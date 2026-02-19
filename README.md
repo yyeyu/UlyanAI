@@ -10,7 +10,7 @@ AI-сервис прогнозирования диапазонов цен дл�
 - Evaluation: walk-forward отчеты.
 - Simulation: paper-симулятор с edge/risk-limit логикой.
 - Inference API (FastAPI): `/v1/health`, `/v1/status`, `/v1/predict`, `/v1/predict_batch`, `/v1/metrics`.
-- UI: `web/index.html` (Dashboard + Model/Data Status) в терминах price ranges.
+- Web GUI (Event Dashboard): создание/мониторинг событий, KPI, фильтры, детализация, экспорт.
 
 ## Ключевой контракт
 Внешний ответ API только в языке цены:
@@ -40,7 +40,21 @@ scripts/run_service.ps1
 curl -H "X-API-Key: dev-key" "http://localhost:8000/v1/predict?asset=BTC&horizon=1h"
 ```
 
-UI: открой `web/index.html` и укажи API key (`dev-key` по умолчанию).
+Web GUI:
+- открой `http://localhost:8000/`
+- или `web/index.html` (укажи `API Base URL`, обычно `http://localhost:8000`)
+- API key по умолчанию: `dev-key`
+
+Event API (MVP):
+- `POST /api/events`
+- `GET /api/events`
+- `GET /api/events/{event_id}`
+- `GET /api/events/{event_id}/prices`
+- `GET /api/models`
+- `GET /api/models/production`
+- `GET /api/metrics/summary`
+- `GET /api/alerts`
+- `GET /api/stream/events` (SSE)
 
 ## Запуск в Docker
 ```powershell

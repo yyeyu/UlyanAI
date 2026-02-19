@@ -130,3 +130,10 @@ class CandleCache:
         ts = pd.Timestamp(latest["ts_utc"])
         return feature_row, spot, ts, entry.stale
 
+    def latest_price(self, asset: str, timeframe: str = "1m") -> tuple[float, pd.Timestamp, bool]:
+        entry = self.get_candles(asset, timeframe=timeframe, min_rows=2)
+        if entry.data.empty:
+            raise ValueError(f"no candles available for asset={asset}, timeframe={timeframe}")
+        latest = entry.data.sort_values("ts_utc").iloc[-1]
+        return float(latest["close"]), pd.Timestamp(latest["ts_utc"]), entry.stale
+

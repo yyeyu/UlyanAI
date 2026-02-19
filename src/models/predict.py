@@ -96,7 +96,7 @@ def build_price_prediction(
     return {
         "asset": asset.upper(),
         "horizon": horizon,
-        "as_of": as_of_utc.isoformat().replace("+00:00", "Z"),
+        "as_of": as_of_utc.isoformat(),
         "price_spot": round(price_spot, 8),
         "mode": "price_ranges",
         "price_levels": {
@@ -126,11 +126,22 @@ class ModelBundle:
     metadata: dict[str, Any]
 
 
-def load_model_bundle(artifacts_root: Path, asset: str, horizon: str) -> ModelBundle | None:
+def load_model_bundle(
+    artifacts_root: Path,
+    asset: str,
+    horizon: str,
+    model_version: str | None = None,
+) -> ModelBundle | None:
     if lgb is None:
         return None
-    model_path = latest_model_dir(artifacts_root, asset, horizon)
+    model_path = (
+        latest_model_dir(artifacts_root, asset, horizon)
+        if model_version is None
+        else artifacts_root / "models" / asset.upper() / horizon / model_version
+    )
     if model_path is None:
+        return None
+    if not model_path.exists():
         return None
 
     q10_path = model_path / "model_q10.txt"

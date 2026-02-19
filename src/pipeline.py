@@ -40,6 +40,26 @@ def _parquet_folder(data_root: Path, layer: str, exchange: str, symbol: str, key
     return data_root / layer / exchange / symbol_dir / key
 
 
+def _to_rel_path(path: Path, root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(root.resolve()))
+    except Exception:
+        return str(path)
+
+
+def _to_rel_paths(paths: list[Path], root: Path) -> list[str]:
+    return [_to_rel_path(path, root) for path in paths]
+
+
+def _asset_price_anchor(asset: str) -> float:
+    anchors = {
+        "BTC": 50000.0,
+        "ETH": 3000.0,
+        "SOL": 120.0,
+    }
+    return float(anchors.get(asset.upper(), 1000.0))
+
+
 def run_data_pipeline(config: dict[str, Any], asset: str, root: str | Path = ".") -> dict[str, Any]:
     paths = get_runtime_paths(config, root=root)
     symbol_info = _symbol_info(config, asset)
@@ -119,8 +139,8 @@ def run_data_pipeline(config: dict[str, Any], asset: str, root: str | Path = "."
         "base_timeframe": base_tf,
         "download_start": start.isoformat(),
         "download_end": end.isoformat(),
-        "raw_files": [str(p) for p in raw_written],
-        "clean_files": [str(p) for p in clean_written],
+        "raw_files": _to_rel_paths(raw_written, paths.root),
+        "clean_files": _to_rel_paths(clean_written, paths.root),
         "resampled_counts": resampled_counts,
         "resampled_qc": resampled_qc,
     }
@@ -167,8 +187,8 @@ def run_feature_label_pipeline(config: dict[str, Any], asset: str, root: str | P
             "timeframe": timeframe,
             "features_rows": int(len(features)),
             "labels_rows": int(len(labels)),
-            "feature_files": [str(p) for p in feat_files],
-            "label_files": [str(p) for p in lbl_files],
+            "feature_files": _to_rel_paths(feat_files, paths.root),
+            "label_files": _to_rel_paths(lbl_files, paths.root),
         }
 
     dump_json(paths.artifacts_root / "runs" / f"features_labels_{asset.lower()}.json", outputs)
@@ -201,6 +221,8 @@ def run_training_pipeline(config: dict[str, Any], asset: str, root: str | Path =
                 config=config,
                 artifacts_root=paths.artifacts_root,
             )
+            if "artifact_dir" in result:
+                result["artifact_dir"] = _to_rel_path(Path(str(result["artifact_dir"])), paths.root)
             training_results[horizon] = result
         except Exception as exc:
             training_errors[horizon] = str(exc)
@@ -254,10 +276,11 @@ def run_simulation_pipeline(config: dict[str, Any], asset: str, root: str | Path
 
     # Synthetic market rows for paper simulation; in prod this should be fed by Polymarket quotes.
     rng = np.random.default_rng(seed=int(config.get("seed", 42)))
+    center_anchor = _asset_price_anchor(asset)
     for horizon in config.get("horizons", []):
         for _ in range(40):
-            center = float(rng.normal(50000.0, 1500.0))
-            spread = float(abs(rng.normal(500.0, 120.0)))
+            center = float(rng.normal(center_anchor, max(center_anchor * 0.03, 1.0)))
+            spread = float(abs(rng.normal(max(center_anchor * 0.01, 0.5), max(center_anchor * 0.003, 0.2))))
             forecast_low = center - spread
             forecast_high = center + spread
             market_low = center - spread * float(rng.uniform(0.8, 1.2))

@@ -47,3 +47,4 @@ service:
   api_key_header: "X-API-Key"
   api_key: "dev-key"
   rate_limit_per_min: 120
+  event_worker_interval_seconds: 5

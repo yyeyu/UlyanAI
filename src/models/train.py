@@ -201,7 +201,7 @@ def train_horizon_model(
         "horizon": horizon,
         "mode": "quantiles_internal_price_ranges_external",
         "model_version": model_version,
-        "created_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "feature_set": config.get("feature_set", "v1"),
         "feature_columns": feature_cols,
         "label_column": label_col,

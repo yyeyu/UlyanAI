@@ -1,134 +1,606 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UlyanAI Dashboard</title>
-    <style>
-      :root {
-        --bg: #f4f1ea;
-        --panel: #fffdf8;
-        --ink: #1d1a16;
-        --accent: #0f766e;
-        --line: #d7d0c2;
-      }
-      body {
-        margin: 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        color: var(--ink);
-        background: radial-gradient(circle at 10% 10%, #efe7d8 0%, var(--bg) 60%);
-      }
-      .wrap {
-        max-width: 980px;
-        margin: 24px auto;
-        padding: 16px;
-      }
-      .panel {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 16px;
-        box-shadow: 0 8px 24px rgba(40, 30, 20, 0.08);
-      }
-      h1 {
-        margin: 0 0 12px;
-        font-size: 24px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      th,
-      td {
-        border-bottom: 1px solid var(--line);
-        text-align: left;
-        padding: 10px 8px;
-        font-size: 14px;
-      }
-      th {
-        color: #5c5144;
-      }
-      .ok {
-        color: var(--accent);
-        font-weight: 600;
-      }
-      .controls {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 12px;
-      }
-      .controls input {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 8px 10px;
-        min-width: 220px;
-      }
-      .status-grid {
-        margin-top: 16px;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 10px;
-      }
-      .status-item {
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        padding: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <div class="panel">
-        <h1>BTC Forecast Dashboard</h1>
-        <div class="controls">
-          <input id="apiKey" value="dev-key" placeholder="API key" />
-          <button id="reloadBtn">Reload</button>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UlyanAI Terminal</title>
+  <style>
+    :root {
+      --bg: #040507;
+      --panel: #0b1118;
+      --line: #1a2a1b;
+      --line-strong: #2f7a37;
+      --txt: #ddffdd;
+      --mut: #86b98a;
+      --cyan: #66ff66;
+      --green: #66ff66;
+      --amber: #ffc760;
+      --red: #ff5d7f;
+      --pink: #9cff9c;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      color: var(--txt);
+      font-family: "JetBrains Mono", "Consolas", monospace;
+      background:
+        radial-gradient(1200px 700px at 4% -10%, #0a1b0e 0%, transparent 58%),
+        radial-gradient(900px 600px at 100% 0%, #0b190e 0%, transparent 50%),
+        var(--bg);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(0deg, rgba(92,255,141,.03) 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(90deg, rgba(102,255,102,.015) 0 1px, transparent 1px 4px);
+      opacity: 0.45;
+      z-index: 0;
+    }
+    .app { position: relative; z-index: 1; width: min(1720px, 96vw); margin: 14px auto 26px; display: grid; gap: 10px; }
+    .panel { border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(180deg, rgba(8,12,8,.96), rgba(6,10,6,.98)); box-shadow: 0 14px 36px rgba(0, 0, 0, .55); }
+    .pad { padding: 12px 14px; }
+    .row, .tabs, .btn-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .title { margin: 0; font-size: 25px; text-transform: uppercase; letter-spacing: .9px; text-shadow: 0 0 16px rgba(102,255,102,.35); }
+    .subtitle { margin-top: 4px; color: var(--mut); font-size: 12px; }
+    .conn { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border: 1px solid var(--line-strong); border-radius: 999px; background: rgba(102,255,102,.08); font-size: 12px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 14px rgba(92,255,141,.9); animation: pulse 1.65s infinite ease-in-out; }
+    .dot.bad { background: var(--red); box-shadow: 0 0 14px rgba(255,93,127,.9); }
+    @keyframes pulse { 0%, 100% { transform: scale(.95); opacity: 1; } 50% { transform: scale(1.25); opacity: .62; } }
+    button, input, select, textarea, .tab-btn {
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: #0a120a;
+      color: var(--txt);
+      font-family: inherit;
+      font-size: 12px;
+      padding: 9px 10px;
+    }
+    button, .tab-btn { cursor: pointer; font-weight: 700; }
+    button:hover, .tab-btn:hover { border-color: #3f8f46; }
+    .tab-btn.active, .btn-primary { color: #04141a; border-color: transparent; background: linear-gradient(90deg, #58ff58, #b8ffb8); box-shadow: 0 0 18px rgba(102,255,102,.45); }
+    .btn-danger { background: rgba(255,93,127,.17); border-color: rgba(255,93,127,.52); }
+    .banner { display: none; margin-top: 9px; border-radius: 10px; border: 1px solid rgba(255,93,127,.55); background: rgba(255,93,127,.16); color: #ffe3ea; padding: 8px 10px; font-size: 12px; }
+    .banner.show { display: block; }
+    .pane { display: none; }
+    .pane.active { display: block; }
+    .grid { display: grid; gap: 8px; }
+    .g2 { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+    .g3 { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+    .g4 { grid-template-columns: repeat(4, minmax(150px, 1fr)); }
+    .field { display: grid; gap: 4px; }
+    .field label { font-size: 11px; color: var(--mut); text-transform: uppercase; letter-spacing: .35px; }
+    .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .ht { margin: 0; font-size: 15px; text-transform: uppercase; letter-spacing: .5px; }
+    .mut { color: var(--mut); font-size: 12px; }
+    .quote { border: 1px solid var(--line-strong); border-radius: 12px; background: linear-gradient(180deg, rgba(10,21,12,.95), rgba(7,12,8,.98)); padding: 10px; }
+    .quote-price { margin-top: 4px; font-size: 30px; letter-spacing: .6px; color: #dcffdc; text-shadow: 0 0 14px rgba(102,255,102,.5); }
+    .quote-meta { margin-top: 4px; color: var(--mut); font-size: 11px; }
+    .kpi-grid { display: grid; gap: 8px; grid-template-columns: repeat(6, minmax(150px, 1fr)); }
+    .kpi { border: 1px solid var(--line-strong); border-radius: 11px; padding: 10px; background: rgba(10,15,10,.9); }
+    .kpi .n { color: var(--mut); font-size: 11px; text-transform: uppercase; }
+    .kpi .v { margin-top: 5px; font-size: 18px; font-weight: 700; }
+    .kpi .h { margin-top: 4px; color: var(--mut); font-size: 11px; }
+    .chart { height: 300px; border: 1px solid var(--line-strong); border-radius: 11px; background: rgba(7,12,7,.95); padding: 8px; }
+    canvas { width: 100%; height: 100%; display: block; }
+    .tw { overflow: auto; }
+    table { width: 100%; min-width: 1120px; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #1a2f1a; text-align: left; padding: 8px 7px; font-size: 12px; vertical-align: top; }
+    th { position: sticky; top: 0; background: #10180f; color: var(--mut); z-index: 1; }
+    tr.row-clickable { cursor: pointer; }
+    tr.row-clickable:hover td { background: rgba(102,255,102,.09); }
+    .tag { display: inline-flex; align-items: center; border: 1px solid; border-radius: 999px; padding: 2px 7px; font-size: 10px; text-transform: uppercase; letter-spacing: .2px; }
+    .tag.active { color: var(--cyan); border-color: rgba(102,255,102,.52); background: rgba(102,255,102,.13); }
+    .tag.completed, .tag.hit { color: var(--green); border-color: rgba(92,255,141,.48); background: rgba(92,255,141,.11); }
+    .tag.cancelled { color: var(--amber); border-color: rgba(255,199,96,.48); background: rgba(255,199,96,.11); }
+    .tag.miss { color: var(--red); border-color: rgba(255,93,127,.48); background: rgba(255,93,127,.12); }
+    .pager { margin-top: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .details { display: none; margin-top: 8px; }
+    .details.open { display: block; }
+    .detail-tabs { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .detail-tab.active { color: var(--cyan); border-color: rgba(102,255,102,.58); }
+    .detail-content { margin-top: 8px; border: 1px solid var(--line-strong); border-radius: 10px; background: rgba(8,13,8,.95); min-height: 170px; padding: 10px; }
+    .kv { display: grid; grid-template-columns: 240px 1fr; gap: 6px 10px; font-size: 12px; }
+    .kv .k { color: var(--mut); }
+    pre { margin: 0; white-space: pre-wrap; word-break: break-word; font-size: 11px; color: #c5f8c5; }
+    .stats { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+    .stats span { border: 1px solid var(--line-strong); border-radius: 999px; padding: 4px 8px; background: rgba(10,18,10,.95); }
+    .modal { position: fixed; inset: 0; z-index: 40; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.74); padding: 16px; }
+    .modal.open { display: flex; }
+    .modal-card { width: min(640px, 100%); border: 1px solid var(--line-strong); border-radius: 12px; background: #0b130b; padding: 12px; }
+    .modal-grid { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+    .modal-actions { margin-top: 10px; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+    .toast-wrap { position: fixed; right: 12px; bottom: 12px; z-index: 60; display: grid; gap: 7px; }
+    .toast { border: 1px solid rgba(102,255,102,.45); border-radius: 9px; background: rgba(9,24,10,.95); padding: 7px 9px; font-size: 11px; }
+    @media (max-width: 1380px) {
+      .kpi-grid { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+      .g4 { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+      .g3 { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+      .g2 { grid-template-columns: 1fr; }
+      .kv { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .title { font-size: 21px; }
+      .kpi-grid { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
+      .chart { height: 250px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="panel pad">
+      <div class="topbar">
+        <div>
+          <h1 class="title">ULYANAI TERMINAL // BTC</h1>
+          <div class="subtitle">Панель управления AI-прогнозами в стиле matrix / retro terminal</div>
         </div>
-        <table id="forecast-table">
-          <thead>
-            <tr>
-              <th>Horizon</th>
-              <th>Spot Price</th>
-              <th>Price Range</th>
-              <th>Median Price</th>
-              <th>Confidence</th>
-              <th>As Of (UTC)</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <div class="status-grid" id="status-grid"></div>
+        <div class="row">
+          <div class="conn"><div id="connDot" class="dot"></div><span id="connText">Connected</span></div>
+          <button id="openCreateEventBtn" class="btn-primary">Создать Event</button>
+        </div>
       </div>
+      <div class="tabs" style="margin-top:10px">
+        <button class="tab-btn active" data-tab="events">События</button>
+        <button class="tab-btn" data-tab="analysis">Анализ</button>
+        <button class="tab-btn" data-tab="settings">Настройки</button>
+      </div>
+      <div id="globalBanner" class="banner"></div>
+    </section>
+
+    <section id="paneEvents" class="pane active">
+      <section class="panel pad">
+        <div class="head">
+          <h2 class="ht">Котировка BTC в реальном времени</h2>
+          <div class="btn-row">
+            <button id="reloadEventsBtn">Обновить</button>
+            <button id="exportEventsJsonBtn">Export JSON</button>
+            <button id="exportEventsCsvBtn">Export CSV</button>
+          </div>
+        </div>
+        <div class="grid g3">
+          <div class="quote">
+            <div class="field">
+              <label for="quoteAssetSelect">Asset</label>
+              <select id="quoteAssetSelect"><option value="BTC" selected>BTC</option></select>
+            </div>
+            <div id="quotePrice" class="quote-price">-</div>
+            <div id="quoteMeta" class="quote-meta">нет данных</div>
+          </div>
+        </div>
+      </section>
+      <section class="panel pad">
+        <div class="head">
+          <h2 class="ht">Лента событий</h2>
+          <div id="eventsMeta" class="mut">-</div>
+        </div>
+        <div class="grid g4">
+          <div class="field"><label for="eventsStatusFilter">Статус</label><select id="eventsStatusFilter"><option value="">Все</option><option value="active">active</option><option value="completed">completed</option><option value="cancelled">cancelled</option></select></div>
+          <div class="field"><label for="eventsHorizonFilter">Horizon</label><select id="eventsHorizonFilter"><option value="">Все</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
+          <div class="field"><label for="eventsResultFilter">Result</label><select id="eventsResultFilter"><option value="">Все</option><option value="hit">hit</option><option value="miss">miss</option></select></div>
+          <div class="field"><label for="eventsSearchInput">Поиск</label><input id="eventsSearchInput" placeholder="event_id / note" /></div>
+        </div>
+        <div class="tw" style="margin-top:8px">
+          <table>
+            <thead>
+              <tr>
+                <th>Статус</th><th>T0 UTC</th><th>Horizon</th><th>BTC Open</th><th>Price Range</th><th>Таймер</th><th>Current</th><th>Model</th><th>Result</th><th>Abs Error</th><th>Rel Error</th><th>Width %</th>
+              </tr>
+            </thead>
+            <tbody id="eventsTableBody"></tbody>
+          </table>
+        </div>
+        <div class="pager">
+          <div id="eventsPageInfo" class="mut">-</div>
+          <div class="btn-row"><button id="eventsPrevBtn">Назад</button><button id="eventsNextBtn">Вперед</button></div>
+        </div>
+      </section>
+
+      <section id="eventDetailsPanel" class="panel pad details">
+        <div class="head">
+          <h2 id="eventDetailsTitle" class="ht">Детали события</h2>
+          <div class="btn-row"><button id="closeDetailsBtn">Закрыть</button><button id="cancelEventBtn" class="btn-danger">Отменить Event</button></div>
+        </div>
+        <div class="detail-tabs">
+          <button class="detail-tab active" data-detail-tab="overview">Overview</button>
+          <button class="detail-tab" data-detail-tab="chart">Chart</button>
+          <button class="detail-tab" data-detail-tab="live">Live</button>
+          <button class="detail-tab" data-detail-tab="payload">Payload</button>
+          <button class="detail-tab" data-detail-tab="result">Result</button>
+          <button class="detail-tab" data-detail-tab="model">Model</button>
+        </div>
+        <div id="eventDetailsContent" class="detail-content"></div>
+      </section>
+    </section>
+
+    <section id="paneAnalysis" class="pane">
+      <section class="panel pad">
+        <div class="head">
+          <h2 class="ht">Сводный анализ</h2>
+          <div class="btn-row"><button id="reloadAnalysisBtn">Обновить анализ</button><button id="exportChartPngBtn">Export PNG</button><button id="exportReportPdfBtn">Export PDF</button></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label for="analysisHorizonFilter">Horizon</label><select id="analysisHorizonFilter"><option value="">Все</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
+          <div class="field"><label for="analysisDaysFilter">Период (дни)</label><select id="analysisDaysFilter"><option value="7">7</option><option value="30" selected>30</option><option value="90">90</option><option value="180">180</option></select></div>
+          <div class="field"><label>&nbsp;</label><button id="applyAnalysisFiltersBtn" class="btn-primary">Применить</button></div>
+        </div>
+        <div class="kpi-grid" style="margin-top:8px">
+          <div class="kpi"><div class="n">Coverage факт / target</div><div id="kpiCoverage" class="v">-</div><div class="h">target: 80%</div></div>
+          <div class="kpi"><div class="n">Calibration</div><div id="kpiCalibration" class="v">-</div><div class="h">под / в норме / выше</div></div>
+          <div class="kpi"><div class="n">Best Horizon</div><div id="kpiBestHorizon" class="v">-</div><div class="h">макс coverage</div></div>
+          <div class="kpi"><div class="n">Completed Events</div><div id="kpiCompleted" class="v">-</div><div class="h">по фильтру периода</div></div>
+          <div class="kpi"><div class="n">Active Events</div><div id="kpiActive" class="v">-</div><div class="h">в системе сейчас</div></div>
+          <div class="kpi"><div class="n">Data Freshness</div><div id="kpiFreshness" class="v">-</div><div class="h">TTL cache</div></div>
+        </div>
+      </section>
+
+      <section class="panel pad">
+        <div class="head"><h2 class="ht">Coverage / Width по времени</h2></div>
+        <div class="chart"><canvas id="analysisChart"></canvas></div>
+      </section>
+
+      <section class="panel pad">
+        <div class="head"><h2 class="ht">Срез по горизонтам</h2></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Horizon</th><th>Count</th><th>Coverage</th><th>Avg Width %</th><th>Avg Abs Error</th></tr></thead>
+            <tbody id="horizonBreakdownBody"></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="panel pad">
+        <div class="head"><h2 class="ht">Глубокий фильтр событий</h2><button id="applyDeepAnalysisBtn" class="btn-primary">Применить фильтр</button></div>
+        <div class="grid g4">
+          <div class="field"><label for="deepStatusFilter">Статус</label><select id="deepStatusFilter"><option value="">Все</option><option value="active">active</option><option value="completed">completed</option><option value="cancelled">cancelled</option></select></div>
+          <div class="field"><label for="deepHorizonFilter">Horizon</label><select id="deepHorizonFilter"><option value="">Все</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
+          <div class="field"><label for="deepResultFilter">Result</label><select id="deepResultFilter"><option value="">Все</option><option value="hit">hit</option><option value="miss">miss</option></select></div>
+          <div class="field"><label for="deepModelFilter">Model</label><input id="deepModelFilter" placeholder="model_id" /></div>
+          <div class="field"><label for="deepFromFilter">Дата с</label><input id="deepFromFilter" type="datetime-local" /></div>
+          <div class="field"><label for="deepToFilter">Дата по</label><input id="deepToFilter" type="datetime-local" /></div>
+          <div class="field"><label for="deepSearchFilter">Поиск</label><input id="deepSearchFilter" placeholder="event_id / note" /></div>
+          <div class="field"><label for="deepPageSizeFilter">Лимит</label><select id="deepPageSizeFilter"><option value="100">100</option><option value="300" selected>300</option><option value="500">500</option></select></div>
+        </div>
+        <div id="deepStats" class="stats"></div>
+        <div class="tw" style="margin-top:8px">
+          <table>
+            <thead><tr><th>event_id</th><th>Статус</th><th>Horizon</th><th>T0 UTC</th><th>BTC Open</th><th>Result</th><th>Abs Error</th><th>Rel Error</th><th>Width %</th></tr></thead>
+            <tbody id="deepEventsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <section id="paneSettings" class="pane">
+      <section class="panel pad">
+        <div class="head"><h2 class="ht">Настройки подключения и обновления</h2><div class="btn-row"><button id="saveSettingsBtn" class="btn-primary">Сохранить настройки</button><button id="resetSettingsBtn">Сбросить</button></div></div>
+        <div class="grid g2">
+          <div class="field"><label for="settingsApiBase">API Base URL</label><input id="settingsApiBase" placeholder="http://localhost:8000" /></div>
+          <div class="field"><label for="settingsApiHeader">API Key Header</label><input id="settingsApiHeader" placeholder="X-API-Key" /></div>
+          <div class="field"><label for="settingsApiKey">API Key</label><input id="settingsApiKey" placeholder="dev-key" /></div>
+          <div class="field"><label for="settingsRefreshSec">Refresh sec</label><input id="settingsRefreshSec" type="number" min="3" max="120" /></div>
+          <div class="field"><label for="settingsAutoRefresh">Auto refresh</label><select id="settingsAutoRefresh"><option value="on">On</option><option value="off">Off</option></select></div>
+        </div>
+      </section>
+    </section>
+  </div>
+
+  <section id="createEventModal" class="modal">
+    <div class="modal-card">
+      <h3 style="margin:0 0 10px;text-transform:uppercase;font-size:14px">Создать Event</h3>
+      <div class="modal-grid">
+        <div class="field"><label>Asset</label><input value="BTC" disabled /></div>
+        <div class="field"><label for="createHorizonSelect">Horizon</label><select id="createHorizonSelect"><option value="5m">5m</option><option value="15m">15m</option><option value="1h" selected>1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
+        <div class="field"><label for="createModelSelect">Model</label><select id="createModelSelect"></select></div>
+        <div class="field"><label for="createSourceSelect">Price Source</label><select id="createSourceSelect"><option value="binance_spot" selected>binance_spot</option><option value="index">index</option></select></div>
+      </div>
+      <div class="field" style="margin-top:8px"><label for="createNoteInput">Комментарий</label><textarea id="createNoteInput" rows="3" placeholder="Опционально"></textarea></div>
+      <div class="modal-actions"><button id="closeCreateModalBtn">Закрыть</button><button id="submitCreateEventBtn" class="btn-primary">Создать</button></div>
     </div>
-    <script>
-      const horizons = ["5m", "15m", "1h", "4h", "1d", "1w"];
-      const tbody = document.querySelector("#forecast-table tbody");
-      const statusGrid = document.querySelector("#status-grid");
-      const apiKeyInput = document.querySelector("#apiKey");
-      const reloadBtn = document.querySelector("#reloadBtn");
-      let lastPredictions = [];
+  </section>
 
-      function fmt(num) {
-        return Number(num).toLocaleString(undefined, { maximumFractionDigits: 2 });
+  <div id="toastWrap" class="toast-wrap"></div>
+
+  <script>
+    (() => {
+      "use strict";
+      const HORIZONS = ["5m", "15m", "1h", "4h", "1d", "1w"];
+      const defaultSettings = {
+        apiBase: location.protocol === "file:" ? "http://localhost:8000" : location.origin,
+        apiHeader: "X-API-Key",
+        apiKey: "dev-key",
+        refreshSec: 5,
+        autoRefresh: "on",
+      };
+      const state = {
+        settings: { ...defaultSettings },
+        activeTab: "events",
+        statusInfo: null,
+        quote: null,
+        events: { items: [], total: 0, page: 1, page_size: 50 },
+        selectedEvent: null,
+        selectedSamples: [],
+        detailTab: "overview",
+        models: [],
+        productionModels: [],
+        analysis: { summary: null, deepEvents: [], deepTotal: 0 },
+        pollTimer: null,
+        tickerTimer: null,
+        quoteLiveTimer: null,
+        quoteFetchInFlight: false,
+        searchTimer: null,
+      };
+      const el = (id) => document.getElementById(id);
+      const num = (v, d = 2) => (v === null || v === undefined || Number.isNaN(Number(v))) ? "-" : Number(v).toLocaleString(undefined, { maximumFractionDigits: d });
+      const price = (v) => (v === null || v === undefined || Number.isNaN(Number(v))) ? "-" : Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const pct = (v, d = 2) => (v === null || v === undefined || Number.isNaN(Number(v))) ? "-" : `${(Number(v) * 100).toFixed(d)}%`;
+      const pctRaw = (v, d = 2) => (v === null || v === undefined || Number.isNaN(Number(v))) ? "-" : `${Number(v).toFixed(d)}%`;
+      const dt = (iso) => { if (!iso) return "-"; try { return new Date(iso).toISOString().replace("T", " ").replace(".000Z", "+00:00"); } catch { return iso; } };
+      const esc = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&#39;");
+
+      function showBanner(message) {
+        const node = el("globalBanner");
+        if (!message) { node.classList.remove("show"); node.textContent = ""; return; }
+        node.classList.add("show");
+        node.textContent = message;
       }
-
-      function headers() {
-        return { "X-API-Key": apiKeyInput.value || "" };
+      function showToast(message) {
+        const node = document.createElement("div");
+        node.className = "toast";
+        node.textContent = message;
+        el("toastWrap").appendChild(node);
+        setTimeout(() => node.remove(), 3000);
       }
-
-      function addRow(pred) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${pred.horizon}</td>
-          <td>${fmt(pred.price_spot)}</td>
-          <td>[${fmt(pred.price_range.low)}; ${fmt(pred.price_range.high)}]</td>
-          <td>${fmt(pred.median_price)}</td>
-          <td class="${pred.confidence.drift_flag ? "" : "ok"}">${pred.confidence.calibration_score.toFixed(2)}</td>
-          <td>${pred.as_of}</td>
-        `;
-        tbody.appendChild(tr);
+      function setConnection(ok, text) { el("connDot").classList.toggle("bad", !ok); el("connText").textContent = text; }
+      function normalizeBaseUrl(value) {
+        const raw = String(value ?? "").trim();
+        if (!raw) return defaultSettings.apiBase;
+        if (raw.startsWith("http://") || raw.startsWith("https://")) return raw;
+        return `http://${raw}`;
       }
-
+      function loadSettings() {
+        try {
+          const raw = localStorage.getItem("ulyanai_gui_settings");
+          if (!raw) return;
+          const parsed = JSON.parse(raw);
+          state.settings = { ...defaultSettings, ...parsed, apiBase: normalizeBaseUrl(parsed.apiBase), refreshSec: Math.max(3, Number(parsed.refreshSec || 5)), autoRefresh: parsed.autoRefresh === "off" ? "off" : "on" };
+        } catch { state.settings = { ...defaultSettings }; }
+      }
+      function saveSettings() { localStorage.setItem("ulyanai_gui_settings", JSON.stringify(state.settings)); }
+      function renderSettings() { el("settingsApiBase").value = state.settings.apiBase; el("settingsApiHeader").value = state.settings.apiHeader; el("settingsApiKey").value = state.settings.apiKey; el("settingsRefreshSec").value = String(state.settings.refreshSec); el("settingsAutoRefresh").value = state.settings.autoRefresh; }
+      function readSettings() {
+        state.settings.apiBase = normalizeBaseUrl(el("settingsApiBase").value);
+        state.settings.apiHeader = (el("settingsApiHeader").value || "").trim() || "X-API-Key";
+        state.settings.apiKey = (el("settingsApiKey").value || "").trim();
+        state.settings.refreshSec = Math.max(3, Number(el("settingsRefreshSec").value || "5"));
+        state.settings.autoRefresh = el("settingsAutoRefresh").value === "off" ? "off" : "on";
+      }
+      function headers() { const out = {}; const key = String(state.settings.apiKey || "").trim(); const head = String(state.settings.apiHeader || "").trim(); if (key && head) out[head] = key; return out; }
+      async function api(path, { method = "GET", query = null, body = null, text = false } = {}) {
+        const url = new URL(path, normalizeBaseUrl(state.settings.apiBase));
+        if (query) Object.entries(query).forEach(([k, v]) => { if (v !== null && v !== undefined && v !== "") url.searchParams.set(k, v); });
+        const hs = headers();
+        if (body !== null) hs["Content-Type"] = "application/json";
+        const res = await fetch(url.toString(), { method, headers: hs, body: body === null ? undefined : JSON.stringify(body) });
+        if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
+        return text ? res.text() : res.json();
+      }
+      function statusTag(status) {
+        if (status === "completed") return `<span class="tag completed">completed</span>`;
+        if (status === "cancelled") return `<span class="tag cancelled">cancelled</span>`;
+        return `<span class="tag active">active</span>`;
+      }
+      function resultTag(hit) { if (hit === true) return `<span class="tag hit">hit</span>`; if (hit === false) return `<span class="tag miss">miss</span>`; return "-"; }
+      function timerText(item, now = Date.now()) {
+        if (!item?.expires_at) return "-";
+        if (item.status === "cancelled") return "отменен";
+        if (item.status === "completed") return "завершен";
+        const left = Math.floor((Date.parse(item.expires_at) - now) / 1000);
+        if (left <= 0) return "ожидаем фиксацию";
+        const d = Math.floor(left / 86400), h = Math.floor((left % 86400) / 3600), m = Math.floor((left % 3600) / 60), s = left % 60;
+        if (d > 0) return `${d}d ${h}h ${m}m`;
+        if (h > 0) return `${h}h ${m}m ${s}s`;
+        return `${m}m ${s}s`;
+      }
+      function currentValue(item, now = Date.now()) {
+        if (Date.parse(item.expires_at) > now) return "-";
+        if (item.actual_price !== null && item.actual_price !== undefined) return price(item.actual_price);
+        if (item.current_price !== null && item.current_price !== undefined) return price(item.current_price);
+        return "-";
+      }
+      function collectEventFilters() { return { status: el("eventsStatusFilter").value, horizon: el("eventsHorizonFilter").value, result: el("eventsResultFilter").value, q: el("eventsSearchInput").value.trim() }; }
+      function renderEventsTable() {
+        const body = el("eventsTableBody");
+        const items = state.events.items || [];
+        const now = Date.now();
+        if (!items.length) body.innerHTML = `<tr><td colspan="12" class="mut">События не найдены.</td></tr>`;
+        else body.innerHTML = items.map((item) => {
+          const m = item.metrics || {};
+          return `<tr class="row-clickable" data-event-id="${esc(item.event_id)}">
+            <td>${statusTag(item.status)}</td><td>${esc(dt(item.created_at))}</td><td>${esc(item.horizon)}</td><td>${esc(price(item.price_t0))}</td>
+            <td>[${esc(price(item.pred_low))}; ${esc(price(item.pred_high))}]</td>
+            <td><span class="timer" data-event-id="${esc(item.event_id)}">${esc(timerText(item, now))}</span></td>
+            <td>${esc(currentValue(item, now))}</td><td>${esc(item.model_id || "-")}</td><td>${resultTag(m.hit)}</td>
+            <td>${esc(price(m.abs_error))}</td><td>${esc(pctRaw(m.rel_error))}</td><td>${esc(pctRaw(m.width_pct))}</td></tr>`;
+        }).join("");
+        const total = Number(state.events.total || 0), page = Number(state.events.page || 1), pageSize = Number(state.events.page_size || 50), pages = Math.max(1, Math.ceil(total / pageSize));
+        el("eventsMeta").textContent = `Загружено ${items.length} из ${total}`;
+        el("eventsPageInfo").textContent = `Страница ${page}/${pages}, всего ${total}`;
+        el("eventsPrevBtn").disabled = page <= 1;
+        el("eventsNextBtn").disabled = page >= pages;
+      }
+      function updateTimers() {
+        const map = new Map((state.events.items || []).map((it) => [it.event_id, it]));
+        document.querySelectorAll(".timer[data-event-id]").forEach((node) => {
+          const id = node.getAttribute("data-event-id");
+          const item = map.get(id);
+          if (!item) return;
+          node.textContent = timerText(item, Date.now());
+          const row = node.closest("tr");
+          if (row && row.children[6]) row.children[6].textContent = currentValue(item, Date.now());
+        });
+      }
+      async function loadEvents(pageOverride = null) {
+        const query = { ...collectEventFilters(), page: pageOverride ?? state.events.page ?? 1, page_size: state.events.page_size || 50, sort_by: "created_at", sort_dir: "desc" };
+        state.events = await api("/api/events", { query });
+        renderEventsTable();
+      }
+      async function loadStatus() { state.statusInfo = await api("/v1/status"); setConnection(true, "Connected"); return state.statusInfo; }
+      async function loadQuoteFromBinance() {
+        const asset = el("quoteAssetSelect").value || "BTC";
+        const symbol = asset === "BTC" ? "BTCUSDT" : `${asset}USDT`;
+        const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${encodeURIComponent(symbol)}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Binance HTTP ${response.status}`);
+        const payload = await response.json();
+        const spot = Number(payload.price);
+        if (!Number.isFinite(spot)) throw new Error("Binance invalid price");
+        const nowIso = new Date().toISOString();
+        state.quote = { asset, price_spot: spot, as_of: nowIso, source: "binance_spot" };
+        el("quotePrice").textContent = price(spot);
+        el("quoteMeta").textContent = `${asset} SPOT Binance, as_of: ${dt(nowIso)}`;
+      }
+      async function loadQuoteFromApiFallback() {
+        const payload = await api("/v1/predict", { query: { asset: el("quoteAssetSelect").value || "BTC", horizon: "5m" } });
+        state.quote = payload;
+        el("quotePrice").textContent = price(payload.price_spot);
+        el("quoteMeta").textContent = `${payload.asset} ${payload.horizon}, as_of: ${dt(payload.as_of)}`;
+      }
+      async function loadQuote({ allowFallback = true } = {}) {
+        try {
+          await loadQuoteFromBinance();
+        } catch (error) {
+          if (!allowFallback) throw error;
+          await loadQuoteFromApiFallback();
+        }
+      }
+      async function loadModels() {
+        const [all, prod] = await Promise.all([api("/api/models", { query: { asset: "BTC" } }), api("/api/models/production", { query: { asset: "BTC" } })]);
+        state.models = all.items || [];
+        state.productionModels = prod.items || [];
+        const prodSet = new Set(state.productionModels.map((m) => m.model_id));
+        const ordered = [...state.productionModels, ...state.models.filter((m) => !prodSet.has(m.model_id))];
+        const select = el("createModelSelect");
+        if (!ordered.length) { select.innerHTML = `<option value="">auto (production)</option>`; return; }
+        select.innerHTML = [`<option value="">auto (production)</option>`, ...ordered.map((m) => `<option value="${esc(m.model_id)}">${esc(m.model_id)}${prodSet.has(m.model_id) ? " [prod]" : ""}</option>`)].join("");
+      }
+      function renderDetailContent() {
+        const panel = el("eventDetailsPanel"), content = el("eventDetailsContent"), title = el("eventDetailsTitle"), cancelBtn = el("cancelEventBtn");
+        if (!state.selectedEvent) { panel.classList.remove("open"); content.innerHTML = ""; return; }
+        panel.classList.add("open");
+        const ev = state.selectedEvent, m = ev.metrics || {};
+        title.textContent = `Детали события ${ev.event_id}`;
+        cancelBtn.disabled = ev.status !== "active";
+        document.querySelectorAll(".detail-tab").forEach((btn) => btn.classList.toggle("active", btn.dataset.detailTab === state.detailTab));
+        if (state.detailTab === "overview") {
+          content.innerHTML = `<div class="kv">
+            <div class="k">event_id</div><div>${esc(ev.event_id)}</div><div class="k">status</div><div>${statusTag(ev.status)}</div>
+            <div class="k">asset / horizon</div><div>${esc(ev.asset)} / ${esc(ev.horizon)}</div><div class="k">created_at</div><div>${esc(dt(ev.created_at))}</div>
+            <div class="k">expires_at</div><div>${esc(dt(ev.expires_at))}</div><div class="k">price_t0</div><div>${esc(price(ev.price_t0))}</div>
+            <div class="k">price range</div><div>[${esc(price(ev.pred_low))}; ${esc(price(ev.pred_high))}]</div><div class="k">median price</div><div>${esc(price(ev.pred_mid))}</div>
+            <div class="k">result</div><div>${resultTag(m.hit)}</div><div class="k">abs / rel error</div><div>${esc(price(m.abs_error))} / ${esc(pctRaw(m.rel_error))}</div>
+            <div class="k">width_pct</div><div>${esc(pctRaw(m.width_pct))}</div><div class="k">note</div><div>${esc(ev.note || "-")}</div>
+          </div>`;
+          return;
+        }
+        if (state.detailTab === "chart") { content.innerHTML = `<div class="chart" style="height:260px"><canvas id="detailChart"></canvas></div>`; requestAnimationFrame(() => drawDetailChart()); return; }
+        if (state.detailTab === "live") {
+          const last = state.selectedSamples.length ? state.selectedSamples[state.selectedSamples.length - 1] : null;
+          content.innerHTML = `<div class="kv"><div class="k">Текущий статус</div><div>${statusTag(ev.status)}</div><div class="k">Таймер</div><div>${esc(timerText(ev, Date.now()))}</div><div class="k">Последний тик</div><div>${last ? `${price(last.price)} @ ${dt(last.ts)}` : "нет данных"}</div><div class="k">Current (после horizon)</div><div>${esc(currentValue(ev, Date.now()))}</div><div class="k">Actual</div><div>${esc(price(ev.actual_price))}</div></div>`;
+          return;
+        }
+        if (state.detailTab === "payload") { content.innerHTML = `<pre>${esc(JSON.stringify(ev.prediction || {}, null, 2))}</pre>`; return; }
+        if (state.detailTab === "result") { content.innerHTML = `<div class="kv"><div class="k">Result</div><div>${resultTag(m.hit)}</div><div class="k">Abs Error</div><div>${esc(price(m.abs_error))}</div><div class="k">Rel Error</div><div>${esc(pctRaw(m.rel_error))}</div><div class="k">Width %</div><div>${esc(pctRaw(m.width_pct))}</div><div class="k">Latency (ms)</div><div>${esc(num(m.latency_ms, 0))}</div></div>`; return; }
+        const meta = ev.model_meta || {};
+        content.innerHTML = `<div class="kv"><div class="k">model_id</div><div>${esc(ev.model_id || "-")}</div><div class="k">git_commit</div><div>${esc(meta.git_commit || "unknown")}</div><div class="k">train_time</div><div>${esc(meta.train_time || "unknown")}</div><div class="k">dataset_hash</div><div>${esc(meta.dataset_hash || "unknown")}</div><div class="k">config_hash</div><div>${esc(meta.config_hash || "unknown")}</div></div>`;
+      }
+      function drawDetailChart() {
+        const canvas = document.getElementById("detailChart"), ev = state.selectedEvent, samples = state.selectedSamples || [];
+        if (!canvas || !ev) return;
+        const ctx = canvas.getContext("2d"), w = canvas.clientWidth || 640, h = canvas.clientHeight || 220, dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h); ctx.fillStyle = "#08111c"; ctx.fillRect(0, 0, w, h);
+        if (!samples.length) { ctx.fillStyle = "#86b98a"; ctx.font = "12px JetBrains Mono"; ctx.fillText("Нет price samples для этого события.", 16, 24); return; }
+        const vals = samples.map((s) => Number(s.price)); vals.push(Number(ev.pred_low), Number(ev.pred_high), Number(ev.pred_mid)); if (ev.actual_price !== null && ev.actual_price !== undefined) vals.push(Number(ev.actual_price));
+        let minV = Math.min(...vals), maxV = Math.max(...vals); if (minV === maxV) { minV -= 1; maxV += 1; }
+        const pad = 36, pw = w - pad * 2, ph = h - pad * 2, x = (i) => pad + (pw * i) / Math.max(1, samples.length - 1), y = (v) => pad + ((maxV - v) * ph) / (maxV - minV);
+        ctx.strokeStyle = "rgba(142,163,187,.25)"; for (let i = 0; i <= 4; i++) { const yy = pad + (ph * i) / 4; ctx.beginPath(); ctx.moveTo(pad, yy); ctx.lineTo(w - pad, yy); ctx.stroke(); }
+        ctx.fillStyle = "rgba(102,255,102,.12)"; const yLow = y(Number(ev.pred_low)), yHigh = y(Number(ev.pred_high)); ctx.fillRect(pad, yHigh, pw, Math.max(1, yLow - yHigh));
+        ctx.strokeStyle = "rgba(156,255,156,.9)"; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(pad, y(Number(ev.pred_mid))); ctx.lineTo(w - pad, y(Number(ev.pred_mid))); ctx.stroke(); ctx.setLineDash([]);
+        ctx.strokeStyle = "#66ff66"; ctx.lineWidth = 2; ctx.beginPath(); samples.forEach((s, i) => { const xx = x(i), yy = y(Number(s.price)); if (i === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy); }); ctx.stroke();
+        if (ev.actual_price !== null && ev.actual_price !== undefined) { ctx.strokeStyle = "#5cff8d"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(pad, y(Number(ev.actual_price))); ctx.lineTo(w - pad, y(Number(ev.actual_price))); ctx.stroke(); }
+      }
+      async function openEvent(eventId, resetTab = false) {
+        const id = encodeURIComponent(eventId);
+        const [eventPayload, prices] = await Promise.all([api(`/api/events/${id}`), api(`/api/events/${id}/prices`, { query: { limit: 500 } })]);
+        state.selectedEvent = eventPayload;
+        state.selectedSamples = prices.samples || [];
+        if (resetTab) state.detailTab = "overview";
+        renderDetailContent();
+      }
+      function closeEvent() { state.selectedEvent = null; state.selectedSamples = []; renderDetailContent(); }
+      function drawAnalysisChart(series) {
+        const canvas = el("analysisChart"), ctx = canvas.getContext("2d"), w = canvas.clientWidth || 900, h = canvas.clientHeight || 280, dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h); ctx.fillStyle = "#08111c"; ctx.fillRect(0, 0, w, h);
+        if (!series.length) { ctx.fillStyle = "#86b98a"; ctx.font = "12px JetBrains Mono"; ctx.fillText("Нет данных для выбранного периода.", 16, 24); return; }
+        const pad = 36, pw = w - pad * 2, ph = h - pad * 2, maxWidth = Math.max(1, ...series.map((s) => Number(s.width_pct || 0)));
+        const x = (i) => pad + (pw * i) / Math.max(1, series.length - 1), yCov = (v) => pad + (1 - Math.max(0, Math.min(1, Number(v || 0)))) * ph, yWidth = (v) => pad + (1 - Math.max(0, Math.min(1, Number(v || 0) / maxWidth))) * ph;
+        ctx.strokeStyle = "rgba(142,163,187,.25)"; for (let i = 0; i <= 4; i++) { const yy = pad + (ph * i) / 4; ctx.beginPath(); ctx.moveTo(pad, yy); ctx.lineTo(w - pad, yy); ctx.stroke(); }
+        ctx.strokeStyle = "#66ff66"; ctx.lineWidth = 2; ctx.beginPath(); series.forEach((s, i) => { const xx = x(i), yy = yCov(s.coverage); if (i === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy); }); ctx.stroke();
+        ctx.strokeStyle = "#5cff8d"; ctx.lineWidth = 2; ctx.beginPath(); series.forEach((s, i) => { const xx = x(i), yy = yWidth(s.width_pct); if (i === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy); }); ctx.stroke();
+      }
+      function renderByHorizon(map) {
+        const body = el("horizonBreakdownBody"), rows = Object.entries(map || {});
+        if (!rows.length) { body.innerHTML = `<tr><td colspan="5" class="mut">Нет данных.</td></tr>`; return; }
+        body.innerHTML = rows.sort((a, b) => HORIZONS.indexOf(a[0]) - HORIZONS.indexOf(b[0])).map(([h, d]) => `<tr><td>${esc(h)}</td><td>${esc(num(d.count, 0))}</td><td>${esc(pct(d.coverage))}</td><td>${esc(pctRaw(d.avg_width_pct))}</td><td>${esc(price(d.avg_abs_error))}</td></tr>`).join("");
+      }
+      function renderSummary(summary) {
+        if (!summary) { ["kpiCoverage", "kpiCalibration", "kpiBestHorizon", "kpiCompleted", "kpiActive", "kpiFreshness"].forEach((id) => { el(id).textContent = "-"; }); renderByHorizon({}); drawAnalysisChart([]); return; }
+        el("kpiCoverage").textContent = `${pct(summary.actual_coverage)} / ${pct(summary.target_coverage)}`;
+        const delta = Number(summary.coverage_delta || 0);
+        el("kpiCalibration").textContent = delta < -0.03 ? "ниже target" : delta > 0.03 ? "выше target" : "в норме";
+        el("kpiBestHorizon").textContent = summary.best_horizon || "-";
+        el("kpiCompleted").textContent = num(summary.completed_events, 0);
+        el("kpiActive").textContent = num(summary.active_events, 0);
+        const fresh = Number(state.statusInfo?.data_freshness_seconds ?? NaN);
+        el("kpiFreshness").textContent = Number.isFinite(fresh) ? `${fresh}s` : "-";
+        renderByHorizon(summary.by_horizon || {});
+        drawAnalysisChart(summary.series || []);
+      }
+      async function loadSummary() {
+        const days = Number(el("analysisDaysFilter").value || "30"), horizon = el("analysisHorizonFilter").value;
+        state.analysis.summary = await api("/api/metrics/summary", { query: { days, horizon } });
+        renderSummary(state.analysis.summary);
+      }
+      function collectDeep() {
+        const from = el("deepFromFilter").value, to = el("deepToFilter").value;
+        return { status: el("deepStatusFilter").value, horizon: el("deepHorizonFilter").value, result: el("deepResultFilter").value, model_id: el("deepModelFilter").value.trim(), created_from: from ? new Date(from).toISOString() : "", created_to: to ? new Date(to).toISOString() : "", q: el("deepSearchFilter").value.trim(), page: 1, page_size: Number(el("deepPageSizeFilter").value || "300"), sort_by: "created_at", sort_dir: "desc" };
+      }
+      function renderDeep() {
+        const items = state.analysis.deepEvents || [], body = el("deepEventsBody");
+        if (!items.length) body.innerHTML = `<tr><td colspan="9" class="mut">Нет данных для выбранного фильтра.</td></tr>`;
+        else body.innerHTML = items.map((item) => { const m = item.metrics || {}; return `<tr class="row-clickable" data-event-id="${esc(item.event_id)}"><td>${esc(item.event_id)}</td><td>${statusTag(item.status)}</td><td>${esc(item.horizon)}</td><td>${esc(dt(item.created_at))}</td><td>${esc(price(item.price_t0))}</td><td>${resultTag(m.hit)}</td><td>${esc(price(m.abs_error))}</td><td>${esc(pctRaw(m.rel_error))}</td><td>${esc(pctRaw(m.width_pct))}</td></tr>`; }).join("");
+        const completed = items.filter((it) => it.status === "completed"), withResult = completed.filter((it) => it.metrics && typeof it.metrics.hit === "boolean"), hits = withResult.filter((it) => it.metrics.hit).length;
+        const hitRate = withResult.length ? hits / withResult.length : null;
+        const avgW = withResult.length ? withResult.reduce((s, it) => s + Number(it.metrics.width_pct || 0), 0) / withResult.length : null;
+        const avgA = withResult.length ? withResult.reduce((s, it) => s + Number(it.metrics.abs_error || 0), 0) / withResult.length : null;
+        el("deepStats").innerHTML = [`<span>Загружено: ${num(items.length, 0)} / ${num(state.analysis.deepTotal, 0)}</span>`, `<span>Completed: ${num(completed.length, 0)}</span>`, `<span>Hit rate: ${hitRate === null ? "-" : pct(hitRate)}</span>`, `<span>Avg width %: ${avgW === null ? "-" : pctRaw(avgW)}</span>`, `<span>Avg abs error: ${avgA === null ? "-" : price(avgA)}</span>`].join("");
+      }
+      async function loadDeep() {
+        const payload = await api("/api/events", { query: collectDeep() });
+        state.analysis.deepEvents = payload.items || [];
+        state.analysis.deepTotal = Number(payload.total || 0);
+        renderDeep();
+      }
+      async function loadAnalysis() { await Promise.all([loadStatus(), loadSummary(), loadDeep()]); }
+      function setTab(tab) {
+        state.activeTab = tab;
+        document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.toggle("active", btn.dataset.tab === tab));
+        const map = { events: "paneEvents", analysis: "paneAnalysis", settings: "paneSettings" };
+        Object.entries(map).forEach(([name, id]) => el(id).classList.toggle("active", name === tab));
+        if (tab === "events") Promise.all([loadStatus(), loadQuote(), loadEvents()]).catch(onError);
+        if (tab === "analysis") loadAnalysis().catch(onError);
+      }
       function download(name, content, type) {
         const blob = new Blob([content], { type });
         const url = URL.createObjectURL(blob);
@@ -138,85 +610,117 @@
         a.click();
         URL.revokeObjectURL(url);
       }
-
-      function exportJson() {
-        download("ulyanai_predictions.json", JSON.stringify(lastPredictions, null, 2), "application/json");
+      function exportEventsJson() { download("events_export.json", JSON.stringify(state.events.items || [], null, 2), "application/json"); }
+      function exportEventsCsv() {
+        const header = ["event_id", "status", "asset", "horizon", "created_at", "expires_at", "price_t0", "pred_low", "pred_mid", "pred_high", "actual_price", "current_price", "hit", "abs_error", "rel_error", "width_pct", "model_id", "note"];
+        const row = (arr) => arr.map((v) => { const s = String(v ?? ""); return /[,"\n]/.test(s) ? `"${s.replaceAll("\"", "\"\"")}"` : s; }).join(",");
+        const rows = (state.events.items || []).map((it) => { const m = it.metrics || {}; return [it.event_id, it.status, it.asset, it.horizon, it.created_at, it.expires_at, it.price_t0, it.pred_low, it.pred_mid, it.pred_high, it.actual_price, it.current_price, m.hit, m.abs_error, m.rel_error, m.width_pct, it.model_id, it.note || ""]; });
+        download("events_export.csv", [row(header), ...rows.map((r) => row(r))].join("\n"), "text/csv;charset=utf-8");
       }
-
-      function exportCsv() {
-        const rows = [
-          ["horizon", "price_spot", "low", "high", "median_price", "calibration_score", "as_of"],
-          ...lastPredictions.map((p) => [
-            p.horizon,
-            p.price_spot,
-            p.price_range.low,
-            p.price_range.high,
-            p.median_price,
-            p.confidence.calibration_score,
-            p.as_of,
-          ]),
-        ];
-        const csv = rows.map((r) => r.join(",")).join("\\n");
-        download("ulyanai_predictions.csv", csv, "text/csv");
+      function exportChartPng() { const a = document.createElement("a"); a.href = el("analysisChart").toDataURL("image/png"); a.download = "analysis_chart.png"; a.click(); }
+      function exportPdf() {
+        if (!state.analysis.summary) { showToast("Сначала загрузите анализ."); return; }
+        const s = state.analysis.summary;
+        const rows = (state.analysis.deepEvents || []).slice(0, 120).map((it) => { const m = it.metrics || {}; return `<tr><td>${esc(it.event_id)}</td><td>${esc(it.status)}</td><td>${esc(it.horizon)}</td><td>${esc(dt(it.created_at))}</td><td>${esc(price(it.price_t0))}</td><td>${esc(typeof m.hit === "boolean" ? (m.hit ? "hit" : "miss") : "-")}</td><td>${esc(price(m.abs_error))}</td><td>${esc(pctRaw(m.width_pct))}</td></tr>`; }).join("");
+        const html = `<!doctype html><html><head><meta charset="utf-8"><title>UlyanAI Report</title><style>body{font-family:Arial,sans-serif;padding:16px;color:#111}table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}th,td{border:1px solid #ccc;padding:6px;text-align:left}th{background:#f2f2f2}.meta{display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));gap:6px;margin-top:8px;font-size:13px}</style></head><body><h1>UlyanAI Analysis Report</h1><div>Generated at ${new Date().toISOString()}</div><div class="meta"><div>Coverage: ${pct(s.actual_coverage)} (target ${pct(s.target_coverage)})</div><div>Best horizon: ${esc(s.best_horizon || "-")}</div><div>Completed events: ${num(s.completed_events, 0)}</div><div>Active events: ${num(s.active_events, 0)}</div><div>Avg width %: ${pctRaw(s.avg_width_pct)}</div><div>Avg abs error: ${price(s.avg_abs_error)}</div></div><h2>Deep Events (first 120)</h2><table><thead><tr><th>event_id</th><th>status</th><th>horizon</th><th>created_at</th><th>btc_open</th><th>result</th><th>abs_error</th><th>width%</th></tr></thead><tbody>${rows || "<tr><td colspan='8'>No data</td></tr>"}</tbody></table></body></html>`;
+        const w = window.open("", "_blank");
+        if (!w) { showToast("Разрешите всплывающие окна для Export PDF."); return; }
+        w.document.open(); w.document.write(html); w.document.close(); w.focus(); w.print();
       }
-
-      async function load() {
-        tbody.innerHTML = "";
-        statusGrid.innerHTML = "";
-        lastPredictions = [];
-        for (const h of horizons) {
+      function restartPolling() {
+        if (state.pollTimer) clearInterval(state.pollTimer);
+        state.pollTimer = null;
+        if (state.settings.autoRefresh === "off") return;
+        const ms = Math.max(3, Number(state.settings.refreshSec || 5)) * 1000;
+        state.pollTimer = setInterval(() => refreshView().catch(onError), ms);
+      }
+      function ensureTicker() { if (!state.tickerTimer) state.tickerTimer = setInterval(updateTimers, 1000); }
+      function restartQuoteTicker() {
+        if (state.quoteLiveTimer) clearInterval(state.quoteLiveTimer);
+        state.quoteLiveTimer = setInterval(async () => {
+          if (state.activeTab !== "events") return;
+          if (state.quoteFetchInFlight) return;
+          state.quoteFetchInFlight = true;
           try {
-            const res = await fetch(`/v1/predict?asset=BTC&horizon=${h}`, { headers: headers() });
-            if (!res.ok) {
-              throw new Error(`HTTP ${res.status}`);
-            }
-            const pred = await res.json();
-            lastPredictions.push(pred);
-            addRow(pred);
-          } catch (err) {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `<td>${h}</td><td colspan="5">Failed to load forecast: ${err.message}</td>`;
-            tbody.appendChild(tr);
+            await loadQuote({ allowFallback: false });
+          } catch {
+            } finally {
+            state.quoteFetchInFlight = false;
           }
-        }
-
-        try {
-          const res = await fetch(`/v1/status`, { headers: headers() });
-          if (!res.ok) {
-            throw new Error(`HTTP ${res.status}`);
-          }
-          const status = await res.json();
-          const fields = [
-            ["Mode", status.mode],
-            ["Assets", status.assets.join(", ")],
-            ["Horizons", status.horizons.join(", ")],
-            ["Data Freshness (s)", status.data_freshness_seconds],
-          ];
-          for (const [k, v] of fields) {
-            const item = document.createElement("div");
-            item.className = "status-item";
-            item.innerHTML = `<strong>${k}</strong><div>${v}</div>`;
-            statusGrid.appendChild(item);
-          }
-        } catch (err) {
-          const item = document.createElement("div");
-          item.className = "status-item";
-          item.innerHTML = `<strong>Status Load Failed</strong><div>${err.message}</div>`;
-          statusGrid.appendChild(item);
-        }
+        }, 1000);
       }
-
-      reloadBtn.addEventListener("click", load);
-      const jsonBtn = document.createElement("button");
-      jsonBtn.textContent = "Export JSON";
-      jsonBtn.addEventListener("click", exportJson);
-      document.querySelector(".controls").appendChild(jsonBtn);
-
-      const csvBtn = document.createElement("button");
-      csvBtn.textContent = "Export CSV";
-      csvBtn.addEventListener("click", exportCsv);
-      document.querySelector(".controls").appendChild(csvBtn);
-      load();
-    </script>
-  </body>
+      async function refreshView() {
+        await loadStatus();
+        await loadQuote();
+        if (state.activeTab === "events") { await loadEvents(); if (state.selectedEvent) await openEvent(state.selectedEvent.event_id, false); }
+        if (state.activeTab === "analysis") { await loadSummary(); await loadDeep(); }
+        showBanner("");
+      }
+      function onError(error) { setConnection(false, "Disconnected"); showBanner(`Ошибка: ${error instanceof Error ? error.message : String(error)}`); }
+      function openModal() { el("createEventModal").classList.add("open"); }
+      function closeModal() { el("createEventModal").classList.remove("open"); }
+      async function createEvent() {
+        const payload = { asset: "BTC", horizon: el("createHorizonSelect").value, model_id: el("createModelSelect").value || null, price_source: el("createSourceSelect").value, note: el("createNoteInput").value.trim() || null };
+        const created = await api("/api/events", { method: "POST", body: payload });
+        showToast(`Event создан: ${created.event_id}`);
+        closeModal();
+        el("createNoteInput").value = "";
+        setTab("events");
+        await loadEvents(1);
+        await openEvent(created.event_id, true);
+      }
+      async function cancelEvent() {
+        if (!state.selectedEvent || state.selectedEvent.status !== "active") { showToast("Отменить можно только active событие."); return; }
+        if (!window.confirm(`Отменить событие ${state.selectedEvent.event_id}?`)) return;
+        await api(`/api/events/${encodeURIComponent(state.selectedEvent.event_id)}/cancel`, { method: "POST" });
+        showToast("Событие отменено.");
+        await loadEvents();
+        await openEvent(state.selectedEvent.event_id, false);
+      }
+      function bind() {
+        document.querySelectorAll(".tab-btn").forEach((btn) => btn.addEventListener("click", () => setTab(btn.dataset.tab)));
+        el("reloadEventsBtn").addEventListener("click", () => refreshView().catch(onError));
+        el("quoteAssetSelect").addEventListener("change", () => loadQuote().catch(onError));
+        ["eventsStatusFilter", "eventsHorizonFilter", "eventsResultFilter"].forEach((id) => el(id).addEventListener("change", () => loadEvents(1).catch(onError)));
+        el("eventsSearchInput").addEventListener("input", () => { if (state.searchTimer) clearTimeout(state.searchTimer); state.searchTimer = setTimeout(() => loadEvents(1).catch(onError), 280); });
+        el("eventsPrevBtn").addEventListener("click", () => loadEvents(Math.max(1, Number(state.events.page || 1) - 1)).catch(onError));
+        el("eventsNextBtn").addEventListener("click", () => loadEvents(Number(state.events.page || 1) + 1).catch(onError));
+        el("eventsTableBody").addEventListener("click", (event) => { const row = event.target.closest("tr[data-event-id]"); if (!row) return; openEvent(row.getAttribute("data-event-id"), true).catch(onError); });
+        document.querySelectorAll(".detail-tab").forEach((btn) => btn.addEventListener("click", () => { state.detailTab = btn.dataset.detailTab; renderDetailContent(); }));
+        el("closeDetailsBtn").addEventListener("click", closeEvent);
+        el("cancelEventBtn").addEventListener("click", () => cancelEvent().catch(onError));
+        el("reloadAnalysisBtn").addEventListener("click", () => loadAnalysis().catch(onError));
+        el("applyAnalysisFiltersBtn").addEventListener("click", () => loadSummary().catch(onError));
+        el("applyDeepAnalysisBtn").addEventListener("click", () => loadDeep().catch(onError));
+        el("deepEventsBody").addEventListener("click", (event) => { const row = event.target.closest("tr[data-event-id]"); if (!row) return; setTab("events"); openEvent(row.getAttribute("data-event-id"), true).catch(onError); });
+        el("exportEventsJsonBtn").addEventListener("click", exportEventsJson);
+        el("exportEventsCsvBtn").addEventListener("click", exportEventsCsv);
+        el("exportChartPngBtn").addEventListener("click", exportChartPng);
+        el("exportReportPdfBtn").addEventListener("click", exportPdf);
+        el("saveSettingsBtn").addEventListener("click", async () => { try { readSettings(); saveSettings(); renderSettings(); restartPolling(); await refreshView(); showToast("Настройки сохранены."); } catch (error) { onError(error); } });
+        el("resetSettingsBtn").addEventListener("click", () => { state.settings = { ...defaultSettings }; saveSettings(); renderSettings(); restartPolling(); showToast("Настройки сброшены."); });
+        el("openCreateEventBtn").addEventListener("click", openModal);
+        el("closeCreateModalBtn").addEventListener("click", closeModal);
+        el("submitCreateEventBtn").addEventListener("click", () => createEvent().catch(onError));
+        el("createEventModal").addEventListener("click", (event) => { if (event.target.id === "createEventModal") closeModal(); });
+      }
+      async function boot() {
+        bind();
+        loadSettings();
+        renderSettings();
+        ensureTicker();
+        restartQuoteTicker();
+        try {
+          await Promise.all([loadStatus(), loadQuote(), loadModels(), loadEvents(1)]);
+          setConnection(true, "Connected");
+          showBanner("");
+        } catch (error) { onError(error); }
+        restartPolling();
+      }
+      boot();
+    })();
+  </script>
+</body>
 </html>
+
+
