@@ -1,0 +1,19 @@
+﻿horizons:
+  "5m":
+    timeframe: "5m"
+    minutes: 5
+  "15m":
+    timeframe: "15m"
+    minutes: 15
+  "1h":
+    timeframe: "1h"
+    minutes: 60
+  "4h":
+    timeframe: "4h"
+    minutes: 240
+  "1d":
+    timeframe: "1d"
+    minutes: 1440
+  "1w":
+    timeframe: "1w"
+    minutes: 10080

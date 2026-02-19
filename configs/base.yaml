@@ -1,0 +1,49 @@
+﻿exchange: binance
+symbols:
+  - BTC/USDT
+  - ETH/USDT
+  - SOL/USDT
+base_timeframe: "1m"
+timeframes: ["5m", "15m", "1h", "4h", "1d", "1w"]
+horizons: ["5m", "15m", "1h", "4h", "1d", "1w"]
+mode: "quantiles"
+external_mode: "price_ranges"
+feature_set: "v1"
+timezone: "UTC"
+seed: 42
+storage:
+  root: "data"
+  artifacts_root: "artifacts"
+  parquet_compression: "snappy"
+data:
+  download_days: 365
+  ohlcv_limit_per_call: 1000
+  cache_ttl_seconds: 300
+  allow_offline_synthetic_fallback: true
+qc:
+  max_missing_ratio: 0.001
+training:
+  model: "lightgbm"
+  quantiles: [0.1, 0.5, 0.9]
+  num_boost_round: 120
+  learning_rate: 0.05
+  num_leaves: 31
+  min_data_in_leaf: 20
+walk_forward:
+  train_days: 180
+  val_days: 30
+  test_days: 30
+  step_days: 30
+  max_splits: 3
+sim:
+  edge_threshold: 0.05
+  fees: 0.02
+  max_position_per_market: 1.0
+  max_daily_loss: 1.0
+  max_total_exposure: 3.0
+service:
+  host: "0.0.0.0"
+  port: 8000
+  api_key_header: "X-API-Key"
+  api_key: "dev-key"
+  rate_limit_per_min: 120

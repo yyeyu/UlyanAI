@@ -1,0 +1,12 @@
+﻿# Runtime artifacts
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Generated data
+artifacts/
+data/
+
+# Local environment
+.venv/
+.env

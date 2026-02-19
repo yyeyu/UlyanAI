@@ -1,0 +1,11 @@
+﻿name: v1
+return_windows: [1, 2, 3, 6, 12]
+vol_windows: [10, 20, 50]
+volume_windows: [20, 50]
+trend_windows: [20, 50, 200]
+rsi_window: 14
+atr_window: 14
+macd:
+  fast: 12
+  slow: 26
+  signal: 9

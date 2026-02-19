@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UlyanAI Dashboard</title>
+    <style>
+      :root {
+        --bg: #f4f1ea;
+        --panel: #fffdf8;
+        --ink: #1d1a16;
+        --accent: #0f766e;
+        --line: #d7d0c2;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--ink);
+        background: radial-gradient(circle at 10% 10%, #efe7d8 0%, var(--bg) 60%);
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 24px auto;
+        padding: 16px;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 8px 24px rgba(40, 30, 20, 0.08);
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 24px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        padding: 10px 8px;
+        font-size: 14px;
+      }
+      th {
+        color: #5c5144;
+      }
+      .ok {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .controls {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .controls input {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 10px;
+        min-width: 220px;
+      }
+      .status-grid {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+      }
+      .status-item {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="panel">
+        <h1>BTC Forecast Dashboard</h1>
+        <div class="controls">
+          <input id="apiKey" value="dev-key" placeholder="API key" />
+          <button id="reloadBtn">Reload</button>
+        </div>
+        <table id="forecast-table">
+          <thead>
+            <tr>
+              <th>Horizon</th>
+              <th>Spot Price</th>
+              <th>Price Range</th>
+              <th>Median Price</th>
+              <th>Confidence</th>
+              <th>As Of (UTC)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="status-grid" id="status-grid"></div>
+      </div>
+    </div>
+    <script>
+      const horizons = ["5m", "15m", "1h", "4h", "1d", "1w"];
+      const tbody = document.querySelector("#forecast-table tbody");
+      const statusGrid = document.querySelector("#status-grid");
+      const apiKeyInput = document.querySelector("#apiKey");
+      const reloadBtn = document.querySelector("#reloadBtn");
+      let lastPredictions = [];
+
+      function fmt(num) {
+        return Number(num).toLocaleString(undefined, { maximumFractionDigits: 2 });
+      }
+
+      function headers() {
+        return { "X-API-Key": apiKeyInput.value || "" };
+      }
+
+      function addRow(pred) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${pred.horizon}</td>
+          <td>${fmt(pred.price_spot)}</td>
+          <td>[${fmt(pred.price_range.low)}; ${fmt(pred.price_range.high)}]</td>
+          <td>${fmt(pred.median_price)}</td>
+          <td class="${pred.confidence.drift_flag ? "" : "ok"}">${pred.confidence.calibration_score.toFixed(2)}</td>
+          <td>${pred.as_of}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      function download(name, content, type) {
+        const blob = new Blob([content], { type });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = name;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function exportJson() {
+        download("ulyanai_predictions.json", JSON.stringify(lastPredictions, null, 2), "application/json");
+      }
+
+      function exportCsv() {
+        const rows = [
+          ["horizon", "price_spot", "low", "high", "median_price", "calibration_score", "as_of"],
+          ...lastPredictions.map((p) => [
+            p.horizon,
+            p.price_spot,
+            p.price_range.low,
+            p.price_range.high,
+            p.median_price,
+            p.confidence.calibration_score,
+            p.as_of,
+          ]),
+        ];
+        const csv = rows.map((r) => r.join(",")).join("\\n");
+        download("ulyanai_predictions.csv", csv, "text/csv");
+      }
+
+      async function load() {
+        tbody.innerHTML = "";
+        statusGrid.innerHTML = "";
+        lastPredictions = [];
+        for (const h of horizons) {
+          try {
+            const res = await fetch(`/v1/predict?asset=BTC&horizon=${h}`, { headers: headers() });
+            if (!res.ok) {
+              throw new Error(`HTTP ${res.status}`);
+            }
+            const pred = await res.json();
+            lastPredictions.push(pred);
+            addRow(pred);
+          } catch (err) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td>${h}</td><td colspan="5">Failed to load forecast: ${err.message}</td>`;
+            tbody.appendChild(tr);
+          }
+        }
+
+        try {
+          const res = await fetch(`/v1/status`, { headers: headers() });
+          if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+          }
+          const status = await res.json();
+          const fields = [
+            ["Mode", status.mode],
+            ["Assets", status.assets.join(", ")],
+            ["Horizons", status.horizons.join(", ")],
+            ["Data Freshness (s)", status.data_freshness_seconds],
+          ];
+          for (const [k, v] of fields) {
+            const item = document.createElement("div");
+            item.className = "status-item";
+            item.innerHTML = `<strong>${k}</strong><div>${v}</div>`;
+            statusGrid.appendChild(item);
+          }
+        } catch (err) {
+          const item = document.createElement("div");
+          item.className = "status-item";
+          item.innerHTML = `<strong>Status Load Failed</strong><div>${err.message}</div>`;
+          statusGrid.appendChild(item);
+        }
+      }
+
+      reloadBtn.addEventListener("click", load);
+      const jsonBtn = document.createElement("button");
+      jsonBtn.textContent = "Export JSON";
+      jsonBtn.addEventListener("click", exportJson);
+      document.querySelector(".controls").appendChild(jsonBtn);
+
+      const csvBtn = document.createElement("button");
+      csvBtn.textContent = "Export CSV";
+      csvBtn.addEventListener("click", exportCsv);
+      document.querySelector(".controls").appendChild(csvBtn);
+      load();
+    </script>
+  </body>
+</html>

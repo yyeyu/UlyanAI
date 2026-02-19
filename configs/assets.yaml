@@ -1,0 +1,13 @@
+﻿assets:
+  BTC:
+    symbol: "BTC/USDT"
+    market_symbol: "BTCUSDT"
+    status: "enabled"
+  ETH:
+    symbol: "ETH/USDT"
+    market_symbol: "ETHUSDT"
+    status: "enabled"
+  SOL:
+    symbol: "SOL/USDT"
+    market_symbol: "SOLUSDT"
+    status: "enabled"
