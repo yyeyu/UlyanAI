@@ -1,0 +1,26 @@
+{
+  "splits": [
+    {
+      "split_index": 1,
+      "train_rows": 22,
+      "val_rows": 5,
+      "test_rows": 5,
+      "pinball_q10": 0.012162312747185449,
+      "pinball_q50": 0.022984766977144848,
+      "pinball_q90": 0.010257653075876548,
+      "coverage": 0.4,
+      "mean_width": 0.11321399360895157,
+      "calibrator_scale": 1.0,
+      "test_period_start": "2026-01-12T00:00:00+00:00",
+      "test_period_end": "2026-02-09T00:00:00+00:00"
+    }
+  ],
+  "summary": {
+    "splits_count": 1,
+    "avg_pinball_q10": 0.012162312747185449,
+    "avg_pinball_q50": 0.022984766977144848,
+    "avg_pinball_q90": 0.010257653075876548,
+    "avg_coverage": 0.4,
+    "avg_mean_width": 0.11321399360895157
+  }
+}

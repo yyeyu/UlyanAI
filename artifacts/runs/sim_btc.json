@@ -1,0 +1,5053 @@
+﻿{
+  "summary": {
+    "trades_total": 240,
+    "trades_entered": 3,
+    "pnl_cumulative": 1.5035758199062919,
+    "avg_edge": 0.43823784599645693,
+    "final_exposure": 3.0,
+    "mode": "price_ranges"
+  },
+  "trades": [
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50081.87371238051,
+        50832.27752688279
+      ],
+      "market_price_range": [
+        50028.055062985695,
+        50861.89867225618
+      ],
+      "p_model": 0.8999335200983215,
+      "p_market": 0.25650640873258973,
+      "edge": 0.6434271113657317,
+      "gross_ev": 0.6434271113657317,
+      "fees": 0.02,
+      "net_ev": 0.6234271113657317,
+      "enter_trade": true,
+      "position_size": 1.0,
+      "trade_pnl": 0.6234271113657317
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        47531.38989132645,
+        48562.0715880866
+      ],
+      "market_price_range": [
+        47472.42164261737,
+        48485.41229467141
+      ],
+      "p_model": 0.9417879636011388,
+      "p_market": 0.47023156273734035,
+      "edge": 0.47155640086379846,
+      "gross_ev": 0.47155640086379846,
+      "fees": 0.02,
+      "net_ev": 0.45155640086379845,
+      "enter_trade": true,
+      "position_size": 1.0,
+      "trade_pnl": 0.45155640086379845
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50725.76193004277,
+        51912.43199454572
+      ],
+      "market_price_range": [
+        50691.6178437776,
+        51989.03430443355
+      ],
+      "p_model": 0.9146408269731604,
+      "p_market": 0.46604851929639873,
+      "edge": 0.44859230767676167,
+      "gross_ev": 0.44859230767676167,
+      "fees": 0.02,
+      "net_ev": 0.42859230767676165,
+      "enter_trade": true,
+      "position_size": 1.0,
+      "trade_pnl": 0.42859230767676165
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        48166.81121158525,
+        49255.31139976504
+      ],
+      "market_price_range": [
+        48261.768211347524,
+        49326.636719238544
+      ],
+      "p_model": 0.9330195991852919,
+      "p_market": 0.5789986394732389,
+      "edge": 0.35402095971205294,
+      "gross_ev": 0.35402095971205294,
+      "fees": 0.02,
+      "net_ev": 0.3340209597120529,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49304.41800001058,
+        50140.994909353634
+      ],
+      "market_price_range": [
+        49225.66298031415,
+        50206.77012088827
+      ],
+      "p_model": 0.8526865973613333,
+      "p_market": 0.6670300982442572,
+      "edge": 0.18565649911707616,
+      "gross_ev": 0.18565649911707616,
+      "fees": 0.02,
+      "net_ev": 0.16565649911707617,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        48907.922572001255,
+        50035.676776534056
+      ],
+      "market_price_range": [
+        49010.81801624635,
+        49957.70148175966
+      ],
+      "p_model": 1.0,
+      "p_market": 0.6098293719454728,
+      "edge": 0.3901706280545272,
+      "gross_ev": 0.3901706280545272,
+      "fees": 0.02,
+      "net_ev": 0.37017062805452716,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        52761.24120327185,
+        53663.70159933954
+      ],
+      "market_price_range": [
+        52792.67834652777,
+        53640.32060333984
+      ],
+      "p_model": 1.0,
+      "p_market": 0.48173348676548483,
+      "edge": 0.5182665132345152,
+      "gross_ev": 0.5182665132345152,
+      "fees": 0.02,
+      "net_ev": 0.4982665132345152,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        51207.13213399993,
+        52179.78474416275
+      ],
+      "market_price_range": [
+        51211.858267384014,
+        52126.66027827141
+      ],
+      "p_model": 1.0,
+      "p_market": 0.6018883968095063,
+      "edge": 0.39811160319049366,
+      "gross_ev": 0.39811160319049366,
+      "fees": 0.02,
+      "net_ev": 0.37811160319049364,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50549.70274460854,
+        51680.05976900179
+      ],
+      "market_price_range": [
+        50474.588304522425,
+        51748.95827645803
+      ],
+      "p_model": 0.8869928272685083,
+      "p_market": 0.43248702741810474,
+      "edge": 0.4545057998504035,
+      "gross_ev": 0.4545057998504035,
+      "fees": 0.02,
+      "net_ev": 0.4345057998504035,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49723.46144173974,
+        50932.604348447305
+      ],
+      "market_price_range": [
+        49810.5795875603,
+        50860.033575779635
+      ],
+      "p_model": 1.0,
+      "p_market": 0.20441736185060333,
+      "edge": 0.7955826381493967,
+      "gross_ev": 0.7955826381493967,
+      "fees": 0.02,
+      "net_ev": 0.7755826381493967,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49857.924510934354,
+        51009.4336851356
+      ],
+      "market_price_range": [
+        49810.67454779101,
+        51074.08609707288
+      ],
+      "p_model": 0.9114284057762211,
+      "p_market": 0.47534946532300404,
+      "edge": 0.43607894045321705,
+      "gross_ev": 0.43607894045321705,
+      "fees": 0.02,
+      "net_ev": 0.416078940453217,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        48574.70029778219,
+        49508.66615748779
+      ],
+      "market_price_range": [
+        48646.70344803431,
+        49540.12268188491
+      ],
+      "p_model": 0.964790858305628,
+      "p_market": 0.48265772368587956,
+      "edge": 0.4821331346197485,
+      "gross_ev": 0.4821331346197485,
+      "fees": 0.02,
+      "net_ev": 0.4621331346197485,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        47015.88154617458,
+        47935.509138978
+      ],
+      "market_price_range": [
+        46991.10340930885,
+        47945.363759028194
+      ],
+      "p_model": 0.963707224211808,
+      "p_market": 0.5355242964472482,
+      "edge": 0.4281829277645598,
+      "gross_ev": 0.4281829277645598,
+      "fees": 0.02,
+      "net_ev": 0.4081829277645598,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50731.867861469706,
+        51648.17384413008
+      ],
+      "market_price_range": [
+        50743.46510843866,
+        51595.868290762395
+      ],
+      "p_model": 1.0,
+      "p_market": 0.44511718623478175,
+      "edge": 0.5548828137652182,
+      "gross_ev": 0.5548828137652182,
+      "fees": 0.02,
+      "net_ev": 0.5348828137652182,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        47722.46498067353,
+        48450.4760493127
+      ],
+      "market_price_range": [
+        47786.77707928112,
+        48418.64506103454
+      ],
+      "p_model": 1.0,
+      "p_market": 0.37615625466001024,
+      "edge": 0.6238437453399898,
+      "gross_ev": 0.6238437453399898,
+      "fees": 0.02,
+      "net_ev": 0.6038437453399897,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50586.99834866203,
+        51484.45771354127
+      ],
+      "market_price_range": [
+        50536.040927375034,
+        51513.95065964992
+      ],
+      "p_model": 0.9177323174721862,
+      "p_market": 0.44383211686404234,
+      "edge": 0.47390020060814386,
+      "gross_ev": 0.47390020060814386,
+      "fees": 0.02,
+      "net_ev": 0.45390020060814384,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50264.59396926411,
+        51105.73174340812
+      ],
+      "market_price_range": [
+        50344.88695015011,
+        51036.76649842957
+      ],
+      "p_model": 1.0,
+      "p_market": 0.6334156103578703,
+      "edge": 0.3665843896421297,
+      "gross_ev": 0.3665843896421297,
+      "fees": 0.02,
+      "net_ev": 0.3465843896421297,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50286.7870020027,
+        51174.13044035405
+      ],
+      "market_price_range": [
+        50286.601587136196,
+        51112.42672650372
+      ],
+      "p_model": 0.9997754792659344,
+      "p_market": 0.6177922250466417,
+      "edge": 0.3819832542192927,
+      "gross_ev": 0.3819832542192927,
+      "fees": 0.02,
+      "net_ev": 0.36198325421929267,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50509.89592160031,
+        51486.25940531805
+      ],
+      "market_price_range": [
+        50548.6551912234,
+        51511.70003961512
+      ],
+      "p_model": 0.9735831261238203,
+      "p_market": 0.4170875663320343,
+      "edge": 0.556495559791786,
+      "gross_ev": 0.556495559791786,
+      "fees": 0.02,
+      "net_ev": 0.536495559791786,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        47488.0552448479,
+        48170.607337882844
+      ],
+      "market_price_range": [
+        47425.001401306654,
+        48226.38286000607
+      ],
+      "p_model": 0.851719347416241,
+      "p_market": 0.6198242802864498,
+      "edge": 0.23189506712979124,
+      "gross_ev": 0.23189506712979124,
+      "fees": 0.02,
+      "net_ev": 0.21189506712979125,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        48776.848773206584,
+        50088.66356467524
+      ],
+      "market_price_range": [
+        48703.714861415065,
+        50145.56751732788
+      ],
+      "p_model": 0.9098119603893687,
+      "p_market": 0.46961690128627326,
+      "edge": 0.4401950591030955,
+      "gross_ev": 0.4401950591030955,
+      "fees": 0.02,
+      "net_ev": 0.42019505910309546,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49305.84630978783,
+        50077.84101660928
+      ],
+      "market_price_range": [
+        49243.68492597072,
+        50071.01292357639
+      ],
+      "p_model": 0.9248648855145699,
+      "p_market": 0.3214180188771382,
+      "edge": 0.6034468666374317,
+      "gross_ev": 0.6034468666374317,
+      "fees": 0.02,
+      "net_ev": 0.5834468666374317,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50123.107193038915,
+        51180.16373759866
+      ],
+      "market_price_range": [
+        50191.441082073696,
+        51255.55603117533
+      ],
+      "p_model": 0.9291502354700337,
+      "p_market": 0.6551117179011261,
+      "edge": 0.2740385175689076,
+      "gross_ev": 0.2740385175689076,
+      "fees": 0.02,
+      "net_ev": 0.2540385175689076,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        48677.83979104173,
+        49733.682081766856
+      ],
+      "market_price_range": [
+        48650.956179442364,
+        49751.44092119529
+      ],
+      "p_model": 0.9594338300804682,
+      "p_market": 0.5899079609328921,
+      "edge": 0.3695258691475761,
+      "gross_ev": 0.3695258691475761,
+      "fees": 0.02,
+      "net_ev": 0.3495258691475761,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        47943.24068487244,
+        48986.26683726196
+      ],
+      "market_price_range": [
+        48038.86236578179,
+        48985.01329172548
+      ],
+      "p_model": 1.0,
+      "p_market": 0.3979167273996712,
+      "edge": 0.6020832726003288,
+      "gross_ev": 0.6020832726003288,
+      "fees": 0.02,
+      "net_ev": 0.5820832726003288,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49859.71024177792,
+        51210.90293567061
+      ],
+      "market_price_range": [
+        49836.02530066074,
+        51121.884461824644
+      ],
+      "p_model": 0.9815804546621263,
+      "p_market": 0.7550720710260783,
+      "edge": 0.22650838363604797,
+      "gross_ev": 0.22650838363604797,
+      "fees": 0.02,
+      "net_ev": 0.20650838363604798,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49080.487632973105,
+        49750.082957559585
+      ],
+      "market_price_range": [
+        49068.31231536742,
+        49686.17729918573
+      ],
+      "p_model": 0.9802945337176311,
+      "p_market": 0.7751355279448673,
+      "edge": 0.2051590057727638,
+      "gross_ev": 0.2051590057727638,
+      "fees": 0.02,
+      "net_ev": 0.1851590057727638,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        47939.009716494664,
+        49014.25303988271
+      ],
+      "market_price_range": [
+        48028.743072821366,
+        49011.38393274489
+      ],
+      "p_model": 1.0,
+      "p_market": 0.4944241966127126,
+      "edge": 0.5055758033872875,
+      "gross_ev": 0.5055758033872875,
+      "fees": 0.02,
+      "net_ev": 0.48557580338728745,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50240.35872431782,
+        51002.869575510165
+      ],
+      "market_price_range": [
+        50244.40164819095,
+        50967.332859413305
+      ],
+      "p_model": 1.0,
+      "p_market": 0.39894139840553133,
+      "edge": 0.6010586015944687,
+      "gross_ev": 0.6010586015944687,
+      "fees": 0.02,
+      "net_ev": 0.5810586015944686,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        48950.41572561765,
+        49803.51249384329
+      ],
+      "market_price_range": [
+        49032.0379633401,
+        49859.18421204896
+      ],
+      "p_model": 0.932694226332322,
+      "p_market": 0.7376964631038601,
+      "edge": 0.19499776322846196,
+      "gross_ev": 0.19499776322846196,
+      "fees": 0.02,
+      "net_ev": 0.17499776322846197,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49386.32619478106,
+        50137.76929410287
+      ],
+      "market_price_range": [
+        49445.15280642725,
+        50163.655020971135
+      ],
+      "p_model": 0.9639726554152727,
+      "p_market": 0.36874027030340506,
+      "edge": 0.5952323851118676,
+      "gross_ev": 0.5952323851118676,
+      "fees": 0.02,
+      "net_ev": 0.5752323851118676,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49708.87856079756,
+        51133.18174005672
+      ],
+      "market_price_range": [
+        49632.35146542989,
+        51021.44257750308
+      ],
+      "p_model": 0.9449085126939937,
+      "p_market": 0.749607107082565,
+      "edge": 0.19530140561142872,
+      "gross_ev": 0.19530140561142872,
+      "fees": 0.02,
+      "net_ev": 0.17530140561142873,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        47838.398361842344,
+        48606.77033890658
+      ],
+      "market_price_range": [
+        47829.96894177171,
+        48586.93439991787
+      ],
+      "p_model": 0.9888641945548223,
+      "p_market": 0.697873845879448,
+      "edge": 0.2909903486753743,
+      "gross_ev": 0.2909903486753743,
+      "fees": 0.02,
+      "net_ev": 0.2709903486753743,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        50866.08506697496,
+        51649.382544234075
+      ],
+      "market_price_range": [
+        50795.1340762529,
+        51616.62783924913
+      ],
+      "p_model": 0.9136317353606138,
+      "p_market": 0.5090342775390289,
+      "edge": 0.40459745782158496,
+      "gross_ev": 0.40459745782158496,
+      "fees": 0.02,
+      "net_ev": 0.38459745782158494,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49517.43073424837,
+        50360.28168734532
+      ],
+      "market_price_range": [
+        49573.96785837082,
+        50283.567184707426
+      ],
+      "p_model": 1.0,
+      "p_market": 0.46105823600182283,
+      "edge": 0.5389417639981772,
+      "gross_ev": 0.5389417639981772,
+      "fees": 0.02,
+      "net_ev": 0.5189417639981772,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        47562.383088393915,
+        48603.80418864723
+      ],
+      "market_price_range": [
+        47510.60196096299,
+        48685.20009881152
+      ],
+      "p_model": 0.886619062891455,
+      "p_market": 0.7360679838187181,
+      "edge": 0.1505510790727369,
+      "gross_ev": 0.1505510790727369,
+      "fees": 0.02,
+      "net_ev": 0.13055107907273691,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49772.019000399,
+        51085.45941840863
+      ],
+      "market_price_range": [
+        49700.56457589186,
+        51127.92590682284
+      ],
+      "p_model": 0.9201877545281089,
+      "p_market": 0.4241946373242261,
+      "edge": 0.4959931172038828,
+      "gross_ev": 0.4959931172038828,
+      "fees": 0.02,
+      "net_ev": 0.47599311720388277,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        49958.8439386529,
+        51327.42537673194
+      ],
+      "market_price_range": [
+        50023.86236439667,
+        51446.98825167781
+      ],
+      "p_model": 0.9159857353348456,
+      "p_market": 0.3445823450034109,
+      "edge": 0.5714033903314347,
+      "gross_ev": 0.5714033903314347,
+      "fees": 0.02,
+      "net_ev": 0.5514033903314347,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        51769.55201185288,
+        53183.23178484087
+      ],
+      "market_price_range": [
+        51867.58100156601,
+        53092.54940477815
+      ],
+      "p_model": 1.0,
+      "p_market": 0.5596296749125061,
+      "edge": 0.44037032508749385,
+      "gross_ev": 0.44037032508749385,
+      "fees": 0.02,
+      "net_ev": 0.42037032508749383,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "5m",
+      "forecast_price_range": [
+        47946.798719209466,
+        48732.06423466007
+      ],
+      "market_price_range": [
+        47903.23142855148,
+        48806.166039992866
+      ],
+      "p_model": 0.8696814868986582,
+      "p_market": 0.5004447117214055,
+      "edge": 0.36923677517725273,
+      "gross_ev": 0.36923677517725273,
+      "fees": 0.02,
+      "net_ev": 0.3492367751772527,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49214.32670635736,
+        50295.3445980691
+      ],
+      "market_price_range": [
+        49272.77604005488,
+        50215.7432450884
+      ],
+      "p_model": 1.0,
+      "p_market": 0.6065952041677145,
+      "edge": 0.3934047958322855,
+      "gross_ev": 0.3934047958322855,
+      "fees": 0.02,
+      "net_ev": 0.3734047958322855,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        46430.588056685076,
+        47418.895640221854
+      ],
+      "market_price_range": [
+        46392.18984901664,
+        47434.92927323061
+      ],
+      "p_model": 0.9477991918084194,
+      "p_market": 0.3198653909960346,
+      "edge": 0.6279338008123848,
+      "gross_ev": 0.6279338008123848,
+      "fees": 0.02,
+      "net_ev": 0.6079338008123848,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        48888.90653386606,
+        50108.72314403151
+      ],
+      "market_price_range": [
+        48830.603202358056,
+        50018.71476846307
+      ],
+      "p_model": 0.9509277300454715,
+      "p_market": 0.2742522821902068,
+      "edge": 0.6766754478552647,
+      "gross_ev": 0.6766754478552647,
+      "fees": 0.02,
+      "net_ev": 0.6566754478552647,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        50290.87161317393,
+        51174.670949173866
+      ],
+      "market_price_range": [
+        50326.05589598071,
+        51172.65306754624
+      ],
+      "p_model": 1.0,
+      "p_market": 0.5977185276581496,
+      "edge": 0.4022814723418504,
+      "gross_ev": 0.4022814723418504,
+      "fees": 0.02,
+      "net_ev": 0.3822814723418504,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        51524.6378426741,
+        52487.55647965413
+      ],
+      "market_price_range": [
+        51442.82665192795,
+        52396.05215046846
+      ],
+      "p_model": 0.9141743576190402,
+      "p_market": 0.5331188253960948,
+      "edge": 0.3810555322229454,
+      "gross_ev": 0.3810555322229454,
+      "fees": 0.02,
+      "net_ev": 0.3610555322229454,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49894.986606348575,
+        50634.733469012564
+      ],
+      "market_price_range": [
+        49948.19813728786,
+        50622.76648430852
+      ],
+      "p_model": 1.0,
+      "p_market": 0.7797391472859092,
+      "edge": 0.2202608527140908,
+      "gross_ev": 0.2202608527140908,
+      "fees": 0.02,
+      "net_ev": 0.2002608527140908,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        52417.656118989566,
+        53212.87771485544
+      ],
+      "market_price_range": [
+        52369.249244382976,
+        53207.68994488229
+      ],
+      "p_model": 0.9422655954347611,
+      "p_market": 0.6708580695513126,
+      "edge": 0.2714075258834485,
+      "gross_ev": 0.2714075258834485,
+      "fees": 0.02,
+      "net_ev": 0.2514075258834485,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49828.705070878925,
+        51118.1099398921
+      ],
+      "market_price_range": [
+        49743.75169887451,
+        51194.65342067066
+      ],
+      "p_model": 0.8886920799962629,
+      "p_market": 0.33958444517986025,
+      "edge": 0.5491076348164026,
+      "gross_ev": 0.5491076348164026,
+      "fees": 0.02,
+      "net_ev": 0.5291076348164026,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49383.49084860579,
+        50128.51138975949
+      ],
+      "market_price_range": [
+        49328.696233736686,
+        50143.87478079096
+      ],
+      "p_model": 0.913935411874988,
+      "p_market": 0.44754294156420826,
+      "edge": 0.4663924703107797,
+      "gross_ev": 0.4663924703107797,
+      "fees": 0.02,
+      "net_ev": 0.44639247031077967,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        48196.020339258925,
+        49173.397326238315
+      ],
+      "market_price_range": [
+        48124.18496197788,
+        49164.38530194099
+      ],
+      "p_model": 0.9309408250303091,
+      "p_market": 0.34870373777081487,
+      "edge": 0.5822370872594942,
+      "gross_ev": 0.5822370872594942,
+      "fees": 0.02,
+      "net_ev": 0.5622370872594942,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        47700.48039750351,
+        48437.25185867439
+      ],
+      "market_price_range": [
+        47653.83263142573,
+        48379.087890501985
+      ],
+      "p_model": 0.9356808992502913,
+      "p_market": 0.23993531417310693,
+      "edge": 0.6957455850771843,
+      "gross_ev": 0.6957455850771843,
+      "fees": 0.02,
+      "net_ev": 0.6757455850771843,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        48906.63989870509,
+        49988.613230930816
+      ],
+      "market_price_range": [
+        48836.38429950461,
+        49947.5706669584
+      ],
+      "p_model": 0.9367742430448719,
+      "p_market": 0.28632315978268563,
+      "edge": 0.6504510832621863,
+      "gross_ev": 0.6504510832621863,
+      "fees": 0.02,
+      "net_ev": 0.6304510832621862,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        50613.83443515662,
+        51718.17829302861
+      ],
+      "market_price_range": [
+        50661.38304611528,
+        51641.672310134854
+      ],
+      "p_model": 1.0,
+      "p_market": 0.269294038199213,
+      "edge": 0.730705961800787,
+      "gross_ev": 0.730705961800787,
+      "fees": 0.02,
+      "net_ev": 0.7107059618007869,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49174.70588283908,
+        50110.772885236926
+      ],
+      "market_price_range": [
+        49235.617359440206,
+        50027.159999128446
+      ],
+      "p_model": 1.0,
+      "p_market": 0.5546862896665827,
+      "edge": 0.44531371033341727,
+      "gross_ev": 0.44531371033341727,
+      "fees": 0.02,
+      "net_ev": 0.42531371033341725,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        51000.42220740953,
+        52037.72524604996
+      ],
+      "market_price_range": [
+        51038.18188504778,
+        52038.664262933315
+      ],
+      "p_model": 0.9990614358592296,
+      "p_market": 0.7250029653407652,
+      "edge": 0.2740584705184643,
+      "gross_ev": 0.2740584705184643,
+      "fees": 0.02,
+      "net_ev": 0.2540584705184643,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        48379.68363828493,
+        49455.64226108653
+      ],
+      "market_price_range": [
+        48448.22254479906,
+        49398.99193690013
+      ],
+      "p_model": 1.0,
+      "p_market": 0.3496325454993271,
+      "edge": 0.6503674545006729,
+      "gross_ev": 0.6503674545006729,
+      "fees": 0.02,
+      "net_ev": 0.6303674545006729,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        51813.73076740609,
+        52906.33394001964
+      ],
+      "market_price_range": [
+        51912.228043128,
+        52878.71602236113
+      ],
+      "p_model": 1.0,
+      "p_market": 0.5142517692305824,
+      "edge": 0.48574823076941764,
+      "gross_ev": 0.48574823076941764,
+      "fees": 0.02,
+      "net_ev": 0.4657482307694176,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        47688.44563765421,
+        48974.31994639554
+      ],
+      "market_price_range": [
+        47803.669782704,
+        49083.57859632513
+      ],
+      "p_model": 0.9146355984372997,
+      "p_market": 0.25946788494792533,
+      "edge": 0.6551677134893743,
+      "gross_ev": 0.6551677134893743,
+      "fees": 0.02,
+      "net_ev": 0.6351677134893743,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        50836.62728175155,
+        51945.688162923
+      ],
+      "market_price_range": [
+        50730.252665432476,
+        52012.68118170556
+      ],
+      "p_model": 0.864813022401074,
+      "p_market": 0.6676865244627974,
+      "edge": 0.19712649793827663,
+      "gross_ev": 0.19712649793827663,
+      "fees": 0.02,
+      "net_ev": 0.17712649793827664,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49613.760739830796,
+        50543.63965523794
+      ],
+      "market_price_range": [
+        49681.72517904654,
+        50550.34743746751
+      ],
+      "p_model": 0.9922776763264509,
+      "p_market": 0.5085337221142487,
+      "edge": 0.4837439542122022,
+      "gross_ev": 0.4837439542122022,
+      "fees": 0.02,
+      "net_ev": 0.46374395421220216,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        52015.23697240149,
+        52399.23894657798
+      ],
+      "market_price_range": [
+        52024.06214447171,
+        52409.957461913495
+      ],
+      "p_model": 0.9722242928300531,
+      "p_market": 0.35987799050050767,
+      "edge": 0.6123463023295455,
+      "gross_ev": 0.6123463023295455,
+      "fees": 0.02,
+      "net_ev": 0.5923463023295454,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49152.934741915495,
+        49731.32151412063
+      ],
+      "market_price_range": [
+        49162.54875988236,
+        49700.38591334301
+      ],
+      "p_model": 1.0,
+      "p_market": 0.42050708606907683,
+      "edge": 0.5794929139309232,
+      "gross_ev": 0.5794929139309232,
+      "fees": 0.02,
+      "net_ev": 0.5594929139309232,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        50835.16504732203,
+        51756.31899377253
+      ],
+      "market_price_range": [
+        50857.37147505175,
+        51790.53863791127
+      ],
+      "p_model": 0.9633295667692858,
+      "p_market": 0.3781258847427712,
+      "edge": 0.5852036820265146,
+      "gross_ev": 0.5852036820265146,
+      "fees": 0.02,
+      "net_ev": 0.5652036820265146,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        51380.14826300991,
+        52519.985521086965
+      ],
+      "market_price_range": [
+        51384.50006402277,
+        52480.85746339354
+      ],
+      "p_model": 1.0,
+      "p_market": 0.521260873898002,
+      "edge": 0.478739126101998,
+      "gross_ev": 0.478739126101998,
+      "fees": 0.02,
+      "net_ev": 0.45873912610199796,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        52063.22261020309,
+        53168.58096830028
+      ],
+      "market_price_range": [
+        51995.93019997153,
+        53175.814937569325
+      ],
+      "p_model": 0.9368358813994523,
+      "p_market": 0.5797505775605725,
+      "edge": 0.3570853038388798,
+      "gross_ev": 0.3570853038388798,
+      "fees": 0.02,
+      "net_ev": 0.3370853038388798,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        48335.1141928982,
+        49572.61433720096
+      ],
+      "market_price_range": [
+        48408.76906468835,
+        49620.82688070553
+      ],
+      "p_model": 0.960222571178169,
+      "p_market": 0.7164314409955366,
+      "edge": 0.24379113018263243,
+      "gross_ev": 0.24379113018263243,
+      "fees": 0.02,
+      "net_ev": 0.22379113018263244,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49465.046630628916,
+        50746.14593306107
+      ],
+      "market_price_range": [
+        49568.7911415278,
+        50803.97876084638
+      ],
+      "p_model": 0.9531789123524255,
+      "p_market": 0.25069593129411216,
+      "edge": 0.7024829810583133,
+      "gross_ev": 0.7024829810583133,
+      "fees": 0.02,
+      "net_ev": 0.6824829810583133,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        47149.97399726792,
+        48133.905235772356
+      ],
+      "market_price_range": [
+        47059.672675531416,
+        48193.11510477671
+      ],
+      "p_model": 0.8680910588106212,
+      "p_market": 0.5562092026798126,
+      "edge": 0.31188185613080865,
+      "gross_ev": 0.31188185613080865,
+      "fees": 0.02,
+      "net_ev": 0.29188185613080864,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        50540.172367775995,
+        51372.429064917094
+      ],
+      "market_price_range": [
+        50465.930565748815,
+        51331.37939483833
+      ],
+      "p_model": 0.9142158386125673,
+      "p_market": 0.5540455372149855,
+      "edge": 0.36017030139758177,
+      "gross_ev": 0.36017030139758177,
+      "fees": 0.02,
+      "net_ev": 0.34017030139758175,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        48455.848447318975,
+        49530.73072049128
+      ],
+      "market_price_range": [
+        48441.885595138294,
+        49546.30157660563
+      ],
+      "p_model": 0.9732585286788502,
+      "p_market": 0.47959109178873643,
+      "edge": 0.4936674368901138,
+      "gross_ev": 0.4936674368901138,
+      "fees": 0.02,
+      "net_ev": 0.47366743689011376,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49947.90606475748,
+        50965.1941223333
+      ],
+      "market_price_range": [
+        49887.0224494774,
+        50963.597635316204
+      ],
+      "p_model": 0.9434469453866869,
+      "p_market": 0.5597560649135674,
+      "edge": 0.3836908804731195,
+      "gross_ev": 0.3836908804731195,
+      "fees": 0.02,
+      "net_ev": 0.3636908804731195,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        48542.43610347814,
+        49684.25362094855
+      ],
+      "market_price_range": [
+        48629.87567464458,
+        49590.10140744945
+      ],
+      "p_model": 1.0,
+      "p_market": 0.5947179710243168,
+      "edge": 0.4052820289756832,
+      "gross_ev": 0.4052820289756832,
+      "fees": 0.02,
+      "net_ev": 0.3852820289756832,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        50838.38921814772,
+        51701.36273938249
+      ],
+      "market_price_range": [
+        50808.83558300994,
+        51672.6494984833
+      ],
+      "p_model": 0.9657870351375546,
+      "p_market": 0.7390199284169217,
+      "edge": 0.22676710672063294,
+      "gross_ev": 0.22676710672063294,
+      "fees": 0.02,
+      "net_ev": 0.20676710672063295,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49819.16015033424,
+        50884.04252776185
+      ],
+      "market_price_range": [
+        49848.084055731946,
+        50844.522609754735
+      ],
+      "p_model": 1.0,
+      "p_market": 0.2945669891749998,
+      "edge": 0.7054330108250002,
+      "gross_ev": 0.7054330108250002,
+      "fees": 0.02,
+      "net_ev": 0.6854330108250002,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49955.111886901,
+        51195.06970615948
+      ],
+      "market_price_range": [
+        49970.511161824965,
+        51166.13400753955
+      ],
+      "p_model": 1.0,
+      "p_market": 0.6378114252064269,
+      "edge": 0.36218857479357314,
+      "gross_ev": 0.36218857479357314,
+      "fees": 0.02,
+      "net_ev": 0.3421885747935731,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        48483.287658855996,
+        49285.94765470632
+      ],
+      "market_price_range": [
+        48438.29029966836,
+        49282.635810591484
+      ],
+      "p_model": 0.9467074099340711,
+      "p_market": 0.4258156840884958,
+      "edge": 0.5208917258455753,
+      "gross_ev": 0.5208917258455753,
+      "fees": 0.02,
+      "net_ev": 0.5008917258455753,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        51390.6256077475,
+        52596.25616356346
+      ],
+      "market_price_range": [
+        51281.830794003174,
+        52504.26138756236
+      ],
+      "p_model": 0.9110012344933542,
+      "p_market": 0.7103202075144697,
+      "edge": 0.20068102697888457,
+      "gross_ev": 0.20068102697888457,
+      "fees": 0.02,
+      "net_ev": 0.18068102697888458,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        49432.68014174891,
+        49951.83479165295
+      ],
+      "market_price_range": [
+        49423.51623153386,
+        49971.1573513079
+      ],
+      "p_model": 0.9479833255001917,
+      "p_market": 0.2073816115331617,
+      "edge": 0.74060171396703,
+      "gross_ev": 0.74060171396703,
+      "fees": 0.02,
+      "net_ev": 0.72060171396703,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        51656.597172217866,
+        52272.05488236372
+      ],
+      "market_price_range": [
+        51681.78674535061,
+        52266.95250283224
+      ],
+      "p_model": 1.0,
+      "p_market": 0.465388476240736,
+      "edge": 0.534611523759264,
+      "gross_ev": 0.534611523759264,
+      "fees": 0.02,
+      "net_ev": 0.514611523759264,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "15m",
+      "forecast_price_range": [
+        50096.552367887954,
+        51222.35745016302
+      ],
+      "market_price_range": [
+        50033.21591694746,
+        51134.67714196354
+      ],
+      "p_model": 0.9424977933839039,
+      "p_market": 0.7982207947025439,
+      "edge": 0.14427699868136,
+      "gross_ev": 0.14427699868136,
+      "fees": 0.02,
+      "net_ev": 0.12427699868136001,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        49638.14350212218,
+        50524.917254048974
+      ],
+      "market_price_range": [
+        49578.39329333073,
+        50455.11388936747
+      ],
+      "p_model": 0.9318480607601203,
+      "p_market": 0.7994628382845432,
+      "edge": 0.13238522247557705,
+      "gross_ev": 0.13238522247557705,
+      "fees": 0.02,
+      "net_ev": 0.11238522247557704,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        48489.848589520574,
+        49523.02653321466
+      ],
+      "market_price_range": [
+        48574.47811102365,
+        49605.06776434464
+      ],
+      "p_model": 0.9203938921125303,
+      "p_market": 0.21739970192268165,
+      "edge": 0.7029941901898487,
+      "gross_ev": 0.7029941901898487,
+      "fees": 0.02,
+      "net_ev": 0.6829941901898486,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        48464.543475354956,
+        49421.4367360354
+      ],
+      "market_price_range": [
+        48411.5759999108,
+        49363.67946881904
+      ],
+      "p_model": 0.9443679419581413,
+      "p_market": 0.7463829362785313,
+      "edge": 0.19798500567961008,
+      "gross_ev": 0.19798500567961008,
+      "fees": 0.02,
+      "net_ev": 0.1779850056796101,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        50313.651538628015,
+        51249.85022856833
+      ],
+      "market_price_range": [
+        50406.25472690247,
+        51165.902775421084
+      ],
+      "p_model": 1.0,
+      "p_market": 0.5635551065886366,
+      "edge": 0.4364448934113634,
+      "gross_ev": 0.4364448934113634,
+      "fees": 0.02,
+      "net_ev": 0.41644489341136337,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        47733.153755581,
+        48377.429260194716
+      ],
+      "market_price_range": [
+        47688.130643862845,
+        48320.3763381578
+      ],
+      "p_model": 0.9287885831023952,
+      "p_market": 0.6805783121850058,
+      "edge": 0.24821027091738945,
+      "gross_ev": 0.24821027091738945,
+      "fees": 0.02,
+      "net_ev": 0.22821027091738946,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        49048.939090593114,
+        50096.408710259166
+      ],
+      "market_price_range": [
+        49007.43399014471,
+        50167.21351347708
+      ],
+      "p_model": 0.9031627120440778,
+      "p_market": 0.22409077972823988,
+      "edge": 0.679071932315838,
+      "gross_ev": 0.679071932315838,
+      "fees": 0.02,
+      "net_ev": 0.6590719323158379,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        48183.38694304098,
+        49508.24755653764
+      ],
+      "market_price_range": [
+        48148.93742860752,
+        49601.28751038731
+      ],
+      "p_model": 0.9122185002896108,
+      "p_market": 0.29312779546465456,
+      "edge": 0.6190907048249563,
+      "gross_ev": 0.6190907048249563,
+      "fees": 0.02,
+      "net_ev": 0.5990907048249563,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        47385.77129360051,
+        48172.619168704434
+      ],
+      "market_price_range": [
+        47421.84689148286,
+        48205.65178271046
+      ],
+      "p_model": 0.9578560756946898,
+      "p_market": 0.7881228709392092,
+      "edge": 0.1697332047554806,
+      "gross_ev": 0.1697332047554806,
+      "fees": 0.02,
+      "net_ev": 0.1497332047554806,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        47379.58843074325,
+        48473.86702312563
+      ],
+      "market_price_range": [
+        47354.1335475645,
+        48373.707825281344
+      ],
+      "p_model": 0.9750338119202568,
+      "p_market": 0.7304874268200905,
+      "edge": 0.24454638510016635,
+      "gross_ev": 0.24454638510016635,
+      "fees": 0.02,
+      "net_ev": 0.22454638510016636,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        46642.24562224049,
+        47865.03690021692
+      ],
+      "market_price_range": [
+        46742.09362085232,
+        47787.64233971802
+      ],
+      "p_model": 1.0,
+      "p_market": 0.7880163077325155,
+      "edge": 0.21198369226748448,
+      "gross_ev": 0.21198369226748448,
+      "fees": 0.02,
+      "net_ev": 0.1919836922674845,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        48467.228232085276,
+        49569.92193785206
+      ],
+      "market_price_range": [
+        48437.14490803401,
+        49585.891843786885
+      ],
+      "p_model": 0.959910030179179,
+      "p_market": 0.2870781527990298,
+      "edge": 0.6728318773801492,
+      "gross_ev": 0.6728318773801492,
+      "fees": 0.02,
+      "net_ev": 0.6528318773801491,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        51522.12682139597,
+        52439.858145188526
+      ],
+      "market_price_range": [
+        51507.80705284764,
+        52476.52627460645
+      ],
+      "p_model": 0.9473656588813426,
+      "p_market": 0.5895398931471854,
+      "edge": 0.35782576573415725,
+      "gross_ev": 0.35782576573415725,
+      "fees": 0.02,
+      "net_ev": 0.33782576573415724,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        51125.883413284166,
+        52217.89392044796
+      ],
+      "market_price_range": [
+        51124.059157654636,
+        52196.93483072047
+      ],
+      "p_model": 0.9982996579423625,
+      "p_market": 0.48450123768957093,
+      "edge": 0.5137984202527917,
+      "gross_ev": 0.5137984202527917,
+      "fees": 0.02,
+      "net_ev": 0.49379842025279164,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        52607.145057364694,
+        53623.796529796564
+      ],
+      "market_price_range": [
+        52652.26902199472,
+        53584.08706036742
+      ],
+      "p_model": 1.0,
+      "p_market": 0.45674192820881004,
+      "edge": 0.5432580717911899,
+      "gross_ev": 0.5432580717911899,
+      "fees": 0.02,
+      "net_ev": 0.5232580717911899,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        50002.709100681845,
+        50996.50201717292
+      ],
+      "market_price_range": [
+        50020.237441938836,
+        50978.3718782301
+      ],
+      "p_model": 1.0,
+      "p_market": 0.3305771160181772,
+      "edge": 0.6694228839818228,
+      "gross_ev": 0.6694228839818228,
+      "fees": 0.02,
+      "net_ev": 0.6494228839818228,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        46524.610939571816,
+        47256.438752454305
+      ],
+      "market_price_range": [
+        46592.51580292964,
+        47244.49533001111
+      ],
+      "p_model": 1.0,
+      "p_market": 0.48447960505410226,
+      "edge": 0.5155203949458977,
+      "gross_ev": 0.5155203949458977,
+      "fees": 0.02,
+      "net_ev": 0.4955203949458977,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        51274.44098882194,
+        52043.53912089995
+      ],
+      "market_price_range": [
+        51264.32397966886,
+        52074.61102193348
+      ],
+      "p_model": 0.949167507268172,
+      "p_market": 0.588769089320726,
+      "edge": 0.360398417947446,
+      "gross_ev": 0.360398417947446,
+      "fees": 0.02,
+      "net_ev": 0.34039841794744596,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        49703.68794008603,
+        50852.289008160114
+      ],
+      "market_price_range": [
+        49637.65894865163,
+        50863.5784674586
+      ],
+      "p_model": 0.9369302392638889,
+      "p_market": 0.45885091710793413,
+      "edge": 0.4780793221559547,
+      "gross_ev": 0.4780793221559547,
+      "fees": 0.02,
+      "net_ev": 0.4580793221559547,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        49197.7877463519,
+        50821.2294407349
+      ],
+      "market_price_range": [
+        49193.651462181995,
+        50898.08501853084
+      ],
+      "p_model": 0.952481654879326,
+      "p_market": 0.7318417320342248,
+      "edge": 0.22063992284510126,
+      "gross_ev": 0.22063992284510126,
+      "fees": 0.02,
+      "net_ev": 0.20063992284510127,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        50377.979626321816,
+        51364.351659667576
+      ],
+      "market_price_range": [
+        50373.97986509123,
+        51423.50841802864
+      ],
+      "p_model": 0.9398239148283357,
+      "p_market": 0.3886704150465208,
+      "edge": 0.5511534997818149,
+      "gross_ev": 0.5511534997818149,
+      "fees": 0.02,
+      "net_ev": 0.5311534997818149,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        48142.82398786373,
+        49302.56444457896
+      ],
+      "market_price_range": [
+        48063.49931531085,
+        49199.47927217389
+      ],
+      "p_model": 0.9301707111347877,
+      "p_market": 0.3683668616801936,
+      "edge": 0.561803849454594,
+      "gross_ev": 0.561803849454594,
+      "fees": 0.02,
+      "net_ev": 0.541803849454594,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        50217.98913562861,
+        51143.90760229748
+      ],
+      "market_price_range": [
+        50252.45304876258,
+        51188.85030914828
+      ],
+      "p_model": 0.952004657903111,
+      "p_market": 0.20880970613604247,
+      "edge": 0.7431949517670685,
+      "gross_ev": 0.7431949517670685,
+      "fees": 0.02,
+      "net_ev": 0.7231949517670685,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        46693.18930694127,
+        47334.37470768674
+      ],
+      "market_price_range": [
+        46709.57010981802,
+        47289.95503826097
+      ],
+      "p_model": 1.0,
+      "p_market": 0.5605042447670485,
+      "edge": 0.4394957552329515,
+      "gross_ev": 0.4394957552329515,
+      "fees": 0.02,
+      "net_ev": 0.41949575523295146,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        47601.98827647966,
+        47890.50135539765
+      ],
+      "market_price_range": [
+        47575.535713590136,
+        47919.09095249358
+      ],
+      "p_model": 0.8397865794125898,
+      "p_market": 0.6632629348127514,
+      "edge": 0.17652364459983838,
+      "gross_ev": 0.17652364459983838,
+      "fees": 0.02,
+      "net_ev": 0.1565236445998384,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        48604.83194578573,
+        49716.4511960658
+      ],
+      "market_price_range": [
+        48559.16521178531,
+        49691.51573091883
+      ],
+      "p_model": 0.9596708499455054,
+      "p_market": 0.5845331807516957,
+      "edge": 0.37513766919380975,
+      "gross_ev": 0.37513766919380975,
+      "fees": 0.02,
+      "net_ev": 0.35513766919380974,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        49275.95228766562,
+        50465.745756871234
+      ],
+      "market_price_range": [
+        49269.98230786084,
+        50385.73245742676
+      ],
+      "p_model": 0.9946493578270161,
+      "p_market": 0.2995441207259202,
+      "edge": 0.695105237101096,
+      "gross_ev": 0.695105237101096,
+      "fees": 0.02,
+      "net_ev": 0.6751052371010959,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        50651.25067890094,
+        52042.1955463307
+      ],
+      "market_price_range": [
+        50635.680601171116,
+        52136.52100770485
+      ],
+      "p_model": 0.9267773318031993,
+      "p_market": 0.7941929985957636,
+      "edge": 0.13258433320743568,
+      "gross_ev": 0.13258433320743568,
+      "fees": 0.02,
+      "net_ev": 0.11258433320743567,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        49044.52545290942,
+        50381.4425870054
+      ],
+      "market_price_range": [
+        49073.24972828149,
+        50269.15472637154
+      ],
+      "p_model": 1.0,
+      "p_market": 0.6531981036768468,
+      "edge": 0.34680189632315317,
+      "gross_ev": 0.34680189632315317,
+      "fees": 0.02,
+      "net_ev": 0.32680189632315315,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        49699.577072383654,
+        51075.109397584434
+      ],
+      "market_price_range": [
+        49795.67919570088,
+        50987.33025779114
+      ],
+      "p_model": 1.0,
+      "p_market": 0.7442621732937291,
+      "edge": 0.2557378267062709,
+      "gross_ev": 0.2557378267062709,
+      "fees": 0.02,
+      "net_ev": 0.2357378267062709,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        50366.39201462637,
+        50990.60983730304
+      ],
+      "market_price_range": [
+        50392.352069041764,
+        50989.38606455525
+      ],
+      "p_model": 1.0,
+      "p_market": 0.5518671038088776,
+      "edge": 0.4481328961911224,
+      "gross_ev": 0.4481328961911224,
+      "fees": 0.02,
+      "net_ev": 0.4281328961911224,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        46002.99743566179,
+        46814.22164963679
+      ],
+      "market_price_range": [
+        46044.586069281766,
+        46869.967094108775
+      ],
+      "p_model": 0.9324609570668676,
+      "p_market": 0.5825532202870756,
+      "edge": 0.34990773677979203,
+      "gross_ev": 0.34990773677979203,
+      "fees": 0.02,
+      "net_ev": 0.329907736779792,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        49261.565370099124,
+        50200.754753551606
+      ],
+      "market_price_range": [
+        49212.18222522722,
+        50117.75079003062
+      ],
+      "p_model": 0.945467249205335,
+      "p_market": 0.4199650309595675,
+      "edge": 0.5255022182457675,
+      "gross_ev": 0.5255022182457675,
+      "fees": 0.02,
+      "net_ev": 0.5055022182457675,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        50480.75454490232,
+        51639.79437779484
+      ],
+      "market_price_range": [
+        50400.90159775636,
+        51635.75454744789
+      ],
+      "p_model": 0.9353340434859854,
+      "p_market": 0.6611765536756276,
+      "edge": 0.2741574898103578,
+      "gross_ev": 0.2741574898103578,
+      "fees": 0.02,
+      "net_ev": 0.2541574898103578,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        52563.0612546229,
+        53542.1586535703
+      ],
+      "market_price_range": [
+        52482.8629472814,
+        53559.21921928346
+      ],
+      "p_model": 0.9096406314669789,
+      "p_market": 0.7101645793002331,
+      "edge": 0.1994760521667458,
+      "gross_ev": 0.1994760521667458,
+      "fees": 0.02,
+      "net_ev": 0.1794760521667458,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        47739.9479961861,
+        48526.63664101068
+      ],
+      "market_price_range": [
+        47755.90951439086,
+        48592.29960362146
+      ],
+      "p_model": 0.921492419080209,
+      "p_market": 0.5784993442188455,
+      "edge": 0.34299307486136343,
+      "gross_ev": 0.34299307486136343,
+      "fees": 0.02,
+      "net_ev": 0.3229930748613634,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        48243.67493617304,
+        49459.71923153783
+      ],
+      "market_price_range": [
+        48318.67981633451,
+        49344.1520085647
+      ],
+      "p_model": 1.0,
+      "p_market": 0.7564762751024161,
+      "edge": 0.2435237248975839,
+      "gross_ev": 0.2435237248975839,
+      "fees": 0.02,
+      "net_ev": 0.2235237248975839,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        50300.08505074637,
+        51345.19871174303
+      ],
+      "market_price_range": [
+        50279.50107910766,
+        51242.216234282285
+      ],
+      "p_model": 0.9786188349398334,
+      "p_market": 0.3668132639604883,
+      "edge": 0.6118055709793451,
+      "gross_ev": 0.6118055709793451,
+      "fees": 0.02,
+      "net_ev": 0.591805570979345,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        48127.67661312788,
+        49173.23902740886
+      ],
+      "market_price_range": [
+        48026.92497518237,
+        49198.407327906345
+      ],
+      "p_model": 0.8925123044745872,
+      "p_market": 0.4865035241766397,
+      "edge": 0.40600878029794746,
+      "gross_ev": 0.40600878029794746,
+      "fees": 0.02,
+      "net_ev": 0.38600878029794744,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        49077.609478004866,
+        50164.83851908624
+      ],
+      "market_price_range": [
+        49029.620069500634,
+        50265.56185896579
+      ],
+      "p_model": 0.8796765756677446,
+      "p_market": 0.6692031024429064,
+      "edge": 0.21047347322483823,
+      "gross_ev": 0.21047347322483823,
+      "fees": 0.02,
+      "net_ev": 0.19047347322483824,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1h",
+      "forecast_price_range": [
+        47806.07288994404,
+        48977.52804577539
+      ],
+      "market_price_range": [
+        47751.620490670655,
+        48963.49136640915
+      ],
+      "p_model": 0.9550674907999595,
+      "p_market": 0.5318622814467652,
+      "edge": 0.4232052093531943,
+      "gross_ev": 0.4232052093531943,
+      "fees": 0.02,
+      "net_ev": 0.40320520935319426,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        49659.83861464494,
+        51046.506490284846
+      ],
+      "market_price_range": [
+        49525.448842892845,
+        50987.775073494886
+      ],
+      "p_model": 0.90809863836145,
+      "p_market": 0.6402520984627498,
+      "edge": 0.2678465398987002,
+      "gross_ev": 0.2678465398987002,
+      "fees": 0.02,
+      "net_ev": 0.24784653989870023,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        47176.0895825526,
+        47868.632972909596
+      ],
+      "market_price_range": [
+        47137.675152586344,
+        47867.20629876487
+      ],
+      "p_model": 0.9473436738547992,
+      "p_market": 0.7913241016969559,
+      "edge": 0.15601957215784334,
+      "gross_ev": 0.15601957215784334,
+      "fees": 0.02,
+      "net_ev": 0.13601957215784335,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        50075.48502688831,
+        50649.494132574204
+      ],
+      "market_price_range": [
+        50085.63626286866,
+        50683.20937929397
+      ],
+      "p_model": 0.943579713020807,
+      "p_market": 0.2508915633870993,
+      "edge": 0.6926881496337077,
+      "gross_ev": 0.6926881496337077,
+      "fees": 0.02,
+      "net_ev": 0.6726881496337077,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        48635.01252931689,
+        49482.22486137236
+      ],
+      "market_price_range": [
+        48563.05003133425,
+        49536.884136869085
+      ],
+      "p_model": 0.8699760331254504,
+      "p_market": 0.22218243632070456,
+      "edge": 0.6477935968047458,
+      "gross_ev": 0.6477935968047458,
+      "fees": 0.02,
+      "net_ev": 0.6277935968047458,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        46907.0398911314,
+        48036.16815671418
+      ],
+      "market_price_range": [
+        46995.27397292466,
+        48075.75666580302
+      ],
+      "p_model": 0.9633603487128716,
+      "p_market": 0.627954917787019,
+      "edge": 0.3354054309258526,
+      "gross_ev": 0.3354054309258526,
+      "fees": 0.02,
+      "net_ev": 0.3154054309258526,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        50266.27508983148,
+        51072.69135279771
+      ],
+      "market_price_range": [
+        50227.65880382241,
+        51121.21690278558
+      ],
+      "p_model": 0.9024777055928951,
+      "p_market": 0.22937822589396756,
+      "edge": 0.6730994796989276,
+      "gross_ev": 0.6730994796989276,
+      "fees": 0.02,
+      "net_ev": 0.6530994796989276,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        48404.89333602812,
+        49753.17625979318
+      ],
+      "market_price_range": [
+        48308.32248946936,
+        49619.56145673886
+      ],
+      "p_model": 0.9263514515894407,
+      "p_market": 0.5087776052698099,
+      "edge": 0.4175738463196308,
+      "gross_ev": 0.4175738463196308,
+      "fees": 0.02,
+      "net_ev": 0.3975738463196308,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        48513.964743599085,
+        49627.03745401507
+      ],
+      "market_price_range": [
+        48535.924430983396,
+        49715.11153296644
+      ],
+      "p_model": 0.9253094960051284,
+      "p_market": 0.6029676853135153,
+      "edge": 0.32234181069161305,
+      "gross_ev": 0.32234181069161305,
+      "fees": 0.02,
+      "net_ev": 0.30234181069161303,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        48228.65456094289,
+        48649.58728151981
+      ],
+      "market_price_range": [
+        48241.44827022017,
+        48679.334149265014
+      ],
+      "p_model": 0.9320670769057641,
+      "p_market": 0.37936619067134336,
+      "edge": 0.5527008862344207,
+      "gross_ev": 0.5527008862344207,
+      "fees": 0.02,
+      "net_ev": 0.5327008862344207,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        46632.00101621324,
+        47557.484861926205
+      ],
+      "market_price_range": [
+        46673.680171810316,
+        47629.03541877186
+      ],
+      "p_model": 0.9251058105629084,
+      "p_market": 0.3125562091636948,
+      "edge": 0.6125496013992136,
+      "gross_ev": 0.6125496013992136,
+      "fees": 0.02,
+      "net_ev": 0.5925496013992135,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        50306.40082868039,
+        51432.28259874905
+      ],
+      "market_price_range": [
+        50257.3936389238,
+        51501.50892789137
+      ],
+      "p_model": 0.9049657857697215,
+      "p_market": 0.799246022040059,
+      "edge": 0.10571976372966252,
+      "gross_ev": 0.10571976372966252,
+      "fees": 0.02,
+      "net_ev": 0.08571976372966252,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        49798.41951810381,
+        50717.46147920737
+      ],
+      "market_price_range": [
+        49865.17481507796,
+        50731.22356921384
+      ],
+      "p_model": 0.984109335714935,
+      "p_market": 0.7985480223577504,
+      "edge": 0.18556131335718462,
+      "gross_ev": 0.18556131335718462,
+      "fees": 0.02,
+      "net_ev": 0.16556131335718463,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        47801.507460938985,
+        48386.146275617255
+      ],
+      "market_price_range": [
+        47814.092502126376,
+        48434.70623160739
+      ],
+      "p_model": 0.9217549440442669,
+      "p_market": 0.49814995767820974,
+      "edge": 0.4236049863660572,
+      "gross_ev": 0.4236049863660572,
+      "fees": 0.02,
+      "net_ev": 0.4036049863660572,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        49038.59438595822,
+        50438.88741262691
+      ],
+      "market_price_range": [
+        49159.81308502267,
+        50355.42407856181
+      ],
+      "p_model": 1.0,
+      "p_market": 0.21060126859994732,
+      "edge": 0.7893987314000527,
+      "gross_ev": 0.7893987314000527,
+      "fees": 0.02,
+      "net_ev": 0.7693987314000527,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        48175.141594446395,
+        49217.71666195926
+      ],
+      "market_price_range": [
+        48207.81746876941,
+        49201.115066969636
+      ],
+      "p_model": 1.0,
+      "p_market": 0.7755255637067457,
+      "edge": 0.22447443629325425,
+      "gross_ev": 0.22447443629325425,
+      "fees": 0.02,
+      "net_ev": 0.20447443629325426,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        49581.946531658934,
+        50365.364988908725
+      ],
+      "market_price_range": [
+        49615.70546270299,
+        50427.5679138343
+      ],
+      "p_model": 0.9233824340085026,
+      "p_market": 0.34105827012839574,
+      "edge": 0.5823241638801069,
+      "gross_ev": 0.5823241638801069,
+      "fees": 0.02,
+      "net_ev": 0.5623241638801069,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        47018.664470755924,
+        48134.360511282044
+      ],
+      "market_price_range": [
+        47012.072479933806,
+        48188.431147624855
+      ],
+      "p_model": 0.9484318611057649,
+      "p_market": 0.5544468764982597,
+      "edge": 0.3939849846075052,
+      "gross_ev": 0.3939849846075052,
+      "fees": 0.02,
+      "net_ev": 0.3739849846075052,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        49994.219611795736,
+        50822.88965402698
+      ],
+      "market_price_range": [
+        50037.08305671854,
+        50793.47060019336
+      ],
+      "p_model": 1.0,
+      "p_market": 0.2932649384500535,
+      "edge": 0.7067350615499465,
+      "gross_ev": 0.7067350615499465,
+      "fees": 0.02,
+      "net_ev": 0.6867350615499465,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        53023.480792179114,
+        54124.326055873105
+      ],
+      "market_price_range": [
+        52959.19705957179,
+        54186.81534217879
+      ],
+      "p_model": 0.8967325424285874,
+      "p_market": 0.4630317551505158,
+      "edge": 0.43370078727807154,
+      "gross_ev": 0.43370078727807154,
+      "fees": 0.02,
+      "net_ev": 0.4137007872780715,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        50287.420800844404,
+        51587.834802900055
+      ],
+      "market_price_range": [
+        50242.01100008698,
+        51669.66685130315
+      ],
+      "p_model": 0.9108735840979318,
+      "p_market": 0.7415323815315393,
+      "edge": 0.1693412025663925,
+      "gross_ev": 0.1693412025663925,
+      "fees": 0.02,
+      "net_ev": 0.14934120256639252,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        48904.38117109349,
+        49789.396410074616
+      ],
+      "market_price_range": [
+        48893.37676173821,
+        49718.93046357381
+      ],
+      "p_model": 0.9866702682928915,
+      "p_market": 0.5917532759383991,
+      "edge": 0.3949169923544924,
+      "gross_ev": 0.3949169923544924,
+      "fees": 0.02,
+      "net_ev": 0.3749169923544924,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        48825.150141445985,
+        49900.52867517474
+      ],
+      "market_price_range": [
+        48839.56612991386,
+        49800.69972789484
+      ],
+      "p_model": 1.0,
+      "p_market": 0.7758647133975323,
+      "edge": 0.22413528660246773,
+      "gross_ev": 0.22413528660246773,
+      "fees": 0.02,
+      "net_ev": 0.20413528660246774,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        48353.83238970003,
+        49166.052469549286
+      ],
+      "market_price_range": [
+        48395.082349116004,
+        49095.475489418306
+      ],
+      "p_model": 1.0,
+      "p_market": 0.4730707054470575,
+      "edge": 0.5269292945529425,
+      "gross_ev": 0.5269292945529425,
+      "fees": 0.02,
+      "net_ev": 0.5069292945529424,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        49064.787111222526,
+        50331.89892522099
+      ],
+      "market_price_range": [
+        49178.58376671883,
+        50233.46977383218
+      ],
+      "p_model": 1.0,
+      "p_market": 0.4307026267939569,
+      "edge": 0.5692973732060431,
+      "gross_ev": 0.5692973732060431,
+      "fees": 0.02,
+      "net_ev": 0.5492973732060431,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        51190.875490095816,
+        51956.64537422823
+      ],
+      "market_price_range": [
+        51235.74645928976,
+        51926.33184886042
+      ],
+      "p_model": 1.0,
+      "p_market": 0.4364754663068585,
+      "edge": 0.5635245336931415,
+      "gross_ev": 0.5635245336931415,
+      "fees": 0.02,
+      "net_ev": 0.5435245336931415,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        50472.86465107965,
+        51469.589421048775
+      ],
+      "market_price_range": [
+        50550.19646512576,
+        51541.904707318296
+      ],
+      "p_model": 0.9270800794096045,
+      "p_market": 0.20073983750714489,
+      "edge": 0.7263402419024596,
+      "gross_ev": 0.7263402419024596,
+      "fees": 0.02,
+      "net_ev": 0.7063402419024596,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        49329.87188934776,
+        50038.05806756277
+      ],
+      "market_price_range": [
+        49353.51197099489,
+        50028.33141753295
+      ],
+      "p_model": 1.0,
+      "p_market": 0.6683486825159506,
+      "edge": 0.3316513174840494,
+      "gross_ev": 0.3316513174840494,
+      "fees": 0.02,
+      "net_ev": 0.3116513174840494,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        47978.1210499598,
+        48955.0381050982
+      ],
+      "market_price_range": [
+        48012.80347309355,
+        48904.723527524766
+      ],
+      "p_model": 1.0,
+      "p_market": 0.4879180403306391,
+      "edge": 0.5120819596693609,
+      "gross_ev": 0.5120819596693609,
+      "fees": 0.02,
+      "net_ev": 0.49208195966936086,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        47940.32887315066,
+        49291.011801163535
+      ],
+      "market_price_range": [
+        47986.05334185651,
+        49407.27443325494
+      ],
+      "p_model": 0.9181952528040463,
+      "p_market": 0.22914157390817486,
+      "edge": 0.6890536788958714,
+      "gross_ev": 0.6890536788958714,
+      "fees": 0.02,
+      "net_ev": 0.6690536788958714,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        47766.958541087486,
+        48874.433833100935
+      ],
+      "market_price_range": [
+        47844.38125021199,
+        48774.179416227475
+      ],
+      "p_model": 1.0,
+      "p_market": 0.28292322298311845,
+      "edge": 0.7170767770168816,
+      "gross_ev": 0.7170767770168816,
+      "fees": 0.02,
+      "net_ev": 0.6970767770168815,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        49898.241299493326,
+        50936.18987987055
+      ],
+      "market_price_range": [
+        49962.94245224919,
+        50838.889158393926
+      ],
+      "p_model": 1.0,
+      "p_market": 0.26637768053732197,
+      "edge": 0.7336223194626781,
+      "gross_ev": 0.7336223194626781,
+      "fees": 0.02,
+      "net_ev": 0.7136223194626781,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        46008.88771927053,
+        47249.3066147069
+      ],
+      "market_price_range": [
+        45991.717332241315,
+        47271.68262711974
+      ],
+      "p_model": 0.9691035377284816,
+      "p_market": 0.7096611998538676,
+      "edge": 0.259442337874614,
+      "gross_ev": 0.259442337874614,
+      "fees": 0.02,
+      "net_ev": 0.23944233787461403,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        49536.85164434874,
+        50760.25281867287
+      ],
+      "market_price_range": [
+        49507.7055583049,
+        50677.732816643336
+      ],
+      "p_model": 0.9750893957075591,
+      "p_market": 0.6637624328811704,
+      "edge": 0.3113269628263887,
+      "gross_ev": 0.3113269628263887,
+      "fees": 0.02,
+      "net_ev": 0.2913269628263887,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        48158.929912622225,
+        49161.67822262318
+      ],
+      "market_price_range": [
+        48074.94098146938,
+        49152.544676662954
+      ],
+      "p_model": 0.9220595367968197,
+      "p_market": 0.562054672599993,
+      "edge": 0.36000486419682676,
+      "gross_ev": 0.36000486419682676,
+      "fees": 0.02,
+      "net_ev": 0.34000486419682674,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        52041.426761081544,
+        53314.078445134845
+      ],
+      "market_price_range": [
+        51961.718207314545,
+        53267.85551243061
+      ],
+      "p_model": 0.9389738326477733,
+      "p_market": 0.6795281133448947,
+      "edge": 0.25944571930287863,
+      "gross_ev": 0.25944571930287863,
+      "fees": 0.02,
+      "net_ev": 0.23944571930287864,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        50013.85860426082,
+        51313.778268351336
+      ],
+      "market_price_range": [
+        50036.210438517235,
+        51266.3664643673
+      ],
+      "p_model": 1.0,
+      "p_market": 0.24686503584821834,
+      "edge": 0.7531349641517817,
+      "gross_ev": 0.7531349641517817,
+      "fees": 0.02,
+      "net_ev": 0.7331349641517817,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        50225.220447568856,
+        50797.15377643746
+      ],
+      "market_price_range": [
+        50280.23652775103,
+        50758.89003736674
+      ],
+      "p_model": 1.0,
+      "p_market": 0.6351099925105214,
+      "edge": 0.36489000748947864,
+      "gross_ev": 0.36489000748947864,
+      "fees": 0.02,
+      "net_ev": 0.3448900074894786,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        51815.24548804495,
+        53230.204369857514
+      ],
+      "market_price_range": [
+        51866.989636949125,
+        53340.5766698432
+      ],
+      "p_model": 0.9250995716425949,
+      "p_market": 0.5562983288170686,
+      "edge": 0.3688012428255263,
+      "gross_ev": 0.3688012428255263,
+      "fees": 0.02,
+      "net_ev": 0.34880124282552627,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        49493.74409767501,
+        50542.41544413047
+      ],
+      "market_price_range": [
+        49453.24536940445,
+        50473.82058062293
+      ],
+      "p_model": 0.9603177425579412,
+      "p_market": 0.5043756209492261,
+      "edge": 0.45594212160871517,
+      "gross_ev": 0.45594212160871517,
+      "fees": 0.02,
+      "net_ev": 0.43594212160871515,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "4h",
+      "forecast_price_range": [
+        47552.165478166295,
+        48539.87817133032
+      ],
+      "market_price_range": [
+        47647.66153132583,
+        48637.28335240556
+      ],
+      "p_model": 0.901573329325976,
+      "p_market": 0.5507833004804994,
+      "edge": 0.3507900288454766,
+      "gross_ev": 0.3507900288454766,
+      "fees": 0.02,
+      "net_ev": 0.3307900288454766,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49487.31368146107,
+        50547.02263581333
+      ],
+      "market_price_range": [
+        49406.69519944017,
+        50554.695017198406
+      ],
+      "p_model": 0.9230915701899771,
+      "p_market": 0.573075217916454,
+      "edge": 0.3500163522735231,
+      "gross_ev": 0.3500163522735231,
+      "fees": 0.02,
+      "net_ev": 0.3300163522735231,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49362.953974387914,
+        50183.890392791305
+      ],
+      "market_price_range": [
+        49347.42717555994,
+        50150.191806473704
+      ],
+      "p_model": 0.980658342146564,
+      "p_market": 0.5981726279962112,
+      "edge": 0.3824857141503528,
+      "gross_ev": 0.3824857141503528,
+      "fees": 0.02,
+      "net_ev": 0.3624857141503528,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        46834.6608894473,
+        47805.21657644847
+      ],
+      "market_price_range": [
+        46816.081779778186,
+        47753.05513736551
+      ],
+      "p_model": 0.980171144122008,
+      "p_market": 0.7243330987422809,
+      "edge": 0.2558380453797271,
+      "gross_ev": 0.2558380453797271,
+      "fees": 0.02,
+      "net_ev": 0.2358380453797271,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49659.77524970849,
+        50456.96437099589
+      ],
+      "market_price_range": [
+        49651.238814655684,
+        50440.4093846803
+      ],
+      "p_model": 0.9891830291485184,
+      "p_market": 0.6065724581598765,
+      "edge": 0.38261057098864193,
+      "gross_ev": 0.38261057098864193,
+      "fees": 0.02,
+      "net_ev": 0.3626105709886419,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        51298.999109366545,
+        52562.99422544865
+      ],
+      "market_price_range": [
+        51233.67022022884,
+        52685.2015910658
+      ],
+      "p_model": 0.870801101152422,
+      "p_market": 0.4515634327404831,
+      "edge": 0.41923766841193894,
+      "gross_ev": 0.41923766841193894,
+      "fees": 0.02,
+      "net_ev": 0.3992376684119389,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49850.09678166251,
+        50801.59680276906
+      ],
+      "market_price_range": [
+        49793.76254614702,
+        50805.44658561331
+      ],
+      "p_model": 0.9405110528466102,
+      "p_market": 0.44477685821633917,
+      "edge": 0.495734194630271,
+      "gross_ev": 0.495734194630271,
+      "fees": 0.02,
+      "net_ev": 0.475734194630271,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        48520.52653429553,
+        49595.27521452835
+      ],
+      "market_price_range": [
+        48543.09470033561,
+        49634.521081870385
+      ],
+      "p_model": 0.9640416724334211,
+      "p_market": 0.2896244938208905,
+      "edge": 0.6744171786125306,
+      "gross_ev": 0.6744171786125306,
+      "fees": 0.02,
+      "net_ev": 0.6544171786125306,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        47848.60543322648,
+        48733.10756349879
+      ],
+      "market_price_range": [
+        47901.75658269404,
+        48796.6117854777
+      ],
+      "p_model": 0.9290340808419446,
+      "p_market": 0.7475496464851588,
+      "edge": 0.18148443435678585,
+      "gross_ev": 0.18148443435678585,
+      "fees": 0.02,
+      "net_ev": 0.16148443435678586,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        48010.87926477504,
+        48502.8821970221
+      ],
+      "market_price_range": [
+        47987.9032292331,
+        48540.11360812145
+      ],
+      "p_model": 0.8909700922998136,
+      "p_market": 0.4274316170223832,
+      "edge": 0.4635384752774304,
+      "gross_ev": 0.4635384752774304,
+      "fees": 0.02,
+      "net_ev": 0.4435384752774304,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49177.880937390895,
+        50469.28649633374
+      ],
+      "market_price_range": [
+        49118.18288036668,
+        50542.36975430871
+      ],
+      "p_model": 0.906766929657442,
+      "p_market": 0.541960291184916,
+      "edge": 0.36480663847252603,
+      "gross_ev": 0.36480663847252603,
+      "fees": 0.02,
+      "net_ev": 0.344806638472526,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        47853.905634077215,
+        48762.75207124765
+      ],
+      "market_price_range": [
+        47787.45577409937,
+        48816.93703074227
+      ],
+      "p_model": 0.8828198000749855,
+      "p_market": 0.25991748629643774,
+      "edge": 0.6229023137785478,
+      "gross_ev": 0.6229023137785478,
+      "fees": 0.02,
+      "net_ev": 0.6029023137785477,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        51420.741524468256,
+        52861.71432658526
+      ],
+      "market_price_range": [
+        51558.16995529376,
+        52999.824260240595
+      ],
+      "p_model": 0.9042003806450459,
+      "p_market": 0.4262868082134085,
+      "edge": 0.47791357243163746,
+      "gross_ev": 0.47791357243163746,
+      "fees": 0.02,
+      "net_ev": 0.45791357243163744,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        52141.73237801004,
+        53119.340702093206
+      ],
+      "market_price_range": [
+        52162.33451770085,
+        53083.97718615297
+      ],
+      "p_model": 1.0,
+      "p_market": 0.5652446773389481,
+      "edge": 0.4347553226610519,
+      "gross_ev": 0.4347553226610519,
+      "fees": 0.02,
+      "net_ev": 0.41475532266105186,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        50861.80010586136,
+        51692.056618673014
+      ],
+      "market_price_range": [
+        50844.90027508156,
+        51764.3522632009
+      ],
+      "p_model": 0.9029906112986702,
+      "p_market": 0.48058415397595794,
+      "edge": 0.42240645732271226,
+      "gross_ev": 0.42240645732271226,
+      "fees": 0.02,
+      "net_ev": 0.40240645732271224,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        50859.17176930563,
+        51866.63231037071
+      ],
+      "market_price_range": [
+        50880.50837662798,
+        51792.303624227105
+      ],
+      "p_model": 1.0,
+      "p_market": 0.29772290033273296,
+      "edge": 0.702277099667267,
+      "gross_ev": 0.702277099667267,
+      "fees": 0.02,
+      "net_ev": 0.682277099667267,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        50369.88487807887,
+        50905.01281422957
+      ],
+      "market_price_range": [
+        50321.199110560454,
+        50877.57110633386
+      ],
+      "p_model": 0.9124942163008455,
+      "p_market": 0.25935470306289343,
+      "edge": 0.653139513237952,
+      "gross_ev": 0.653139513237952,
+      "fees": 0.02,
+      "net_ev": 0.633139513237952,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49402.30541381424,
+        50422.46085460971
+      ],
+      "market_price_range": [
+        49447.57718705972,
+        50361.6775668129
+      ],
+      "p_model": 1.0,
+      "p_market": 0.3114596809226523,
+      "edge": 0.6885403190773477,
+      "gross_ev": 0.6885403190773477,
+      "fees": 0.02,
+      "net_ev": 0.6685403190773477,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        48959.769273033126,
+        49819.399480649205
+      ],
+      "market_price_range": [
+        49001.127829115125,
+        49741.20289607486
+      ],
+      "p_model": 1.0,
+      "p_market": 0.4888948041957685,
+      "edge": 0.5111051958042315,
+      "gross_ev": 0.5111051958042315,
+      "fees": 0.02,
+      "net_ev": 0.4911051958042315,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        50578.86373198418,
+        51593.9843003845
+      ],
+      "market_price_range": [
+        50579.77600934202,
+        51514.94540476574
+      ],
+      "p_model": 1.0,
+      "p_market": 0.3514617743297524,
+      "edge": 0.6485382256702477,
+      "gross_ev": 0.6485382256702477,
+      "fees": 0.02,
+      "net_ev": 0.6285382256702476,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49180.95943694942,
+        50156.138609691516
+      ],
+      "market_price_range": [
+        49107.48733222152,
+        50234.473164791416
+      ],
+      "p_model": 0.8652985197856186,
+      "p_market": 0.7907411649504525,
+      "edge": 0.07455735483516601,
+      "gross_ev": 0.07455735483516601,
+      "fees": 0.02,
+      "net_ev": 0.05455735483516601,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        47973.97923977176,
+        48692.70605747557
+      ],
+      "market_price_range": [
+        48035.52782184528,
+        48640.6405586207
+      ],
+      "p_model": 1.0,
+      "p_market": 0.3826799158856198,
+      "edge": 0.6173200841143802,
+      "gross_ev": 0.6173200841143802,
+      "fees": 0.02,
+      "net_ev": 0.5973200841143802,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49153.19482393989,
+        49552.78686134158
+      ],
+      "market_price_range": [
+        49125.5592817608,
+        49562.11783023692
+      ],
+      "p_model": 0.9153229018112774,
+      "p_market": 0.5254186413813231,
+      "edge": 0.3899042604299543,
+      "gross_ev": 0.3899042604299543,
+      "fees": 0.02,
+      "net_ev": 0.3699042604299543,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        48882.7873243602,
+        49892.04679387563
+      ],
+      "market_price_range": [
+        48951.353985453636,
+        49963.0851693038
+      ],
+      "p_model": 0.929785325823571,
+      "p_market": 0.5505367160367309,
+      "edge": 0.37924860978684005,
+      "gross_ev": 0.37924860978684005,
+      "fees": 0.02,
+      "net_ev": 0.35924860978684003,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        48149.05799616423,
+        49263.98812540914
+      ],
+      "market_price_range": [
+        48177.76685895845,
+        49242.77211304735
+      ],
+      "p_model": 1.0,
+      "p_market": 0.6560089830464211,
+      "edge": 0.3439910169535789,
+      "gross_ev": 0.3439910169535789,
+      "fees": 0.02,
+      "net_ev": 0.3239910169535789,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49088.24313226484,
+        50469.42939798066
+      ],
+      "market_price_range": [
+        48966.273651323536,
+        50364.640271401586
+      ],
+      "p_model": 0.9127771793247631,
+      "p_market": 0.7376732494541782,
+      "edge": 0.17510392987058487,
+      "gross_ev": 0.17510392987058487,
+      "fees": 0.02,
+      "net_ev": 0.15510392987058488,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        47576.084982825276,
+        48592.86568226404
+      ],
+      "market_price_range": [
+        47505.62644517654,
+        48527.68842829292
+      ],
+      "p_model": 0.9310623633276117,
+      "p_market": 0.4481407587859819,
+      "edge": 0.4829216045416298,
+      "gross_ev": 0.4829216045416298,
+      "fees": 0.02,
+      "net_ev": 0.4629216045416298,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        50408.0332570057,
+        51258.71300894468
+      ],
+      "market_price_range": [
+        50372.26298986193,
+        51318.48766442489
+      ],
+      "p_model": 0.8990251203625504,
+      "p_market": 0.7247450839133431,
+      "edge": 0.1742800364492073,
+      "gross_ev": 0.1742800364492073,
+      "fees": 0.02,
+      "net_ev": 0.15428003644920732,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        47992.09284549488,
+        49119.15206320506
+      ],
+      "market_price_range": [
+        48048.8050218229,
+        49061.6261731411
+      ],
+      "p_model": 1.0,
+      "p_market": 0.2967524377111545,
+      "edge": 0.7032475622888454,
+      "gross_ev": 0.7032475622888454,
+      "fees": 0.02,
+      "net_ev": 0.6832475622888454,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        48185.18501217957,
+        49213.79921885015
+      ],
+      "market_price_range": [
+        48128.125989605025,
+        49217.43259819174
+      ],
+      "p_model": 0.944283453861644,
+      "p_market": 0.4943647493071232,
+      "edge": 0.4499187045545208,
+      "gross_ev": 0.4499187045545208,
+      "fees": 0.02,
+      "net_ev": 0.4299187045545208,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49195.765227306605,
+        50295.07538343225
+      ],
+      "market_price_range": [
+        49210.15232042208,
+        50214.11225400307
+      ],
+      "p_model": 1.0,
+      "p_market": 0.2753983117211216,
+      "edge": 0.7246016882788784,
+      "gross_ev": 0.7246016882788784,
+      "fees": 0.02,
+      "net_ev": 0.7046016882788784,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        50032.64919469407,
+        51312.3230032254
+      ],
+      "market_price_range": [
+        49916.6581466735,
+        51226.220632589655
+      ],
+      "p_model": 0.9114276338334274,
+      "p_market": 0.5326499312239602,
+      "edge": 0.3787777026094672,
+      "gross_ev": 0.3787777026094672,
+      "fees": 0.02,
+      "net_ev": 0.3587777026094672,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        47784.248445311525,
+        48763.15802713177
+      ],
+      "market_price_range": [
+        47876.25526046817,
+        48688.55597708432
+      ],
+      "p_model": 1.0,
+      "p_market": 0.7501090445775176,
+      "edge": 0.2498909554224824,
+      "gross_ev": 0.2498909554224824,
+      "fees": 0.02,
+      "net_ev": 0.22989095542248242,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        50770.69893427267,
+        51888.48294443118
+      ],
+      "market_price_range": [
+        50778.52026304145,
+        51866.22814417198
+      ],
+      "p_model": 1.0,
+      "p_market": 0.519131654807641,
+      "edge": 0.480868345192359,
+      "gross_ev": 0.480868345192359,
+      "fees": 0.02,
+      "net_ev": 0.460868345192359,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        50355.43321050187,
+        50652.090560297205
+      ],
+      "market_price_range": [
+        50336.547536752136,
+        50666.42591262078
+      ],
+      "p_model": 0.899293107692091,
+      "p_market": 0.48125557820837156,
+      "edge": 0.41803752948371947,
+      "gross_ev": 0.41803752948371947,
+      "fees": 0.02,
+      "net_ev": 0.39803752948371945,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        50120.349380939464,
+        51234.95642188349
+      ],
+      "market_price_range": [
+        50155.707599235684,
+        51134.66557261601
+      ],
+      "p_model": 1.0,
+      "p_market": 0.40544220608637727,
+      "edge": 0.5945577939136227,
+      "gross_ev": 0.5945577939136227,
+      "fees": 0.02,
+      "net_ev": 0.5745577939136227,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        48504.804365152624,
+        50043.10524012934
+      ],
+      "market_price_range": [
+        48427.631322274436,
+        50133.44515471326
+      ],
+      "p_model": 0.9017988046077609,
+      "p_market": 0.3271727666483256,
+      "edge": 0.5746260379594352,
+      "gross_ev": 0.5746260379594352,
+      "fees": 0.02,
+      "net_ev": 0.5546260379594352,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49816.82195197303,
+        50576.25939660724
+      ],
+      "market_price_range": [
+        49795.70751785974,
+        50500.66632681452
+      ],
+      "p_model": 0.9700486981011059,
+      "p_market": 0.7960210990467069,
+      "edge": 0.17402759905439902,
+      "gross_ev": 0.17402759905439902,
+      "fees": 0.02,
+      "net_ev": 0.15402759905439903,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49205.31494426846,
+        50027.188841709074
+      ],
+      "market_price_range": [
+        49212.17561198718,
+        49966.21074016165
+      ],
+      "p_model": 1.0,
+      "p_market": 0.29139602609454546,
+      "edge": 0.7086039739054546,
+      "gross_ev": 0.7086039739054546,
+      "fees": 0.02,
+      "net_ev": 0.6886039739054546,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        49313.9524618574,
+        50367.50174627487
+      ],
+      "market_price_range": [
+        49225.06399245928,
+        50329.396238135436
+      ],
+      "p_model": 0.919509305513675,
+      "p_market": 0.6357080770303407,
+      "edge": 0.28380122848333433,
+      "gross_ev": 0.28380122848333433,
+      "fees": 0.02,
+      "net_ev": 0.2638012284833343,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1d",
+      "forecast_price_range": [
+        51206.49924776836,
+        52107.53839843923
+      ],
+      "market_price_range": [
+        51188.53336386012,
+        52102.63385822526
+      ],
+      "p_model": 0.9803458328499012,
+      "p_market": 0.7700366567746624,
+      "edge": 0.2103091760752388,
+      "gross_ev": 0.2103091760752388,
+      "fees": 0.02,
+      "net_ev": 0.1903091760752388,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        47176.389308259306,
+        48231.46491997057
+      ],
+      "market_price_range": [
+        47138.808768214316,
+        48304.4777488513
+      ],
+      "p_model": 0.9051245501400512,
+      "p_market": 0.22415224396395428,
+      "edge": 0.6809723061760969,
+      "gross_ev": 0.6809723061760969,
+      "fees": 0.02,
+      "net_ev": 0.6609723061760969,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        47353.87153426433,
+        48433.321171463416
+      ],
+      "market_price_range": [
+        47299.98138873745,
+        48539.49750469244
+      ],
+      "p_model": 0.8708637373120531,
+      "p_market": 0.5188482869583464,
+      "edge": 0.35201545035370674,
+      "gross_ev": 0.35201545035370674,
+      "fees": 0.02,
+      "net_ev": 0.3320154503537067,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        48671.348088782666,
+        49880.2814350434
+      ],
+      "market_price_range": [
+        48563.13994676766,
+        49847.96313902427
+      ],
+      "p_model": 0.9157797410047107,
+      "p_market": 0.6431064276119772,
+      "edge": 0.2726733133927335,
+      "gross_ev": 0.2726733133927335,
+      "fees": 0.02,
+      "net_ev": 0.25267331339273347,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49293.07230799156,
+        50377.72514711789
+      ],
+      "market_price_range": [
+        49245.39475787126,
+        50379.66323873035
+      ],
+      "p_model": 0.9562575857744192,
+      "p_market": 0.7442517961457051,
+      "edge": 0.21200578962871408,
+      "gross_ev": 0.21200578962871408,
+      "fees": 0.02,
+      "net_ev": 0.1920057896287141,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        50742.743615337386,
+        51728.515780291156
+      ],
+      "market_price_range": [
+        50773.82256041815,
+        51710.40846129226
+      ],
+      "p_model": 1.0,
+      "p_market": 0.4640300649401315,
+      "edge": 0.5359699350598686,
+      "gross_ev": 0.5359699350598686,
+      "fees": 0.02,
+      "net_ev": 0.5159699350598685,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49463.66473957573,
+        50545.31513402413
+      ],
+      "market_price_range": [
+        49427.431631288164,
+        50578.958299628626
+      ],
+      "p_model": 0.9393185795750902,
+      "p_market": 0.5977458285260573,
+      "edge": 0.34157275104903295,
+      "gross_ev": 0.34157275104903295,
+      "fees": 0.02,
+      "net_ev": 0.32157275104903293,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        50216.441475616964,
+        50920.08633475821
+      ],
+      "market_price_range": [
+        50258.9683851088,
+        50959.230299465395
+      ],
+      "p_model": 0.9441009657891396,
+      "p_market": 0.7163782408376782,
+      "edge": 0.2277227249514614,
+      "gross_ev": 0.2277227249514614,
+      "fees": 0.02,
+      "net_ev": 0.2077227249514614,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        48054.95985490194,
+        48809.90901633915
+      ],
+      "market_price_range": [
+        48110.92230304727,
+        48775.9593348895
+      ],
+      "p_model": 1.0,
+      "p_market": 0.28319269774005174,
+      "edge": 0.7168073022599483,
+      "gross_ev": 0.7168073022599483,
+      "fees": 0.02,
+      "net_ev": 0.6968073022599482,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        50388.767904880595,
+        51470.33799156684
+      ],
+      "market_price_range": [
+        50300.00844251684,
+        51405.98941955711
+      ],
+      "p_model": 0.919745941199381,
+      "p_market": 0.5252474209704316,
+      "edge": 0.3944985202289494,
+      "gross_ev": 0.3944985202289494,
+      "fees": 0.02,
+      "net_ev": 0.37449852022894936,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        46381.80257760557,
+        47294.3373970621
+      ],
+      "market_price_range": [
+        46361.71577302943,
+        47249.64270756589
+      ],
+      "p_model": 0.9773778632060175,
+      "p_market": 0.5752868941483618,
+      "edge": 0.40209096905765573,
+      "gross_ev": 0.40209096905765573,
+      "fees": 0.02,
+      "net_ev": 0.3820909690576557,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        50925.78228505799,
+        52210.81453931105
+      ],
+      "market_price_range": [
+        50951.5661654952,
+        52258.47066071317
+      ],
+      "p_model": 0.9635351155524453,
+      "p_market": 0.2139365494080551,
+      "edge": 0.7495985661443902,
+      "gross_ev": 0.7495985661443902,
+      "fees": 0.02,
+      "net_ev": 0.7295985661443902,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        48708.29066218673,
+        49707.956425840326
+      ],
+      "market_price_range": [
+        48686.25254170374,
+        49696.74875138449
+      ],
+      "p_model": 0.9781907935211824,
+      "p_market": 0.7615624996614356,
+      "edge": 0.2166282938597468,
+      "gross_ev": 0.2166282938597468,
+      "fees": 0.02,
+      "net_ev": 0.1966282938597468,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        50630.67707109416,
+        51401.527034982755
+      ],
+      "market_price_range": [
+        50623.809044273185,
+        51399.95824161803
+      ],
+      "p_model": 0.9911511512935053,
+      "p_market": 0.5793215000689175,
+      "edge": 0.4118296512245878,
+      "gross_ev": 0.4118296512245878,
+      "fees": 0.02,
+      "net_ev": 0.3918296512245878,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        48459.61953518759,
+        49253.410090729456
+      ],
+      "market_price_range": [
+        48394.1045341148,
+        49320.703606616844
+      ],
+      "p_model": 0.8566710016214881,
+      "p_market": 0.7059937314571876,
+      "edge": 0.15067727016430055,
+      "gross_ev": 0.15067727016430055,
+      "fees": 0.02,
+      "net_ev": 0.13067727016430056,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        50305.279036395215,
+        51007.2577094644
+      ],
+      "market_price_range": [
+        50268.120886413046,
+        51044.12423932781
+      ],
+      "p_model": 0.9046077835005072,
+      "p_market": 0.48836457856538396,
+      "edge": 0.41624320493512323,
+      "gross_ev": 0.41624320493512323,
+      "fees": 0.02,
+      "net_ev": 0.3962432049351232,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        47257.38476874064,
+        48610.668264698266
+      ],
+      "market_price_range": [
+        47218.18848361578,
+        48553.6463491496
+      ],
+      "p_model": 0.9706495531334545,
+      "p_market": 0.3546850458214127,
+      "edge": 0.6159645073120418,
+      "gross_ev": 0.6159645073120418,
+      "fees": 0.02,
+      "net_ev": 0.5959645073120418,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        50185.53243981629,
+        51148.64801476941
+      ],
+      "market_price_range": [
+        50239.6871555893,
+        51209.52771022787
+      ],
+      "p_model": 0.9372271089641643,
+      "p_market": 0.7163419515766256,
+      "edge": 0.22088515738753867,
+      "gross_ev": 0.22088515738753867,
+      "fees": 0.02,
+      "net_ev": 0.20088515738753868,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        48540.679541248624,
+        49526.21909811231
+      ],
+      "market_price_range": [
+        48572.979620888385,
+        49584.860838544104
+      ],
+      "p_model": 0.9420468139850946,
+      "p_market": 0.7035043197405948,
+      "edge": 0.2385424942444998,
+      "gross_ev": 0.2385424942444998,
+      "fees": 0.02,
+      "net_ev": 0.2185424942444998,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49407.59201411319,
+        50360.33944642425
+      ],
+      "market_price_range": [
+        49480.81938768194,
+        50339.39093043559
+      ],
+      "p_model": 1.0,
+      "p_market": 0.7991657090071496,
+      "edge": 0.20083429099285044,
+      "gross_ev": 0.20083429099285044,
+      "fees": 0.02,
+      "net_ev": 0.18083429099285045,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        48103.46869438866,
+        49157.897345454854
+      ],
+      "market_price_range": [
+        48119.749002631754,
+        49183.13373093755
+      ],
+      "p_model": 0.9762678691813591,
+      "p_market": 0.7597404694479521,
+      "edge": 0.21652739973340696,
+      "gross_ev": 0.21652739973340696,
+      "fees": 0.02,
+      "net_ev": 0.19652739973340697,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        51623.69993731996,
+        52682.200532616356
+      ],
+      "market_price_range": [
+        51700.33590599716,
+        52743.749797305194
+      ],
+      "p_model": 0.9410116491628463,
+      "p_market": 0.36237929136251634,
+      "edge": 0.57863235780033,
+      "gross_ev": 0.57863235780033,
+      "fees": 0.02,
+      "net_ev": 0.5586323578003299,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49714.59356795753,
+        50616.59360887913
+      ],
+      "market_price_range": [
+        49784.61676878484,
+        50676.581895600946
+      ],
+      "p_model": 0.9327459281553434,
+      "p_market": 0.3058138280048455,
+      "edge": 0.6269321001504979,
+      "gross_ev": 0.6269321001504979,
+      "fees": 0.02,
+      "net_ev": 0.6069321001504979,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49156.480532830166,
+        50013.41919691269
+      ],
+      "market_price_range": [
+        49156.3492242763,
+        50045.32523795448
+      ],
+      "p_model": 0.963961514031075,
+      "p_market": 0.5916120409215532,
+      "edge": 0.3723494731095218,
+      "gross_ev": 0.3723494731095218,
+      "fees": 0.02,
+      "net_ev": 0.3523494731095218,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        48368.762440360675,
+        49663.07274971642
+      ],
+      "market_price_range": [
+        48473.55003935731,
+        49722.05273687099
+      ],
+      "p_model": 0.9527594235302619,
+      "p_market": 0.7859984469299537,
+      "edge": 0.1667609766003082,
+      "gross_ev": 0.1667609766003082,
+      "fees": 0.02,
+      "net_ev": 0.1467609766003082,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        51227.328077252176,
+        52498.55191318926
+      ],
+      "market_price_range": [
+        51246.45315048959,
+        52384.50258157485
+      ],
+      "p_model": 1.0,
+      "p_market": 0.6033586587340669,
+      "edge": 0.3966413412659331,
+      "gross_ev": 0.3966413412659331,
+      "fees": 0.02,
+      "net_ev": 0.37664134126593307,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        47769.906709356284,
+        48938.08026700258
+      ],
+      "market_price_range": [
+        47692.3119313747,
+        49013.13093016369
+      ],
+      "p_model": 0.8844312193550783,
+      "p_market": 0.44999959882392815,
+      "edge": 0.43443162053115014,
+      "gross_ev": 0.43443162053115014,
+      "fees": 0.02,
+      "net_ev": 0.4144316205311501,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        50581.84244927899,
+        51938.8180388036
+      ],
+      "market_price_range": [
+        50500.04682834595,
+        51936.4453534362
+      ],
+      "p_model": 0.9430550647997185,
+      "p_market": 0.735818611721782,
+      "edge": 0.20723645307793648,
+      "gross_ev": 0.20723645307793648,
+      "fees": 0.02,
+      "net_ev": 0.1872364530779365,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49643.568299900064,
+        50662.525591821664
+      ],
+      "market_price_range": [
+        49725.8806414211,
+        50591.91705366823
+      ],
+      "p_model": 1.0,
+      "p_market": 0.5203040079643763,
+      "edge": 0.47969599203562374,
+      "gross_ev": 0.47969599203562374,
+      "fees": 0.02,
+      "net_ev": 0.4596959920356237,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        47963.021202482836,
+        49071.09734921335
+      ],
+      "market_price_range": [
+        48073.71385554863,
+        49056.98415214597
+      ],
+      "p_model": 1.0,
+      "p_market": 0.664774328775338,
+      "edge": 0.33522567122466196,
+      "gross_ev": 0.33522567122466196,
+      "fees": 0.02,
+      "net_ev": 0.31522567122466194,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49256.154995747616,
+        50191.31776470671
+      ],
+      "market_price_range": [
+        49195.71966837137,
+        50129.223116559515
+      ],
+      "p_model": 0.9352596634821795,
+      "p_market": 0.28811824089284255,
+      "edge": 0.6471414225893369,
+      "gross_ev": 0.6471414225893369,
+      "fees": 0.02,
+      "net_ev": 0.6271414225893369,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        46461.12844582232,
+        47246.518681347254
+      ],
+      "market_price_range": [
+        46455.01154922673,
+        47296.6579760229
+      ],
+      "p_model": 0.9331593535240365,
+      "p_market": 0.2556536464546969,
+      "edge": 0.6775057070693395,
+      "gross_ev": 0.6775057070693395,
+      "fees": 0.02,
+      "net_ev": 0.6575057070693395,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49097.98002698748,
+        50407.20664682386
+      ],
+      "market_price_range": [
+        49161.49009727593,
+        50473.277794170026
+      ],
+      "p_model": 0.9496327435433347,
+      "p_market": 0.5025071626344884,
+      "edge": 0.44712558090884635,
+      "gross_ev": 0.44712558090884635,
+      "fees": 0.02,
+      "net_ev": 0.42712558090884634,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49299.43897706621,
+        50711.949777798174
+      ],
+      "market_price_range": [
+        49336.75628629951,
+        50632.62012586099
+      ],
+      "p_model": 1.0,
+      "p_market": 0.325027604861009,
+      "edge": 0.674972395138991,
+      "gross_ev": 0.674972395138991,
+      "fees": 0.02,
+      "net_ev": 0.654972395138991,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49438.97929193467,
+        50604.60435387803
+      ],
+      "market_price_range": [
+        49535.497161694184,
+        50529.139775338495
+      ],
+      "p_model": 1.0,
+      "p_market": 0.30520790687235316,
+      "edge": 0.6947920931276468,
+      "gross_ev": 0.6947920931276468,
+      "fees": 0.02,
+      "net_ev": 0.6747920931276468,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        51023.20616497651,
+        52067.38004448169
+      ],
+      "market_price_range": [
+        50920.79600137918,
+        51991.61713980297
+      ],
+      "p_model": 0.904362960421129,
+      "p_market": 0.592123895416186,
+      "edge": 0.3122390650049429,
+      "gross_ev": 0.3122390650049429,
+      "fees": 0.02,
+      "net_ev": 0.2922390650049429,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        50533.45168379057,
+        51559.99883320945
+      ],
+      "market_price_range": [
+        50456.44336072436,
+        51657.64310510969
+      ],
+      "p_model": 0.8546015383512959,
+      "p_market": 0.7237153752645074,
+      "edge": 0.13088616308678858,
+      "gross_ev": 0.13088616308678858,
+      "fees": 0.02,
+      "net_ev": 0.11088616308678857,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        47515.922195925574,
+        48231.02529359572
+      ],
+      "market_price_range": [
+        47493.60041304432,
+        48200.85989777172
+      ],
+      "p_model": 0.9684390476716488,
+      "p_market": 0.6408350784683481,
+      "edge": 0.3276039692033007,
+      "gross_ev": 0.3276039692033007,
+      "fees": 0.02,
+      "net_ev": 0.3076039692033007,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        48125.56395295659,
+        48918.961950110934
+      ],
+      "market_price_range": [
+        48073.430258528926,
+        48952.36920699813
+      ],
+      "p_model": 0.9026770272681126,
+      "p_market": 0.21594665899837504,
+      "edge": 0.6867303682697375,
+      "gross_ev": 0.6867303682697375,
+      "fees": 0.02,
+      "net_ev": 0.6667303682697375,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49092.5295442024,
+        49816.72058487721
+      ],
+      "market_price_range": [
+        49094.52945922733,
+        49781.986161073815
+      ],
+      "p_model": 1.0,
+      "p_market": 0.45119365238888104,
+      "edge": 0.5488063476111189,
+      "gross_ev": 0.5488063476111189,
+      "fees": 0.02,
+      "net_ev": 0.5288063476111189,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    },
+    {
+      "asset": "BTC",
+      "horizon": "1w",
+      "forecast_price_range": [
+        49564.7489043922,
+        50180.69950062177
+      ],
+      "market_price_range": [
+        49557.206827358226,
+        50166.578154299335
+      ],
+      "p_model": 0.9876231835983549,
+      "p_market": 0.36241805689706424,
+      "edge": 0.6252051267012906,
+      "gross_ev": 0.6252051267012906,
+      "fees": 0.02,
+      "net_ev": 0.6052051267012906,
+      "enter_trade": false,
+      "position_size": 1.0,
+      "trade_pnl": 0.0
+    }
+  ]
+}
+

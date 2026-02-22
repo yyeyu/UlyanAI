@@ -1,0 +1,81 @@
+﻿{
+  "5m": {
+    "timeframe": "5m",
+    "features_rows": 104915,
+    "labels_rows": 105120,
+    "feature_files": [
+      "data\\features\\binance\\BTC_USDT\\5m\\2025.parquet",
+      "data\\features\\binance\\BTC_USDT\\5m\\2026.parquet"
+    ],
+    "label_files": [
+      "data\\labels\\binance\\BTC_USDT\\5m\\2025.parquet",
+      "data\\labels\\binance\\BTC_USDT\\5m\\2026.parquet"
+    ]
+  },
+  "15m": {
+    "timeframe": "15m",
+    "features_rows": 34842,
+    "labels_rows": 35040,
+    "feature_files": [
+      "data\\features\\binance\\BTC_USDT\\15m\\2025.parquet",
+      "data\\features\\binance\\BTC_USDT\\15m\\2026.parquet"
+    ],
+    "label_files": [
+      "data\\labels\\binance\\BTC_USDT\\15m\\2025.parquet",
+      "data\\labels\\binance\\BTC_USDT\\15m\\2026.parquet"
+    ]
+  },
+  "1h": {
+    "timeframe": "1h",
+    "features_rows": 8562,
+    "labels_rows": 8760,
+    "feature_files": [
+      "data\\features\\binance\\BTC_USDT\\1h\\2025.parquet",
+      "data\\features\\binance\\BTC_USDT\\1h\\2026.parquet"
+    ],
+    "label_files": [
+      "data\\labels\\binance\\BTC_USDT\\1h\\2025.parquet",
+      "data\\labels\\binance\\BTC_USDT\\1h\\2026.parquet"
+    ]
+  },
+  "4h": {
+    "timeframe": "4h",
+    "features_rows": 1992,
+    "labels_rows": 2190,
+    "feature_files": [
+      "data\\features\\binance\\BTC_USDT\\4h\\2025.parquet",
+      "data\\features\\binance\\BTC_USDT\\4h\\2026.parquet"
+    ],
+    "label_files": [
+      "data\\labels\\binance\\BTC_USDT\\4h\\2025.parquet",
+      "data\\labels\\binance\\BTC_USDT\\4h\\2026.parquet"
+    ]
+  },
+  "1d": {
+    "timeframe": "1d",
+    "features_rows": 316,
+    "labels_rows": 365,
+    "feature_files": [
+      "data\\features\\binance\\BTC_USDT\\1d\\2025.parquet",
+      "data\\features\\binance\\BTC_USDT\\1d\\2026.parquet"
+    ],
+    "label_files": [
+      "data\\labels\\binance\\BTC_USDT\\1d\\2025.parquet",
+      "data\\labels\\binance\\BTC_USDT\\1d\\2026.parquet"
+    ]
+  },
+  "1w": {
+    "timeframe": "1w",
+    "features_rows": 33,
+    "labels_rows": 52,
+    "feature_files": [
+      "data\\features\\binance\\BTC_USDT\\1w\\2025.parquet",
+      "data\\features\\binance\\BTC_USDT\\1w\\2026.parquet"
+    ],
+    "label_files": [
+      "data\\labels\\binance\\BTC_USDT\\1w\\2025.parquet",
+      "data\\labels\\binance\\BTC_USDT\\1w\\2026.parquet"
+    ]
+  }
+}
+

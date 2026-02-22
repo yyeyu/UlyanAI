@@ -1,0 +1,54 @@
+{
+  "splits": [
+    {
+      "split_index": 1,
+      "train_rows": 180,
+      "val_rows": 30,
+      "test_rows": 30,
+      "pinball_q10": 0.005406343867399157,
+      "pinball_q50": 0.011243223446717856,
+      "pinball_q90": 0.005005027067736046,
+      "coverage": 0.7666666666666667,
+      "mean_width": 0.07086617475593031,
+      "calibrator_scale": 1.5,
+      "test_period_start": "2025-11-05T00:00:00+00:00",
+      "test_period_end": "2025-12-04T00:00:00+00:00"
+    },
+    {
+      "split_index": 2,
+      "train_rows": 180,
+      "val_rows": 30,
+      "test_rows": 30,
+      "pinball_q10": 0.0031448941472235503,
+      "pinball_q50": 0.005505588506175015,
+      "pinball_q90": 0.004034366063239718,
+      "coverage": 0.9666666666666667,
+      "mean_width": 0.07063832731673073,
+      "calibrator_scale": 2.0,
+      "test_period_start": "2025-12-05T00:00:00+00:00",
+      "test_period_end": "2026-01-03T00:00:00+00:00"
+    },
+    {
+      "split_index": 3,
+      "train_rows": 180,
+      "val_rows": 30,
+      "test_rows": 30,
+      "pinball_q10": 0.007497931015665391,
+      "pinball_q50": 0.009079931537312184,
+      "pinball_q90": 0.003975937209368134,
+      "coverage": 0.6,
+      "mean_width": 0.02972527796853389,
+      "calibrator_scale": 0.75,
+      "test_period_start": "2026-01-04T00:00:00+00:00",
+      "test_period_end": "2026-02-02T00:00:00+00:00"
+    }
+  ],
+  "summary": {
+    "splits_count": 3,
+    "avg_pinball_q10": 0.005349723010096032,
+    "avg_pinball_q50": 0.008609581163401684,
+    "avg_pinball_q90": 0.0043384434467812994,
+    "avg_coverage": 0.7777777777777778,
+    "avg_mean_width": 0.05707659334706497
+  }
+}

@@ -1,0 +1,192 @@
+﻿{
+  "trained": {
+    "5m": {
+      "model_version": "btc_5m_lgbm_q_v1_2026-02-18",
+      "artifact_dir": "artifacts\\models\\BTC\\5m\\btc_5m_lgbm_q_v1_2026-02-18",
+      "metrics_raw": {
+        "pinball_q10": 0.00032581414093683204,
+        "pinball_q50": 0.0006590638430626642,
+        "pinball_q90": 0.0003125835958007883,
+        "coverage_return": 0.7648420321722023,
+        "mean_width_return": 0.003680680626729023,
+        "coverage_price": 0.7648420321722023,
+        "mean_width_price": 278.83331336647365
+      },
+      "metrics_calibrated": {
+        "pinball_q10": 0.0003249792549906115,
+        "pinball_q50": 0.0006590638430626642,
+        "pinball_q90": 0.00031267090029242126,
+        "coverage_return": 0.7680823978706168,
+        "mean_width_return": 0.003680680626729023,
+        "coverage_price": 0.7680823978706168,
+        "mean_width_price": 278.8126102143998
+      },
+      "naive_baseline_metrics": {
+        "pinball_q10": 0.0003990789230228458,
+        "pinball_q50": 0.0006597874004232085,
+        "pinball_q90": 0.0003808480414940704,
+        "coverage_return": 0.6605716930910774,
+        "mean_width_return": 0.0026272625305510623,
+        "coverage_price": 0.6605716930910774,
+        "mean_width_price": 204.21229879651418
+      }
+    },
+    "15m": {
+      "model_version": "btc_15m_lgbm_q_v1_2026-02-18",
+      "artifact_dir": "artifacts\\models\\BTC\\15m\\btc_15m_lgbm_q_v1_2026-02-18",
+      "metrics_raw": {
+        "pinball_q10": 0.0006052578980180678,
+        "pinball_q50": 0.001144698950064871,
+        "pinball_q90": 0.00053077971303128,
+        "coverage_return": 0.7643179451579313,
+        "mean_width_return": 0.0062063272244089335,
+        "coverage_price": 0.7643179451579313,
+        "mean_width_price": 470.37302078738117
+      },
+      "metrics_calibrated": {
+        "pinball_q10": 0.0005980970247614803,
+        "pinball_q50": 0.001144698950064871,
+        "pinball_q90": 0.000532746379251603,
+        "coverage_return": 0.7688302672683096,
+        "mean_width_return": 0.0062063272244089335,
+        "coverage_price": 0.7688302672683096,
+        "mean_width_price": 470.33961610471835
+      },
+      "naive_baseline_metrics": {
+        "pinball_q10": 0.0007043752123969035,
+        "pinball_q50": 0.0011467571665366395,
+        "pinball_q90": 0.0006455269477661166,
+        "coverage_return": 0.6681707740367928,
+        "mean_width_return": 0.004525045385209844,
+        "coverage_price": 0.6681707740367928,
+        "mean_width_price": 351.74246809832186
+      }
+    },
+    "1h": {
+      "model_version": "btc_1h_lgbm_q_v1_2026-02-18",
+      "artifact_dir": "artifacts\\models\\BTC\\1h\\btc_1h_lgbm_q_v1_2026-02-18",
+      "metrics_raw": {
+        "pinball_q10": 0.0012624528376090948,
+        "pinball_q50": 0.0022975136654506704,
+        "pinball_q90": 0.0009898987740703574,
+        "coverage_return": 0.7475728155339806,
+        "mean_width_return": 0.01200847197362735,
+        "coverage_price": 0.7475728155339806,
+        "mean_width_price": 909.0467933477848
+      },
+      "metrics_calibrated": {
+        "pinball_q10": 0.0012437364207613295,
+        "pinball_q50": 0.0022975136654506704,
+        "pinball_q90": 0.001009927249667712,
+        "coverage_return": 0.7475728155339806,
+        "mean_width_return": 0.01200847197362735,
+        "coverage_price": 0.7475728155339806,
+        "mean_width_price": 909.0479971934083
+      },
+      "naive_baseline_metrics": {
+        "pinball_q10": 0.0013868377162072423,
+        "pinball_q50": 0.0022529353496259616,
+        "pinball_q90": 0.0011992793302467739,
+        "coverage_return": 0.6532593619972261,
+        "mean_width_return": 0.008846315089052727,
+        "coverage_price": 0.6532593619972261,
+        "mean_width_price": 687.6500733089719
+      }
+    },
+    "4h": {
+      "model_version": "btc_4h_lgbm_q_v1_2026-02-18",
+      "artifact_dir": "artifacts\\models\\BTC\\4h\\btc_4h_lgbm_q_v1_2026-02-18",
+      "metrics_raw": {
+        "pinball_q10": 0.0026548591585223067,
+        "pinball_q50": 0.004486360230279417,
+        "pinball_q90": 0.0018612035561143445,
+        "coverage_return": 0.7237569060773481,
+        "mean_width_return": 0.022095804361818048,
+        "coverage_price": 0.7237569060773481,
+        "mean_width_price": 1675.6462706657605
+      },
+      "metrics_calibrated": {
+        "pinball_q10": 0.0026898242558646233,
+        "pinball_q50": 0.004486360230279417,
+        "pinball_q90": 0.0018646295569084658,
+        "coverage_return": 0.7348066298342542,
+        "mean_width_return": 0.022095804361818048,
+        "coverage_price": 0.7348066298342542,
+        "mean_width_price": 1676.4554711935396
+      },
+      "naive_baseline_metrics": {
+        "pinball_q10": 0.002886049198114445,
+        "pinball_q50": 0.004436689548199746,
+        "pinball_q90": 0.002145256561392144,
+        "coverage_return": 0.6408839779005525,
+        "mean_width_return": 0.017692955408751983,
+        "coverage_price": 0.6408839779005525,
+        "mean_width_price": 1375.9716616087794
+      }
+    },
+    "1d": {
+      "model_version": "btc_1d_lgbm_q_v1_2026-02-18",
+      "artifact_dir": "artifacts\\models\\BTC\\1d\\btc_1d_lgbm_q_v1_2026-02-18",
+      "metrics_raw": {
+        "pinball_q10": 0.007999449612227986,
+        "pinball_q50": 0.012391850108238811,
+        "pinball_q90": 0.005462163755137549,
+        "coverage_return": 0.6458333333333334,
+        "mean_width_return": 0.04482814816547772,
+        "coverage_price": 0.6458333333333334,
+        "mean_width_price": 3723.8753130536898
+      },
+      "metrics_calibrated": {
+        "pinball_q10": 0.007495513891995595,
+        "pinball_q50": 0.012391850108238811,
+        "pinball_q90": 0.005812011131186825,
+        "coverage_return": 0.6666666666666666,
+        "mean_width_return": 0.05379377779857327,
+        "coverage_price": 0.6666666666666666,
+        "mean_width_price": 4473.434260110832
+      },
+      "naive_baseline_metrics": {
+        "pinball_q10": 0.007529004215103966,
+        "pinball_q50": 0.010789182535957542,
+        "pinball_q90": 0.005598987336609869,
+        "coverage_return": 0.6875,
+        "mean_width_return": 0.04248701668259352,
+        "coverage_price": 0.6875,
+        "mean_width_price": 3544.57698212718
+      }
+    },
+    "1w": {
+      "model_version": "btc_1w_lgbm_q_v1_2026-02-18",
+      "artifact_dir": "artifacts\\models\\BTC\\1w\\btc_1w_lgbm_q_v1_2026-02-18",
+      "metrics_raw": {
+        "pinball_q10": 0.015670169958119613,
+        "pinball_q50": 0.022984766977144848,
+        "pinball_q90": 0.010959224518063379,
+        "coverage_return": 0.4,
+        "mean_width_return": 0.11321399360895157,
+        "coverage_price": 0.4,
+        "mean_width_price": 8862.396252686234
+      },
+      "metrics_calibrated": {
+        "pinball_q10": 0.012162312747185449,
+        "pinball_q50": 0.022984766977144848,
+        "pinball_q90": 0.010257653075876548,
+        "coverage_return": 0.4,
+        "mean_width_return": 0.11321399360895157,
+        "coverage_price": 0.4,
+        "mean_width_price": 8800.43780699841
+      },
+      "naive_baseline_metrics": {
+        "pinball_q10": 0.015670172387380266,
+        "pinball_q50": 0.02298476679688784,
+        "pinball_q90": 0.010959224514691505,
+        "coverage_return": 0.4,
+        "mean_width_return": 0.11321398871671154,
+        "coverage_price": 0.4,
+        "mean_width_price": 8862.395890692176
+      }
+    }
+  },
+  "errors": {}
+}
+

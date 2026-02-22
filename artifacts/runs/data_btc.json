@@ -1,0 +1,81 @@
+﻿{
+  "asset": "BTC",
+  "symbol": "BTC/USDT",
+  "exchange": "binance",
+  "base_timeframe": "1m",
+  "download_start": "2025-02-18T16:06:30.878535+00:00",
+  "download_end": "2026-02-18T16:06:30.878535+00:00",
+  "raw_files": [
+    "data\\raw\\binance\\BTC_USDT\\1m\\2025.parquet",
+    "data\\raw\\binance\\BTC_USDT\\1m\\2026.parquet"
+  ],
+  "clean_files": [
+    "data\\clean\\binance\\BTC_USDT\\1m\\2025.parquet",
+    "data\\clean\\binance\\BTC_USDT\\1m\\2026.parquet"
+  ],
+  "resampled_counts": {
+    "5m": 105121,
+    "15m": 35041,
+    "1h": 8761,
+    "4h": 2191,
+    "1d": 366,
+    "1w": 53
+  },
+  "resampled_qc": {
+    "5m": {
+      "duplicates": "duplicates=0",
+      "constant_step": "bad_steps=0, expected_seconds=300",
+      "missing_ratio": "missing_rows=0, ratio=0.000000",
+      "ohlc_valid": "bad_ohlc_rows=0",
+      "volume_valid": "negative_volume_rows=0",
+      "timezone_utc": "dtype=datetime64[ns, UTC]",
+      "no_future": "future_rows=0"
+    },
+    "15m": {
+      "duplicates": "duplicates=0",
+      "constant_step": "bad_steps=0, expected_seconds=900",
+      "missing_ratio": "missing_rows=0, ratio=0.000000",
+      "ohlc_valid": "bad_ohlc_rows=0",
+      "volume_valid": "negative_volume_rows=0",
+      "timezone_utc": "dtype=datetime64[ns, UTC]",
+      "no_future": "future_rows=0"
+    },
+    "1h": {
+      "duplicates": "duplicates=0",
+      "constant_step": "bad_steps=0, expected_seconds=3600",
+      "missing_ratio": "missing_rows=0, ratio=0.000000",
+      "ohlc_valid": "bad_ohlc_rows=0",
+      "volume_valid": "negative_volume_rows=0",
+      "timezone_utc": "dtype=datetime64[ns, UTC]",
+      "no_future": "future_rows=0"
+    },
+    "4h": {
+      "duplicates": "duplicates=0",
+      "constant_step": "bad_steps=0, expected_seconds=14400",
+      "missing_ratio": "missing_rows=0, ratio=0.000000",
+      "ohlc_valid": "bad_ohlc_rows=0",
+      "volume_valid": "negative_volume_rows=0",
+      "timezone_utc": "dtype=datetime64[ns, UTC]",
+      "no_future": "future_rows=0"
+    },
+    "1d": {
+      "duplicates": "duplicates=0",
+      "constant_step": "bad_steps=0, expected_seconds=86400",
+      "missing_ratio": "missing_rows=0, ratio=0.000000",
+      "ohlc_valid": "bad_ohlc_rows=0",
+      "volume_valid": "negative_volume_rows=0",
+      "timezone_utc": "dtype=datetime64[ns, UTC]",
+      "no_future": "future_rows=0"
+    },
+    "1w": {
+      "duplicates": "duplicates=0",
+      "constant_step": "bad_steps=0, expected_seconds=604800",
+      "missing_ratio": "missing_rows=0, ratio=0.000000",
+      "ohlc_valid": "bad_ohlc_rows=0",
+      "volume_valid": "negative_volume_rows=0",
+      "timezone_utc": "dtype=datetime64[ns, UTC]",
+      "no_future": "future_rows=0"
+    }
+  }
+}
+
