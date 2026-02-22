@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
+import subprocess
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pandas as pd
+import requests
 
 from src.config import get_runtime_paths
 from src.data.clean import clean_ohlcv
@@ -18,6 +22,7 @@ from src.eval.report import write_walk_forward_report
 from src.eval.walk_forward import run_walk_forward
 from src.features.build import build_features, finalize_features
 from src.labels.build import build_labels, join_features_labels
+from src.models.registry import latest_model_dir
 from src.models.train import train_horizon_model
 from src.sim.polymarket import SimulationParams, run_paper_sim
 from src.utils import (
@@ -58,6 +63,42 @@ def _asset_price_anchor(asset: str) -> float:
         "SOL": 120.0,
     }
     return float(anchors.get(asset.upper(), 1000.0))
+
+
+def _git_commit(root: Path) -> str:
+    try:
+        out = subprocess.check_output(
+            ["git", "-C", str(root), "rev-parse", "--short", "HEAD"],
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+        return out or "unknown"
+    except Exception:
+        return "unknown"
+
+
+def _hash_payload(payload: Any) -> str:
+    data = json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str).encode("utf-8")
+    return hashlib.sha256(data).hexdigest()
+
+
+def _hash_dataframe(frame: pd.DataFrame, columns: list[str]) -> str:
+    if frame.empty:
+        return "empty"
+    out = frame.loc[:, [col for col in columns if col in frame.columns]].copy()
+    if "ts_utc" in out.columns:
+        out["ts_utc"] = pd.to_datetime(out["ts_utc"], utc=True, errors="coerce").astype("int64")
+    row_hashes = pd.util.hash_pandas_object(out, index=False)
+    return hashlib.sha256(row_hashes.to_numpy().tobytes()).hexdigest()
+
+
+def _build_run_meta(*, config: dict[str, Any], root: Path, dataset_hash: str) -> dict[str, str]:
+    return {
+        "generated_at_utc": utc_now().isoformat(),
+        "git_commit": _git_commit(root),
+        "config_hash": _hash_payload(config),
+        "dataset_hash": dataset_hash,
+    }
 
 
 def run_data_pipeline(config: dict[str, Any], asset: str, root: str | Path = ".") -> dict[str, Any]:
@@ -132,7 +173,11 @@ def run_data_pipeline(config: dict[str, Any], asset: str, root: str | Path = "."
         resampled_qc[tf] = qc_result.details
         resampled_counts[tf] = int(len(resampled))
 
-    meta = {
+    dataset_hash = _hash_dataframe(
+        clean_df,
+        columns=["ts_utc", "open", "high", "low", "close", "volume", "symbol", "exchange"],
+    )
+    payload = {
         "asset": asset.upper(),
         "symbol": symbol,
         "exchange": exchange,
@@ -143,9 +188,10 @@ def run_data_pipeline(config: dict[str, Any], asset: str, root: str | Path = "."
         "clean_files": _to_rel_paths(clean_written, paths.root),
         "resampled_counts": resampled_counts,
         "resampled_qc": resampled_qc,
+        "meta": _build_run_meta(config=config, root=paths.root, dataset_hash=dataset_hash),
     }
-    dump_json(paths.artifacts_root / "runs" / f"data_{asset.lower()}.json", meta)
-    return meta
+    dump_json(paths.artifacts_root / "runs" / f"data_{asset.lower()}.json", payload)
+    return payload
 
 
 def run_feature_label_pipeline(config: dict[str, Any], asset: str, root: str | Path = ".") -> dict[str, Any]:
@@ -191,7 +237,15 @@ def run_feature_label_pipeline(config: dict[str, Any], asset: str, root: str | P
             "label_files": _to_rel_paths(lbl_files, paths.root),
         }
 
-    dump_json(paths.artifacts_root / "runs" / f"features_labels_{asset.lower()}.json", outputs)
+    payload: dict[str, Any] = {
+        "items": outputs,
+        "meta": _build_run_meta(
+            config=config,
+            root=paths.root,
+            dataset_hash=_hash_payload(outputs),
+        ),
+    }
+    dump_json(paths.artifacts_root / "runs" / f"features_labels_{asset.lower()}.json", payload)
     return outputs
 
 
@@ -227,7 +281,15 @@ def run_training_pipeline(config: dict[str, Any], asset: str, root: str | Path =
         except Exception as exc:
             training_errors[horizon] = str(exc)
 
-    payload = {"trained": training_results, "errors": training_errors}
+    payload = {
+        "trained": training_results,
+        "errors": training_errors,
+        "meta": _build_run_meta(
+            config=config,
+            root=paths.root,
+            dataset_hash=_hash_payload({"trained": training_results, "errors": training_errors}),
+        ),
+    }
     dump_json(paths.artifacts_root / "runs" / f"training_{asset.lower()}.json", payload)
     return payload
 
@@ -265,8 +327,14 @@ def run_walk_forward_pipeline(config: dict[str, Any], asset: str, root: str | Pa
             result=wf_result,
         )
 
-    dump_json(paths.artifacts_root / "runs" / f"walk_forward_{asset.lower()}.json", results)
-    return results
+    payload: dict[str, Any] = dict(results)
+    payload["meta"] = _build_run_meta(
+        config=config,
+        root=paths.root,
+        dataset_hash=_hash_payload(results),
+    )
+    dump_json(paths.artifacts_root / "runs" / f"walk_forward_{asset.lower()}.json", payload)
+    return payload
 
 
 def run_simulation_pipeline(config: dict[str, Any], asset: str, root: str | Path = ".") -> dict[str, Any]:
@@ -306,8 +374,60 @@ def run_simulation_pipeline(config: dict[str, Any], asset: str, root: str | Path
             max_total_exposure=float(sim_cfg.get("max_total_exposure", 3.0)),
         ),
     )
-    dump_json(paths.artifacts_root / "runs" / f"sim_{asset.lower()}.json", sim_result)
-    return {"summary": sim_result.get("summary", {})}
+    payload = dict(sim_result)
+    payload["meta"] = _build_run_meta(
+        config=config,
+        root=paths.root,
+        dataset_hash=_hash_payload(sim_result),
+    )
+    dump_json(paths.artifacts_root / "runs" / f"sim_{asset.lower()}.json", payload)
+    return {"summary": sim_result.get("summary", {}), "meta": payload["meta"]}
+
+
+def run_doctor(config: dict[str, Any], asset: str, root: str | Path = ".") -> dict[str, Any]:
+    paths = get_runtime_paths(config, root=root)
+    asset_u = asset.upper()
+    checks: list[dict[str, Any]] = []
+
+    def add_check(name: str, ok: bool, detail: str) -> None:
+        checks.append({"name": name, "ok": bool(ok), "detail": detail})
+
+    try:
+        _symbol_info(config, asset_u)
+        add_check("config.asset", True, f"{asset_u} configured")
+    except Exception as exc:
+        add_check("config.asset", False, str(exc))
+
+    horizons_map = config.get("horizons_map", {})
+    add_check("config.horizons", bool(horizons_map), f"count={len(horizons_map)}")
+
+    add_check("paths.data_root", paths.data_root.exists(), str(paths.data_root))
+    add_check("paths.artifacts_root", paths.artifacts_root.exists(), str(paths.artifacts_root))
+
+    model_checks = []
+    for horizon in sorted(horizons_map.keys()):
+        latest = latest_model_dir(paths.artifacts_root, asset_u, horizon)
+        model_checks.append({"horizon": horizon, "model_dir": str(latest) if latest else None, "ok": latest is not None})
+    add_check(
+        "models.present",
+        any(item["ok"] for item in model_checks),
+        ", ".join(f"{item['horizon']}={'ok' if item['ok'] else 'missing'}" for item in model_checks) or "no horizons",
+    )
+
+    try:
+        resp = requests.get("https://api.binance.com/api/v3/ping", timeout=10)
+        add_check("binance.ping", resp.ok, f"http={resp.status_code}")
+    except Exception as exc:
+        add_check("binance.ping", False, str(exc))
+
+    all_ok = all(item["ok"] for item in checks)
+    return {
+        "ok": all_ok,
+        "asset": asset_u,
+        "checks": checks,
+        "models": model_checks,
+        "meta": _build_run_meta(config=config, root=paths.root, dataset_hash=_hash_payload(model_checks)),
+    }
 
 
 def run_all(config: dict[str, Any], asset: str, root: str | Path = ".") -> dict[str, Any]:

@@ -51,6 +51,8 @@ UlyanAI — сервис прогнозирования ценовых диап�
 
 ```powershell
 python -m pip install -r requirements.txt
+# deterministic deps for reproducible environments
+python -m pip install -r requirements.lock.txt
 python -m src.cli --asset BTC pipeline-all
 python -m src.cli service-run
 ```
@@ -73,12 +75,14 @@ curl -H "X-API-Key: dev-key" "http://localhost:8000/v1/predict?asset=BTC&horizon
 - `eval-walk-forward` — walk-forward оценка.
 - `sim-run` — paper simulation.
 - `pipeline-all` — полный цикл.
+- `doctor` — preflight-проверки конфигов, данных, моделей и Binance connectivity.
 - `service-run` — запуск FastAPI сервиса.
 
 Примеры:
 ```powershell
 python -m src.cli --asset BTC data-sync
 python -m src.cli --asset BTC train-run
+python -m src.cli --asset BTC doctor
 python -m src.cli service-run --reload
 ```
 
@@ -105,6 +109,8 @@ GUI открывается по `/` и предназначен для:
 - `GET /v1/predict`
 - `POST /v1/predict_batch`
 - `GET /v1/metrics`
+
+`/v1/health` возвращает контракт с `ok`, `fallback_enabled`, `fallback_in_use`, `missing_models`.
 
 `events`:
 - `POST /api/events`
@@ -151,3 +157,5 @@ pytest -q
 - Все пути в проекте относительные к корню репозитория.
 - Временные метки хранятся в UTC.
 - Поддерживаемые горизонты: `5m`, `15m`, `1h`, `4h`, `1d`, `1w`.
+- В `artifacts/runs/*.json` сохраняется `meta` блок: `git_commit`, `config_hash`, `dataset_hash`.
+- Для pinned-зависимостей используйте `requirements.lock.txt`.

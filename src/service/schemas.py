@@ -80,7 +80,13 @@ class PredictBatchResponse(BaseModel):
 class HealthResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    status: Literal["ok"]
+    ok: bool
+    status: Literal["ok"] = "ok"
+    mode: Literal["price_ranges"] = "price_ranges"
+    fallback_enabled: bool = True
+    fallback_in_use: bool = False
+    missing_models: list[str] = Field(default_factory=list)
+    ts_utc: str
 
 
 class StatusResponse(BaseModel):

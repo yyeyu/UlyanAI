@@ -2,11 +2,20 @@ from __future__ import annotations
 
 import unittest
 
-from src.service.api import get_predict, post_predict_batch
+from src.service.api import get_health, get_predict, post_predict_batch
 from src.service.schemas import PredictBatchRequest, PredictBatchRequestItem
 
 
 class ServiceContractTests(unittest.TestCase):
+    def test_health_contract_contains_fallback_flags(self) -> None:
+        payload = get_health().model_dump()
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["status"], "ok")
+        self.assertEqual(payload["mode"], "price_ranges")
+        self.assertIn("fallback_enabled", payload)
+        self.assertIn("fallback_in_use", payload)
+        self.assertIn("missing_models", payload)
+
     def test_predict_uses_price_ranges_only(self) -> None:
         response = get_predict(asset="BTC", horizon="1h")
         payload = response.model_dump()

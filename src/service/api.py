@@ -361,7 +361,20 @@ def _stop_worker() -> None:
 
 def get_health() -> HealthResponse:
     STATS.total_requests += 1
-    return HealthResponse(status="ok")
+    missing_models: list[str] = []
+    for asset in SUPPORTED_ASSETS:
+        for horizon in SUPPORTED_HORIZONS:
+            if _load_bundle_cached(asset, horizon) is None:
+                missing_models.append(f"{asset}_{horizon}")
+    return HealthResponse(
+        ok=True,
+        status="ok",
+        mode="price_ranges",
+        fallback_enabled=bool(CONFIG.get("data", {}).get("allow_offline_synthetic_fallback", True)),
+        fallback_in_use=bool(missing_models),
+        missing_models=missing_models,
+        ts_utc=datetime.now(timezone.utc).isoformat(),
+    )
 
 
 def get_status() -> StatusResponse:

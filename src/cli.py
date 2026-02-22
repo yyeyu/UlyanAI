@@ -12,6 +12,7 @@ from src.config import load_config
 from src.pipeline import (
     run_all,
     run_data_pipeline,
+    run_doctor,
     run_feature_label_pipeline,
     run_simulation_pipeline,
     run_training_pipeline,
@@ -59,6 +60,12 @@ def cmd_pipeline_all(args: argparse.Namespace) -> None:
     print(result)
 
 
+def cmd_doctor(args: argparse.Namespace) -> None:
+    cfg = _load_cfg(args.config_dir)
+    result = run_doctor(cfg, asset=args.asset, root=args.root)
+    print(result)
+
+
 def cmd_service_run(args: argparse.Namespace) -> None:
     cfg = _load_cfg(args.config_dir)
     uvicorn.run(
@@ -94,6 +101,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     pipeline = sub.add_parser("pipeline-all", help="Run full pipeline")
     pipeline.set_defaults(func=cmd_pipeline_all)
+
+    doctor = sub.add_parser("doctor", help="Run preflight checks for config/data/models/connectivity")
+    doctor.set_defaults(func=cmd_doctor)
 
     service = sub.add_parser("service-run", help="Start FastAPI service")
     service.add_argument("--reload", action="store_true")

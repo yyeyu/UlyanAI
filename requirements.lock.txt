@@ -1,0 +1,10 @@
+numpy==2.3.2
+pandas==2.3.3
+pyarrow==23.0.1
+pyyaml==6.0.3
+requests==2.32.4
+lightgbm==4.6.0
+scikit-learn==1.8.0
+fastapi==0.129.0
+uvicorn==0.41.0
+pytest==9.0.2

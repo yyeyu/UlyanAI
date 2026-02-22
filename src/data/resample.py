@@ -17,7 +17,8 @@ def resample_ohlcv(clean_df: pd.DataFrame, timeframe: str) -> pd.DataFrame:
     frame = clean_df.copy()
     frame = frame.set_index("ts_utc").sort_index()
 
-    agg = frame.resample(rule, label="left", closed="left").agg(
+    # Right-closed/right-labeled buckets keep alignment with candle close moments.
+    agg = frame.resample(rule, label="right", closed="right").agg(
         open=("open", "first"),
         high=("high", "max"),
         low=("low", "min"),
@@ -26,6 +27,9 @@ def resample_ohlcv(clean_df: pd.DataFrame, timeframe: str) -> pd.DataFrame:
         symbol=("symbol", "last"),
         exchange=("exchange", "last"),
     )
-    agg = agg.dropna(subset=["open", "high", "low", "close"]).reset_index()
-    return agg
 
+    # Drop buckets that are labeled beyond the last available source candle.
+    agg = agg[agg.index <= frame.index.max()]
+    agg = agg.dropna(subset=["open", "high", "low", "close"])
+    agg = agg.reset_index()
+    return agg

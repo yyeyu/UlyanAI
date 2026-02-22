@@ -1,6 +1,7 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from copy import deepcopy
+import json
 
 from src.config import load_config
 from src.pipeline import run_data_pipeline, run_feature_label_pipeline, run_training_pipeline
@@ -28,3 +29,12 @@ def test_smoke_data_features_train_pipeline(tmp_path) -> None:
     train = run_training_pipeline(cfg, asset="BTC", root=tmp_path)
     assert isinstance(train, dict)
     assert len(train.get("trained", {})) >= 1
+
+    data_run = json.loads((tmp_path / "artifacts" / "runs" / "data_btc.json").read_text(encoding="utf-8"))
+    features_run = json.loads((tmp_path / "artifacts" / "runs" / "features_labels_btc.json").read_text(encoding="utf-8"))
+    training_run = json.loads((tmp_path / "artifacts" / "runs" / "training_btc.json").read_text(encoding="utf-8"))
+    for payload in (data_run, features_run, training_run):
+        assert "meta" in payload
+        assert "git_commit" in payload["meta"]
+        assert "config_hash" in payload["meta"]
+        assert "dataset_hash" in payload["meta"]
