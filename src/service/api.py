@@ -22,10 +22,13 @@ from src.models.predict import (
     predict_return_quantiles,
 )
 from src.service.cache import CandleCache
-from src.service.event_store import EventCreateInput, EventStore, HORIZON_TO_SECONDS
+from src.service.event_store import CycleCreateInput, EventCreateInput, EventStore, HORIZON_TO_SECONDS
 from src.service.schemas import (
     AlertsResponse,
+    CreateCycleRequest,
     CreateEventRequest,
+    CycleListResponse,
+    CycleRecord,
     EventListResponse,
     EventPricesResponse,
     EventRecord,
@@ -249,10 +252,61 @@ def _build_event_metrics(event: dict[str, Any], actual_price: float, now_utc: da
     }
 
 
+def _spawn_cycle_event(cycle: dict[str, Any]) -> dict[str, Any] | None:
+    total_runs = int(cycle.get("total_runs", 0))
+    launched_runs = int(cycle.get("launched_runs", 0))
+    if launched_runs >= total_runs:
+        return None
+    if EVENT_STORE.has_active_event_for_cycle(str(cycle["cycle_id"])):
+        return None
+
+    requested_model_id = cycle.get("model_id") or None
+    ctx = _predict_internal_ctx(
+        asset=str(cycle["asset"]),
+        horizon=str(cycle["horizon"]),
+        model_id=str(requested_model_id) if requested_model_id else None,
+    )
+    model_meta = _model_meta_from_bundle(ctx.bundle, ctx.model_version)
+    seq = launched_runs + 1
+    return EVENT_STORE.create_event(
+        EventCreateInput(
+            asset=ctx.response.asset,
+            horizon=ctx.response.horizon,
+            created_at=datetime.now(timezone.utc),
+            price_t0=float(ctx.response.price_spot),
+            prediction=ctx.response.model_dump(),
+            pred_low=float(ctx.response.price_range.low),
+            pred_mid=float(ctx.response.median_price),
+            pred_high=float(ctx.response.price_range.high),
+            model_id=ctx.model_version,
+            model_meta=model_meta,
+            price_source=str(cycle.get("price_source", "binance_spot")),
+            note=cycle.get("note"),
+            cycle_id=str(cycle["cycle_id"]),
+            cycle_seq=seq,
+            cycle_total=total_runs,
+        )
+    )
+
+
+def _try_spawn_cycle_events(limit: int = 200) -> None:
+    for cycle in EVENT_STORE.list_running_cycles(limit=limit):
+        cycle_id = str(cycle["cycle_id"])
+        try:
+            if EVENT_STORE.has_active_event_for_cycle(cycle_id):
+                continue
+            _spawn_cycle_event(cycle)
+        except Exception as exc:
+            EVENT_STORE.add_alert(
+                level="error",
+                code="cycle_spawn_failed",
+                message=str(exc),
+                context={"cycle_id": cycle_id},
+            )
+
+
 def _worker_tick() -> None:
     active = EVENT_STORE.list_active_events()
-    if not active:
-        return
     now_utc = datetime.now(timezone.utc)
     for event in active:
         try:
@@ -278,6 +332,7 @@ def _worker_tick() -> None:
                 message=str(exc),
                 context={"event_id": event.get("event_id")},
             )
+    _try_spawn_cycle_events()
 
 
 def _worker_loop() -> None:
@@ -404,6 +459,7 @@ app.add_middleware(
 @app.on_event("startup")
 def _on_startup() -> None:
     _sync_models_registry()
+    _try_spawn_cycle_events()
     _start_worker()
 
 
@@ -502,10 +558,68 @@ def create_event(
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
+@app.post("/api/cycles", response_model=CycleRecord)
+def create_cycle(
+    request: CreateCycleRequest,
+    _: None = Depends(_auth_dep),
+    __: None = Depends(_rate_limit_dep),
+) -> CycleRecord:
+    try:
+        asset_u, horizon_u = _check_supported(request.asset, request.horizon)
+        cycle = EVENT_STORE.create_cycle(
+            CycleCreateInput(
+                asset=asset_u,
+                horizon=horizon_u,
+                total_runs=int(request.runs),
+                model_id=request.model_id,
+                price_source=request.price_source,
+                note=request.note,
+            )
+        )
+        _spawn_cycle_event(cycle)
+        return CycleRecord.model_validate(EVENT_STORE.get_cycle(str(cycle["cycle_id"])))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        EVENT_STORE.add_alert(
+            level="error",
+            code="create_cycle_failed",
+            message=str(exc),
+            context={"asset": request.asset, "horizon": request.horizon, "runs": request.runs},
+        )
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.get("/api/cycles", response_model=CycleListResponse)
+def list_cycles(
+    status: str | None = Query(default=None),
+    horizon: str | None = Query(default=None),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=50, ge=1, le=500),
+    _: None = Depends(_auth_dep),
+    __: None = Depends(_rate_limit_dep),
+) -> CycleListResponse:
+    payload = EVENT_STORE.list_cycles(status=status, horizon=horizon, page=page, page_size=page_size)
+    return CycleListResponse.model_validate(payload)
+
+
+@app.get("/api/cycles/{cycle_id}", response_model=CycleRecord)
+def get_cycle(
+    cycle_id: str,
+    _: None = Depends(_auth_dep),
+    __: None = Depends(_rate_limit_dep),
+) -> CycleRecord:
+    try:
+        return CycleRecord.model_validate(EVENT_STORE.get_cycle(cycle_id))
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
 @app.get("/api/events", response_model=EventListResponse)
 def list_events(
     status: str | None = Query(default=None),
     horizon: str | None = Query(default=None),
+    cycle_id: str | None = Query(default=None),
     result: str | None = Query(default=None, pattern="^(hit|miss)?$"),
     model_id: str | None = Query(default=None),
     created_from: str | None = Query(default=None),
@@ -521,6 +635,7 @@ def list_events(
     payload = EVENT_STORE.list_events(
         status=status,
         horizon=horizon,
+        cycle_id=cycle_id,
         model_id=model_id,
         result=result,
         created_from=created_from,
@@ -607,10 +722,13 @@ def production_models(
 def metrics_summary(
     days: int = Query(default=30, ge=1, le=3650),
     horizon: str | None = Query(default=None),
+    cycle_id: str | None = Query(default=None),
     _: None = Depends(_auth_dep),
     __: None = Depends(_rate_limit_dep),
 ) -> MetricsSummaryResponse:
-    return MetricsSummaryResponse.model_validate(EVENT_STORE.metrics_summary(days=days, horizon=horizon))
+    return MetricsSummaryResponse.model_validate(
+        EVENT_STORE.metrics_summary(days=days, horizon=horizon, cycle_id=cycle_id)
+    )
 
 
 @app.get("/api/alerts", response_model=AlertsResponse)

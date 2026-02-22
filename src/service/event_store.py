@@ -66,6 +66,19 @@ class EventCreateInput:
     model_meta: dict[str, Any]
     price_source: str
     note: str | None = None
+    cycle_id: str | None = None
+    cycle_seq: int | None = None
+    cycle_total: int | None = None
+
+
+@dataclass(frozen=True)
+class CycleCreateInput:
+    asset: str
+    horizon: str
+    total_runs: int
+    model_id: str | None
+    price_source: str
+    note: str | None = None
 
 
 class EventStore:
@@ -81,6 +94,15 @@ class EventStore:
 
     def _exec(self, sql: str, params: tuple[Any, ...] = ()) -> sqlite3.Cursor:
         return self._conn.execute(sql, params)
+
+    def _has_column(self, table: str, column: str) -> bool:
+        rows = self._exec(f"PRAGMA table_info({table})").fetchall()
+        return any(str(row["name"]) == column for row in rows)
+
+    def _ensure_column(self, table: str, column: str, ddl: str) -> None:
+        if self._has_column(table, column):
+            return
+        self._exec(f"ALTER TABLE {table} ADD COLUMN {column} {ddl}")
 
     def _init_schema(self) -> None:
         with self._lock:
@@ -126,6 +148,29 @@ class EventStore:
                 )
                 """
             )
+            self._ensure_column("events", "cycle_id", "TEXT")
+            self._ensure_column("events", "cycle_seq", "INTEGER")
+            self._ensure_column("events", "cycle_total", "INTEGER")
+            self._exec(
+                """
+                CREATE TABLE IF NOT EXISTS cycles (
+                    cycle_id TEXT PRIMARY KEY,
+                    asset TEXT NOT NULL,
+                    horizon TEXT NOT NULL,
+                    total_runs INTEGER NOT NULL,
+                    launched_runs INTEGER NOT NULL DEFAULT 0,
+                    completed_runs INTEGER NOT NULL DEFAULT 0,
+                    cancelled_runs INTEGER NOT NULL DEFAULT 0,
+                    model_id TEXT,
+                    price_source TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    note TEXT,
+                    last_event_id TEXT,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                )
+                """
+            )
             self._exec(
                 """
                 CREATE TABLE IF NOT EXISTS event_price_samples (
@@ -151,6 +196,8 @@ class EventStore:
             self._exec("CREATE INDEX IF NOT EXISTS idx_events_status ON events(status)")
             self._exec("CREATE INDEX IF NOT EXISTS idx_events_created ON events(created_at)")
             self._exec("CREATE INDEX IF NOT EXISTS idx_events_horizon ON events(horizon)")
+            self._exec("CREATE INDEX IF NOT EXISTS idx_events_cycle_id ON events(cycle_id)")
+            self._exec("CREATE INDEX IF NOT EXISTS idx_cycles_status ON cycles(status)")
             self._exec("CREATE INDEX IF NOT EXISTS idx_event_prices_event_ts ON event_price_samples(event_id, ts)")
             self._conn.commit()
 
@@ -166,6 +213,9 @@ class EventStore:
         out["metrics_json"] = _json_load(out.get("metrics_json"), {})
         out["is_production"] = bool(out.get("is_production", 0))
         return out
+
+    def _cycle_from_row(self, row: sqlite3.Row) -> dict[str, Any]:
+        return dict(row)
 
     def upsert_model(self, payload: dict[str, Any]) -> None:
         metrics = payload.get("metrics_json", {})
@@ -242,6 +292,104 @@ class EventStore:
             ).fetchall()
         return [self._model_from_row(row) for row in rows]
 
+    def create_cycle(self, cycle: CycleCreateInput) -> dict[str, Any]:
+        if cycle.horizon not in HORIZON_TO_SECONDS:
+            raise ValueError(f"unsupported horizon: {cycle.horizon}")
+        total_runs = max(1, int(cycle.total_runs))
+        cycle_id = str(uuid.uuid4())
+        now_iso = _to_iso_utc(_utc_now())
+        with self._lock:
+            self._exec(
+                """
+                INSERT INTO cycles (
+                    cycle_id, asset, horizon, total_runs, launched_runs, completed_runs, cancelled_runs,
+                    model_id, price_source, status, note, last_event_id, created_at, updated_at
+                )
+                VALUES (?, ?, ?, ?, 0, 0, 0, ?, ?, 'running', ?, NULL, ?, ?)
+                """,
+                (
+                    cycle_id,
+                    cycle.asset.upper(),
+                    cycle.horizon,
+                    total_runs,
+                    cycle.model_id,
+                    cycle.price_source,
+                    cycle.note,
+                    now_iso,
+                    now_iso,
+                ),
+            )
+            self._conn.commit()
+        return self.get_cycle(cycle_id)
+
+    def get_cycle(self, cycle_id: str) -> dict[str, Any]:
+        with self._lock:
+            row = self._exec("SELECT * FROM cycles WHERE cycle_id=?", (cycle_id,)).fetchone()
+        if row is None:
+            raise KeyError(f"cycle not found: {cycle_id}")
+        return self._cycle_from_row(row)
+
+    def list_cycles(
+        self,
+        *,
+        status: str | None = None,
+        horizon: str | None = None,
+        page: int = 1,
+        page_size: int = 50,
+    ) -> dict[str, Any]:
+        clauses: list[str] = []
+        params: list[Any] = []
+        if status:
+            clauses.append("status = ?")
+            params.append(status)
+        if horizon:
+            clauses.append("horizon = ?")
+            params.append(horizon)
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        page_clean = max(1, int(page))
+        page_size_clean = max(1, min(500, int(page_size)))
+        offset = (page_clean - 1) * page_size_clean
+        with self._lock:
+            total = int(self._exec(f"SELECT COUNT(*) FROM cycles {where}", tuple(params)).fetchone()[0])
+            rows = self._exec(
+                f"""
+                SELECT * FROM cycles
+                {where}
+                ORDER BY created_at DESC
+                LIMIT ? OFFSET ?
+                """,
+                tuple([*params, page_size_clean, offset]),
+            ).fetchall()
+        return {
+            "items": [self._cycle_from_row(row) for row in rows],
+            "total": total,
+            "page": page_clean,
+            "page_size": page_size_clean,
+        }
+
+    def list_running_cycles(self, limit: int = 200) -> list[dict[str, Any]]:
+        with self._lock:
+            rows = self._exec(
+                """
+                SELECT * FROM cycles
+                WHERE status='running' AND launched_runs < total_runs
+                ORDER BY created_at ASC
+                LIMIT ?
+                """,
+                (max(1, min(1000, int(limit))),),
+            ).fetchall()
+        return [self._cycle_from_row(row) for row in rows]
+
+    def has_active_event_for_cycle(self, cycle_id: str) -> bool:
+        with self._lock:
+            count = int(
+                self._exec(
+                    "SELECT COUNT(*) FROM events WHERE cycle_id=? AND status='active'",
+                    (cycle_id,),
+                ).fetchone()[0]
+            )
+        return count > 0
+
     def create_event(self, event: EventCreateInput) -> dict[str, Any]:
         if event.horizon not in HORIZON_TO_SECONDS:
             raise ValueError(f"unsupported horizon: {event.horizon}")
@@ -251,14 +399,33 @@ class EventStore:
         now_iso = _to_iso_utc(_utc_now())
 
         with self._lock:
+            if event.cycle_id:
+                cycle_row = self._exec(
+                    "SELECT status, launched_runs, total_runs FROM cycles WHERE cycle_id=?",
+                    (event.cycle_id,),
+                ).fetchone()
+                if cycle_row is None:
+                    raise ValueError(f"cycle not found: {event.cycle_id}")
+                if str(cycle_row["status"]) != "running":
+                    raise ValueError(f"cycle is not running: {event.cycle_id}")
+                if int(cycle_row["launched_runs"]) >= int(cycle_row["total_runs"]):
+                    raise ValueError(f"cycle is already full: {event.cycle_id}")
+                active_for_cycle = int(
+                    self._exec(
+                        "SELECT COUNT(*) FROM events WHERE cycle_id=? AND status='active'",
+                        (event.cycle_id,),
+                    ).fetchone()[0]
+                )
+                if active_for_cycle > 0:
+                    raise ValueError(f"cycle already has active event: {event.cycle_id}")
             self._exec(
                 """
                 INSERT INTO events (
                     event_id, asset, horizon, created_at, expires_at, price_t0, pred_low, pred_mid, pred_high,
                     payload_json, model_id, model_meta_json, price_source, status, actual_price, current_price,
-                    metrics_json, note, updated_at
+                    metrics_json, note, cycle_id, cycle_seq, cycle_total, updated_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     event_id,
@@ -279,6 +446,9 @@ class EventStore:
                     float(event.price_t0),
                     _json_dump({}),
                     event.note,
+                    event.cycle_id,
+                    event.cycle_seq,
+                    event.cycle_total,
                     now_iso,
                 ),
             )
@@ -286,6 +456,17 @@ class EventStore:
                 "INSERT INTO event_price_samples (event_id, ts, price) VALUES (?, ?, ?)",
                 (event_id, _to_iso_utc(created_at), float(event.price_t0)),
             )
+            if event.cycle_id:
+                self._exec(
+                    """
+                    UPDATE cycles
+                    SET launched_runs = launched_runs + 1,
+                        last_event_id = ?,
+                        updated_at = ?
+                    WHERE cycle_id = ? AND status='running'
+                    """,
+                    (event_id, now_iso, event.cycle_id),
+                )
             self._conn.commit()
         return self.get_event(event_id)
 
@@ -308,6 +489,7 @@ class EventStore:
         *,
         status: str | None = None,
         horizon: str | None = None,
+        cycle_id: str | None = None,
         model_id: str | None = None,
         result: str | None = None,
         created_from: str | None = None,
@@ -327,6 +509,9 @@ class EventStore:
         if horizon:
             clauses.append("horizon = ?")
             params.append(horizon)
+        if cycle_id:
+            clauses.append("cycle_id = ?")
+            params.append(cycle_id)
         if model_id:
             clauses.append("model_id = ?")
             params.append(model_id)
@@ -353,6 +538,7 @@ class EventStore:
             "current_price": "current_price",
             "status": "status",
             "horizon": "horizon",
+            "cycle_seq": "cycle_seq",
         }
         sort_col = allowed_sort.get(sort_by, "created_at")
         sort_order = "ASC" if sort_dir.lower() == "asc" else "DESC"
@@ -421,8 +607,13 @@ class EventStore:
         metrics: dict[str, Any],
         completed_at: datetime,
     ) -> None:
+        now_iso = _to_iso_utc(completed_at)
         with self._lock:
-            self._exec(
+            row = self._exec(
+                "SELECT cycle_id FROM events WHERE event_id=?",
+                (event_id,),
+            ).fetchone()
+            updated = self._exec(
                 """
                 UPDATE events
                 SET status='completed',
@@ -430,26 +621,76 @@ class EventStore:
                     current_price=?,
                     metrics_json=?,
                     updated_at=?
-                WHERE event_id=?
+                WHERE event_id=? AND status='active'
                 """,
                 (
                     float(actual_price),
                     float(actual_price),
                     _json_dump(metrics),
-                    _to_iso_utc(completed_at),
+                    now_iso,
                     event_id,
                 ),
             )
+            if updated.rowcount > 0 and row and row["cycle_id"]:
+                cycle_id = str(row["cycle_id"])
+                self._exec(
+                    """
+                    UPDATE cycles
+                    SET completed_runs = completed_runs + 1,
+                        updated_at = ?
+                    WHERE cycle_id = ?
+                    """,
+                    (now_iso, cycle_id),
+                )
+                self._exec(
+                    """
+                    UPDATE cycles
+                    SET status='completed',
+                        updated_at=?
+                    WHERE cycle_id=?
+                      AND launched_runs >= total_runs
+                      AND (completed_runs + cancelled_runs) >= total_runs
+                      AND status='running'
+                    """,
+                    (now_iso, cycle_id),
+                )
             self._conn.commit()
 
     def cancel_event(self, event_id: str, note: str | None = None) -> None:
         now = _to_iso_utc(_utc_now())
         metrics = {"cancelled_reason": note or "cancelled_by_user"}
         with self._lock:
-            self._exec(
-                "UPDATE events SET status='cancelled', metrics_json=?, updated_at=? WHERE event_id=?",
+            row = self._exec(
+                "SELECT cycle_id FROM events WHERE event_id=?",
+                (event_id,),
+            ).fetchone()
+            updated = self._exec(
+                "UPDATE events SET status='cancelled', metrics_json=?, updated_at=? WHERE event_id=? AND status='active'",
                 (_json_dump(metrics), now, event_id),
             )
+            if updated.rowcount > 0 and row and row["cycle_id"]:
+                cycle_id = str(row["cycle_id"])
+                self._exec(
+                    """
+                    UPDATE cycles
+                    SET cancelled_runs = cancelled_runs + 1,
+                        updated_at = ?
+                    WHERE cycle_id = ?
+                    """,
+                    (now, cycle_id),
+                )
+                self._exec(
+                    """
+                    UPDATE cycles
+                    SET status='completed',
+                        updated_at=?
+                    WHERE cycle_id=?
+                      AND launched_runs >= total_runs
+                      AND (completed_runs + cancelled_runs) >= total_runs
+                      AND status='running'
+                    """,
+                    (now, cycle_id),
+                )
             self._conn.commit()
 
     def add_alert(self, level: str, code: str, message: str, context: dict[str, Any] | None = None) -> None:
@@ -479,13 +720,22 @@ class EventStore:
             out.append(item)
         return out
 
-    def metrics_summary(self, *, days: int = 30, horizon: str | None = None) -> dict[str, Any]:
+    def metrics_summary(
+        self,
+        *,
+        days: int = 30,
+        horizon: str | None = None,
+        cycle_id: str | None = None,
+    ) -> dict[str, Any]:
         start_ts = _to_iso_utc(_utc_now() - timedelta(days=max(1, int(days))))
         clauses = ["status='completed'", "created_at >= ?"]
         params: list[Any] = [start_ts]
         if horizon:
             clauses.append("horizon = ?")
             params.append(horizon)
+        if cycle_id:
+            clauses.append("cycle_id = ?")
+            params.append(cycle_id)
         where = " AND ".join(clauses)
 
         with self._lock:

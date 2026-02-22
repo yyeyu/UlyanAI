@@ -128,6 +128,9 @@ class EventRecord(BaseModel):
     model_id: str
     model_meta: EventModelMeta
     price_source: str
+    cycle_id: str | None = None
+    cycle_seq: int | None = None
+    cycle_total: int | None = None
     status: Literal["active", "completed", "cancelled"]
     actual_price: float | None = None
     current_price: float | None = None
@@ -146,10 +149,49 @@ class CreateEventRequest(BaseModel):
     note: str | None = None
 
 
+class CreateCycleRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    asset: str = "BTC"
+    horizon: Literal["5m", "15m", "1h", "4h", "1d", "1w"]
+    runs: int = Field(ge=1, le=500)
+    model_id: str | None = None
+    price_source: Literal["binance_spot", "index"] = "binance_spot"
+    note: str | None = None
+
+
 class EventListResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     items: list[EventRecord]
+    total: int
+    page: int
+    page_size: int
+
+
+class CycleRecord(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    cycle_id: str
+    asset: str
+    horizon: Literal["5m", "15m", "1h", "4h", "1d", "1w"]
+    total_runs: int
+    launched_runs: int
+    completed_runs: int
+    cancelled_runs: int
+    model_id: str | None = None
+    price_source: str
+    status: Literal["running", "completed", "cancelled"]
+    note: str | None = None
+    last_event_id: str | None = None
+    created_at: str
+    updated_at: str
+
+
+class CycleListResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    items: list[CycleRecord]
     total: int
     page: int
     page_size: int

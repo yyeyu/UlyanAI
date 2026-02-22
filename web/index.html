@@ -181,13 +181,14 @@
           <div class="field"><label for="eventsStatusFilter">Статус</label><select id="eventsStatusFilter"><option value="">Все</option><option value="active">active</option><option value="completed">completed</option><option value="cancelled">cancelled</option></select></div>
           <div class="field"><label for="eventsHorizonFilter">Horizon</label><select id="eventsHorizonFilter"><option value="">Все</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
           <div class="field"><label for="eventsResultFilter">Result</label><select id="eventsResultFilter"><option value="">Все</option><option value="hit">hit</option><option value="miss">miss</option></select></div>
+          <div class="field"><label for="eventsCycleFilter">Cycle ID</label><input id="eventsCycleFilter" placeholder="cycle_id" /></div>
           <div class="field"><label for="eventsSearchInput">Поиск</label><input id="eventsSearchInput" placeholder="event_id / note" /></div>
         </div>
         <div class="tw" style="margin-top:8px">
           <table>
             <thead>
               <tr>
-                <th>Статус</th><th>T0 UTC</th><th>Horizon</th><th>BTC Open</th><th>Price Range</th><th>Таймер</th><th>Current</th><th>Model</th><th>Result</th><th>Abs Error</th><th>Rel Error</th><th>Width %</th>
+                <th>Статус</th><th>Cycle</th><th>T0 UTC</th><th>Horizon</th><th>BTC Open</th><th>Price Range</th><th>Таймер</th><th>Current</th><th>Model</th><th>Result</th><th>Abs Error</th><th>Rel Error</th><th>Width %</th>
               </tr>
             </thead>
             <tbody id="eventsTableBody"></tbody>
@@ -222,10 +223,11 @@
           <h2 class="ht">Сводный анализ</h2>
           <div class="btn-row"><button id="reloadAnalysisBtn">Обновить анализ</button><button id="exportChartPngBtn">Export PNG</button><button id="exportReportPdfBtn">Export PDF</button></div>
         </div>
-        <div class="grid g3">
-          <div class="field"><label for="analysisHorizonFilter">Horizon</label><select id="analysisHorizonFilter"><option value="">Все</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
-          <div class="field"><label for="analysisDaysFilter">Период (дни)</label><select id="analysisDaysFilter"><option value="7">7</option><option value="30" selected>30</option><option value="90">90</option><option value="180">180</option></select></div>
-          <div class="field"><label>&nbsp;</label><button id="applyAnalysisFiltersBtn" class="btn-primary">Применить</button></div>
+        <div class="grid g4">
+          <div class="field"><label for="analysisHorizonFilter">Horizon</label><select id="analysisHorizonFilter"><option value="">All</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
+          <div class="field"><label for="analysisDaysFilter">Period (days)</label><select id="analysisDaysFilter"><option value="7">7</option><option value="30" selected>30</option><option value="90">90</option><option value="180">180</option></select></div>
+          <div class="field"><label for="analysisCycleFilter">Cycle ID</label><input id="analysisCycleFilter" placeholder="cycle_id" /></div>
+          <div class="field"><label>&nbsp;</label><button id="applyAnalysisFiltersBtn" class="btn-primary">Apply</button></div>
         </div>
         <div class="kpi-grid" style="margin-top:8px">
           <div class="kpi"><div class="n">Coverage факт / target</div><div id="kpiCoverage" class="v">-</div><div class="h">target: 80%</div></div>
@@ -257,6 +259,7 @@
           <div class="field"><label for="deepStatusFilter">Статус</label><select id="deepStatusFilter"><option value="">Все</option><option value="active">active</option><option value="completed">completed</option><option value="cancelled">cancelled</option></select></div>
           <div class="field"><label for="deepHorizonFilter">Horizon</label><select id="deepHorizonFilter"><option value="">Все</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
           <div class="field"><label for="deepResultFilter">Result</label><select id="deepResultFilter"><option value="">Все</option><option value="hit">hit</option><option value="miss">miss</option></select></div>
+          <div class="field"><label for="deepCycleFilter">Cycle ID</label><input id="deepCycleFilter" placeholder="cycle_id" /></div>
           <div class="field"><label for="deepModelFilter">Model</label><input id="deepModelFilter" placeholder="model_id" /></div>
           <div class="field"><label for="deepFromFilter">Дата с</label><input id="deepFromFilter" type="datetime-local" /></div>
           <div class="field"><label for="deepToFilter">Дата по</label><input id="deepToFilter" type="datetime-local" /></div>
@@ -266,7 +269,7 @@
         <div id="deepStats" class="stats"></div>
         <div class="tw" style="margin-top:8px">
           <table>
-            <thead><tr><th>event_id</th><th>Статус</th><th>Horizon</th><th>T0 UTC</th><th>BTC Open</th><th>Result</th><th>Abs Error</th><th>Rel Error</th><th>Width %</th></tr></thead>
+            <thead><tr><th>event_id</th><th>Cycle</th><th>Статус</th><th>Horizon</th><th>T0 UTC</th><th>BTC Open</th><th>Result</th><th>Abs Error</th><th>Rel Error</th><th>Width %</th></tr></thead>
             <tbody id="deepEventsBody"></tbody>
           </table>
         </div>
@@ -293,6 +296,7 @@
       <div class="modal-grid">
         <div class="field"><label>Asset</label><input value="BTC" disabled /></div>
         <div class="field"><label for="createHorizonSelect">Horizon</label><select id="createHorizonSelect"><option value="5m">5m</option><option value="15m">15m</option><option value="1h" selected>1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
+        <div class="field"><label for="createRunsInput">Runs</label><input id="createRunsInput" type="number" min="1" max="500" value="1" /></div>
         <div class="field"><label for="createModelSelect">Model</label><select id="createModelSelect"></select></div>
         <div class="field"><label for="createSourceSelect">Price Source</label><select id="createSourceSelect"><option value="binance_spot" selected>binance_spot</option><option value="index">index</option></select></div>
       </div>
@@ -322,6 +326,10 @@
         events: { items: [], total: 0, page: 1, page_size: 50 },
         selectedEvent: null,
         selectedSamples: [],
+        detailMarketSamples: [],
+        detailLiveSamples: [],
+        detailChartTimer: null,
+        detailScale: null,
         detailTab: "overview",
         models: [],
         productionModels: [],
@@ -337,8 +345,28 @@
       const price = (v) => (v === null || v === undefined || Number.isNaN(Number(v))) ? "-" : Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       const pct = (v, d = 2) => (v === null || v === undefined || Number.isNaN(Number(v))) ? "-" : `${(Number(v) * 100).toFixed(d)}%`;
       const pctRaw = (v, d = 2) => (v === null || v === undefined || Number.isNaN(Number(v))) ? "-" : `${Number(v).toFixed(d)}%`;
-      const dt = (iso) => { if (!iso) return "-"; try { return new Date(iso).toISOString().replace("T", " ").replace(".000Z", "+00:00"); } catch { return iso; } };
+      const dt = (iso) => { if (!iso) return "-"; try { return new Date(iso).toISOString().replace("T", " ").replace("Z", "+00:00"); } catch { return iso; } };
       const esc = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&#39;");
+      const cycleText = (item) => item?.cycle_id ? `${String(item.cycle_id).slice(0, 8)} ${Number(item.cycle_seq || 0)}/${Number(item.cycle_total || 0)}` : "-";
+      const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+      function parseHorizonMs(horizon) {
+        const raw = String(horizon || "").trim().toLowerCase();
+        const match = raw.match(/^(\d+)\s*([mhdw])$/);
+        if (!match) return NaN;
+        const n = Number(match[1]);
+        if (!Number.isFinite(n) || n <= 0) return NaN;
+        const unit = match[2];
+        if (unit === "m") return n * 60 * 1000;
+        if (unit === "h") return n * 60 * 60 * 1000;
+        if (unit === "d") return n * 24 * 60 * 60 * 1000;
+        if (unit === "w") return n * 7 * 24 * 60 * 60 * 1000;
+        return NaN;
+      }
+      function detailPreStartMs(ev) {
+        const hMs = parseHorizonMs(ev?.horizon);
+        if (!Number.isFinite(hMs)) return 10 * 60 * 1000;
+        return clamp(Math.round(hMs * 0.2), 5 * 60 * 1000, 30 * 60 * 1000);
+      }
 
       function showBanner(message) {
         const node = el("globalBanner");
@@ -410,16 +438,16 @@
         if (item.current_price !== null && item.current_price !== undefined) return price(item.current_price);
         return "-";
       }
-      function collectEventFilters() { return { status: el("eventsStatusFilter").value, horizon: el("eventsHorizonFilter").value, result: el("eventsResultFilter").value, q: el("eventsSearchInput").value.trim() }; }
+      function collectEventFilters() { return { status: el("eventsStatusFilter").value, horizon: el("eventsHorizonFilter").value, cycle_id: el("eventsCycleFilter").value.trim(), result: el("eventsResultFilter").value, q: el("eventsSearchInput").value.trim() }; }
       function renderEventsTable() {
         const body = el("eventsTableBody");
         const items = state.events.items || [];
         const now = Date.now();
-        if (!items.length) body.innerHTML = `<tr><td colspan="12" class="mut">События не найдены.</td></tr>`;
+        if (!items.length) body.innerHTML = `<tr><td colspan="13" class="mut">События не найдены.</td></tr>`;
         else body.innerHTML = items.map((item) => {
           const m = item.metrics || {};
           return `<tr class="row-clickable" data-event-id="${esc(item.event_id)}">
-            <td>${statusTag(item.status)}</td><td>${esc(dt(item.created_at))}</td><td>${esc(item.horizon)}</td><td>${esc(price(item.price_t0))}</td>
+            <td>${statusTag(item.status)}</td><td>${esc(cycleText(item))}</td><td>${esc(dt(item.created_at))}</td><td>${esc(item.horizon)}</td><td>${esc(price(item.price_t0))}</td>
             <td>[${esc(price(item.pred_low))}; ${esc(price(item.pred_high))}]</td>
             <td><span class="timer" data-event-id="${esc(item.event_id)}">${esc(timerText(item, now))}</span></td>
             <td>${esc(currentValue(item, now))}</td><td>${esc(item.model_id || "-")}</td><td>${resultTag(m.hit)}</td>
@@ -439,7 +467,7 @@
           if (!item) return;
           node.textContent = timerText(item, Date.now());
           const row = node.closest("tr");
-          if (row && row.children[6]) row.children[6].textContent = currentValue(item, Date.now());
+          if (row && row.children[7]) row.children[7].textContent = currentValue(item, Date.now());
         });
       }
       async function loadEvents(pageOverride = null) {
@@ -496,7 +524,7 @@
         if (state.detailTab === "overview") {
           content.innerHTML = `<div class="kv">
             <div class="k">event_id</div><div>${esc(ev.event_id)}</div><div class="k">status</div><div>${statusTag(ev.status)}</div>
-            <div class="k">asset / horizon</div><div>${esc(ev.asset)} / ${esc(ev.horizon)}</div><div class="k">created_at</div><div>${esc(dt(ev.created_at))}</div>
+            <div class="k">asset / horizon</div><div>${esc(ev.asset)} / ${esc(ev.horizon)}</div><div class="k">cycle</div><div>${esc(cycleText(ev))}</div><div class="k">created_at</div><div>${esc(dt(ev.created_at))}</div>
             <div class="k">expires_at</div><div>${esc(dt(ev.expires_at))}</div><div class="k">price_t0</div><div>${esc(price(ev.price_t0))}</div>
             <div class="k">price range</div><div>[${esc(price(ev.pred_low))}; ${esc(price(ev.pred_high))}]</div><div class="k">median price</div><div>${esc(price(ev.pred_mid))}</div>
             <div class="k">result</div><div>${resultTag(m.hit)}</div><div class="k">abs / rel error</div><div>${esc(price(m.abs_error))} / ${esc(pctRaw(m.rel_error))}</div>
@@ -504,7 +532,18 @@
           </div>`;
           return;
         }
-        if (state.detailTab === "chart") { content.innerHTML = `<div class="chart" style="height:260px"><canvas id="detailChart"></canvas></div>`; requestAnimationFrame(() => drawDetailChart()); return; }
+        if (state.detailTab === "chart") {
+          content.innerHTML = `<div class="chart" style="height:300px"><canvas id="detailChart"></canvas></div>`;
+          requestAnimationFrame(async () => {
+            try {
+              if (!state.detailMarketSamples.length) await loadEventMarketSeries(ev);
+            } catch {}
+            drawDetailChart();
+            startDetailChartTicker();
+          });
+          return;
+        }
+        stopDetailChartTicker();
         if (state.detailTab === "live") {
           const last = state.selectedSamples.length ? state.selectedSamples[state.selectedSamples.length - 1] : null;
           content.innerHTML = `<div class="kv"><div class="k">Текущий статус</div><div>${statusTag(ev.status)}</div><div class="k">Таймер</div><div>${esc(timerText(ev, Date.now()))}</div><div class="k">Последний тик</div><div>${last ? `${price(last.price)} @ ${dt(last.ts)}` : "нет данных"}</div><div class="k">Current (после horizon)</div><div>${esc(currentValue(ev, Date.now()))}</div><div class="k">Actual</div><div>${esc(price(ev.actual_price))}</div></div>`;
@@ -515,30 +554,455 @@
         const meta = ev.model_meta || {};
         content.innerHTML = `<div class="kv"><div class="k">model_id</div><div>${esc(ev.model_id || "-")}</div><div class="k">git_commit</div><div>${esc(meta.git_commit || "unknown")}</div><div class="k">train_time</div><div>${esc(meta.train_time || "unknown")}</div><div class="k">dataset_hash</div><div>${esc(meta.dataset_hash || "unknown")}</div><div class="k">config_hash</div><div>${esc(meta.config_hash || "unknown")}</div></div>`;
       }
+      async function loadEventMarketSeries(ev) {
+        state.detailMarketSamples = [];
+        state.detailLiveSamples = [];
+        state.detailScale = null;
+        if (!ev || String(ev.asset || "").toUpperCase() !== "BTC") return;
+        const symbol = "BTCUSDT";
+        const createdMs = Date.parse(ev.created_at);
+        if (!Number.isFinite(createdMs)) return;
+        const expiresMs = Date.parse(ev.expires_at);
+        const updatedMs = Date.parse(ev.updated_at);
+        const nowMs = Date.now();
+        const isActive = ev.status === "active";
+        const startMs = Math.max(0, createdMs - detailPreStartMs(ev));
+        const closeMs = Number.isFinite(updatedMs) ? updatedMs : (Number.isFinite(expiresMs) ? expiresMs : nowMs);
+        const endMs = isActive ? nowMs : Math.max(createdMs, closeMs);
+        const spanMin = Math.max(1, Math.ceil((endMs - startMs) / 60000));
+        let interval = "1m";
+        if (spanMin > 1000) interval = "3m";
+        if (spanMin > 3000) interval = "5m";
+        if (spanMin > 5000) interval = "15m";
+        if (spanMin > 15000) interval = "1h";
+        if (spanMin > 30000) interval = "4h";
+        const url = new URL("https://api.binance.com/api/v3/klines");
+        url.searchParams.set("symbol", symbol);
+        url.searchParams.set("interval", interval);
+        url.searchParams.set("startTime", String(startMs));
+        url.searchParams.set("endTime", String(endMs));
+        url.searchParams.set("limit", "1000");
+        const response = await fetch(url.toString(), { cache: "no-store" });
+        if (!response.ok) throw new Error(`Binance klines HTTP ${response.status}`);
+        const rows = await response.json();
+        if (!Array.isArray(rows)) return;
+        state.detailMarketSamples = rows
+          .map((row) => ({ ts: new Date(Number(row[0])).toISOString(), price: Number(row[4]) }))
+          .filter((row) => Number.isFinite(row.price));
+      }
+      function upsertDetailLiveSample(tsMs, priceValue) {
+        const p = Number(priceValue);
+        const t = Math.floor(Number(tsMs) / 1000) * 1000;
+        if (!Number.isFinite(p) || !Number.isFinite(t)) return;
+        const iso = new Date(t).toISOString();
+        const items = state.detailLiveSamples;
+        const last = items.length ? items[items.length - 1] : null;
+        if (last && Date.parse(last.ts) === t) {
+          last.price = p;
+        } else {
+          items.push({ ts: iso, price: p });
+        }
+        if (items.length > 7200) state.detailLiveSamples = items.slice(-7200);
+      }
+      async function pullDetailLiveTicker() {
+        const ev = state.selectedEvent;
+        if (!ev || String(ev.asset || "").toUpperCase() !== "BTC") return false;
+        const response = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT", { cache: "no-store" });
+        if (!response.ok) throw new Error(`Binance ticker HTTP ${response.status}`);
+        const payload = await response.json();
+        const px = Number(payload.price);
+        if (!Number.isFinite(px)) return false;
+        upsertDetailLiveSample(Date.now(), px);
+        return true;
+      }
+      function stopDetailChartTicker() {
+        if (state.detailChartTimer) clearInterval(state.detailChartTimer);
+        state.detailChartTimer = null;
+      }
+      function startDetailChartTicker() {
+        stopDetailChartTicker();
+        if (!state.selectedEvent || state.detailTab !== "chart") return;
+        if (state.selectedEvent.status !== "active") return;
+        if (!state.detailMarketSamples.length) {
+          loadEventMarketSeries(state.selectedEvent).then(() => {
+            if (state.detailTab === "chart") drawDetailChart();
+          }).catch(() => {});
+        }
+        const tick = async () => {
+          let pulled = false;
+          try {
+            pulled = await pullDetailLiveTicker();
+          } catch {}
+          if (!pulled) {
+            const fallback = state.detailLiveSamples.length
+              ? state.detailLiveSamples[state.detailLiveSamples.length - 1]
+              : (state.detailMarketSamples.length
+                ? state.detailMarketSamples[state.detailMarketSamples.length - 1]
+                : (state.selectedSamples.length ? state.selectedSamples[state.selectedSamples.length - 1] : null));
+            if (fallback && Number.isFinite(Number(fallback.price))) upsertDetailLiveSample(Date.now(), Number(fallback.price));
+          }
+          if (state.detailTab === "chart") drawDetailChart();
+        };
+        tick().catch(() => {});
+        state.detailChartTimer = setInterval(() => { tick().catch(() => {}); }, 1000);
+      }
+      function decimateSeries(points, targetCount) {
+        if (points.length <= targetCount) return points;
+        const first = points[0];
+        const last = points[points.length - 1];
+        const mid = points.slice(1, -1);
+        const buckets = Math.max(1, Math.floor((targetCount - 2) / 2));
+        const bucketSize = mid.length / buckets;
+        const picked = [first];
+        for (let i = 0; i < buckets; i++) {
+          const from = Math.floor(i * bucketSize);
+          const to = Math.min(mid.length, Math.floor((i + 1) * bucketSize));
+          const bucket = mid.slice(from, to);
+          if (!bucket.length) continue;
+          let minP = bucket[0];
+          let maxP = bucket[0];
+          for (let j = 1; j < bucket.length; j++) {
+            const row = bucket[j];
+            if (row.price < minP.price) minP = row;
+            if (row.price > maxP.price) maxP = row;
+          }
+          if (minP.t <= maxP.t) {
+            picked.push(minP);
+            if (maxP !== minP) picked.push(maxP);
+          } else {
+            picked.push(maxP);
+            if (maxP !== minP) picked.push(minP);
+          }
+        }
+        picked.push(last);
+        const sorted = picked.sort((a, b) => a.t - b.t);
+        if (sorted.length <= targetCount) return sorted;
+        const out = [sorted[0]];
+        const step = (sorted.length - 1) / (targetCount - 1);
+        for (let i = 1; i < targetCount - 1; i++) out.push(sorted[Math.round(i * step)]);
+        out.push(sorted[sorted.length - 1]);
+        return out;
+      }
+      function buildDetailPoints(ev, maxPoints = 1800) {
+        const merged = new Map();
+        const push = (samples) => {
+          (samples || []).forEach((s) => {
+            const rawT = Date.parse(s.ts);
+            const t = Math.floor(rawT / 1000) * 1000;
+            const p = Number(s.price);
+            if (!Number.isFinite(t) || !Number.isFinite(p)) return;
+            merged.set(t, { t, price: p });
+          });
+        };
+        if (state.detailMarketSamples.length) push(state.detailMarketSamples);
+        else push(state.selectedSamples);
+        push(state.detailLiveSamples);
+        let points = [...merged.values()].sort((a, b) => a.t - b.t);
+        if (!ev || !points.length) return points;
+        const createdT = Date.parse(ev.created_at);
+        const expiresT = Date.parse(ev.expires_at);
+        const updatedT = Date.parse(ev.updated_at);
+        const isActive = ev.status === "active";
+        const closeT = isActive ? Date.now() : (Number.isFinite(updatedT) ? updatedT : (Number.isFinite(expiresT) ? expiresT : points[points.length - 1].t));
+        const leftEdge = Number.isFinite(createdT) ? (createdT - detailPreStartMs(ev)) : points[0].t;
+        const rightEdge = isActive ? Date.now() : closeT;
+        points = points.filter((p) => p.t >= leftEdge && p.t <= rightEdge);
+        if (points.length > maxPoints) points = decimateSeries(points, maxPoints);
+        return points;
+      }
+      function buildSmoothPath(ctx, xyPoints, closeToY = null) {
+        if (!xyPoints.length) return;
+        ctx.beginPath();
+        ctx.moveTo(xyPoints[0].x, xyPoints[0].y);
+        if (xyPoints.length === 1) {
+          if (closeToY !== null) {
+            ctx.lineTo(xyPoints[0].x, closeToY);
+            ctx.closePath();
+          }
+          return;
+        }
+        for (let i = 1; i < xyPoints.length - 1; i++) {
+          const midX = (xyPoints[i].x + xyPoints[i + 1].x) / 2;
+          const midY = (xyPoints[i].y + xyPoints[i + 1].y) / 2;
+          ctx.quadraticCurveTo(xyPoints[i].x, xyPoints[i].y, midX, midY);
+        }
+        const tail = xyPoints[xyPoints.length - 1];
+        ctx.lineTo(tail.x, tail.y);
+        if (closeToY !== null) {
+          ctx.lineTo(tail.x, closeToY);
+          ctx.lineTo(xyPoints[0].x, closeToY);
+          ctx.closePath();
+        }
+      }
       function drawDetailChart() {
-        const canvas = document.getElementById("detailChart"), ev = state.selectedEvent, samples = state.selectedSamples || [];
+        const canvas = document.getElementById("detailChart"), ev = state.selectedEvent;
         if (!canvas || !ev) return;
-        const ctx = canvas.getContext("2d"), w = canvas.clientWidth || 640, h = canvas.clientHeight || 220, dpr = window.devicePixelRatio || 1;
-        canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h); ctx.fillStyle = "#08111c"; ctx.fillRect(0, 0, w, h);
-        if (!samples.length) { ctx.fillStyle = "#86b98a"; ctx.font = "12px JetBrains Mono"; ctx.fillText("Нет price samples для этого события.", 16, 24); return; }
-        const vals = samples.map((s) => Number(s.price)); vals.push(Number(ev.pred_low), Number(ev.pred_high), Number(ev.pred_mid)); if (ev.actual_price !== null && ev.actual_price !== undefined) vals.push(Number(ev.actual_price));
-        let minV = Math.min(...vals), maxV = Math.max(...vals); if (minV === maxV) { minV -= 1; maxV += 1; }
-        const pad = 36, pw = w - pad * 2, ph = h - pad * 2, x = (i) => pad + (pw * i) / Math.max(1, samples.length - 1), y = (v) => pad + ((maxV - v) * ph) / (maxV - minV);
-        ctx.strokeStyle = "rgba(142,163,187,.25)"; for (let i = 0; i <= 4; i++) { const yy = pad + (ph * i) / 4; ctx.beginPath(); ctx.moveTo(pad, yy); ctx.lineTo(w - pad, yy); ctx.stroke(); }
-        ctx.fillStyle = "rgba(102,255,102,.12)"; const yLow = y(Number(ev.pred_low)), yHigh = y(Number(ev.pred_high)); ctx.fillRect(pad, yHigh, pw, Math.max(1, yLow - yHigh));
-        ctx.strokeStyle = "rgba(156,255,156,.9)"; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(pad, y(Number(ev.pred_mid))); ctx.lineTo(w - pad, y(Number(ev.pred_mid))); ctx.stroke(); ctx.setLineDash([]);
-        ctx.strokeStyle = "#66ff66"; ctx.lineWidth = 2; ctx.beginPath(); samples.forEach((s, i) => { const xx = x(i), yy = y(Number(s.price)); if (i === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy); }); ctx.stroke();
-        if (ev.actual_price !== null && ev.actual_price !== undefined) { ctx.strokeStyle = "#5cff8d"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(pad, y(Number(ev.actual_price))); ctx.lineTo(w - pad, y(Number(ev.actual_price))); ctx.stroke(); }
+        const maxPoints = Math.max(600, Math.floor((canvas.clientWidth || 760) * 2.4));
+        let points = buildDetailPoints(ev, maxPoints);
+        const ctx = canvas.getContext("2d"), w = canvas.clientWidth || 760, h = canvas.clientHeight || 280, dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        const bg = ctx.createLinearGradient(0, 0, 0, h);
+        bg.addColorStop(0, "#071108");
+        bg.addColorStop(1, "#060c07");
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        if (!points.length) {
+          ctx.fillStyle = "#86b98a";
+          ctx.font = "12px JetBrains Mono";
+          ctx.fillText("No Binance data for this event.", 16, 24);
+          return;
+        }
+
+        const isActive = ev.status === "active";
+        const createdT = Date.parse(ev.created_at);
+        const expiresT = Date.parse(ev.expires_at);
+        const updatedT = Date.parse(ev.updated_at);
+        const closeT = isActive ? Date.now() : (Number.isFinite(updatedT) ? updatedT : (Number.isFinite(expiresT) ? expiresT : points[points.length - 1].t));
+        const fmtTime = (ms, withSec = false) => {
+          if (!Number.isFinite(ms)) return "-";
+          const d = new Date(ms);
+          const hh = String(d.getHours()).padStart(2, "0");
+          const mm = String(d.getMinutes()).padStart(2, "0");
+          if (!withSec) return `${hh}:${mm}`;
+          const ss = String(d.getSeconds()).padStart(2, "0");
+          return `${hh}:${mm}:${ss}`;
+        };
+        if (!isActive) {
+          points = points.filter((p) => p.t <= closeT);
+          const closePrice = Number(ev.actual_price ?? ev.current_price);
+          if (Number.isFinite(closePrice)) {
+            points.push({ t: closeT, price: closePrice });
+            points = points.sort((a, b) => a.t - b.t);
+          }
+        }
+        if (!points.length) {
+          ctx.fillStyle = "#86b98a";
+          ctx.font = "12px JetBrains Mono";
+          ctx.fillText("No chart points for this event.", 16, 24);
+          return;
+        }
+
+        const vals = points.map((s) => Number(s.price));
+        vals.push(Number(ev.pred_low), Number(ev.pred_high), Number(ev.pred_mid), Number(ev.price_t0));
+        if (ev.actual_price !== null && ev.actual_price !== undefined) vals.push(Number(ev.actual_price));
+        let minV = Math.min(...vals), maxV = Math.max(...vals);
+        const vPad = Math.max(1e-6, (maxV - minV) * 0.09);
+        const targetMinV = minV - vPad;
+        const targetMaxV = maxV + vPad;
+        if (!state.detailScale || !isActive) {
+          state.detailScale = { min: targetMinV, max: targetMaxV };
+        } else {
+          const alpha = 0.28;
+          state.detailScale.min = state.detailScale.min + ((targetMinV - state.detailScale.min) * alpha);
+          state.detailScale.max = state.detailScale.max + ((targetMaxV - state.detailScale.max) * alpha);
+        }
+        minV = state.detailScale.min;
+        maxV = state.detailScale.max;
+        if (minV === maxV) { minV -= 1; maxV += 1; }
+
+        let minT = points[0].t;
+        let maxT = points[points.length - 1].t;
+        if (Number.isFinite(createdT)) minT = Math.min(minT, createdT - detailPreStartMs(ev));
+        maxT = isActive ? Math.max(maxT, Date.now()) : Math.max(maxT, closeT);
+        if (minT === maxT) maxT += 60 * 1000;
+        const spanT = Math.max(60 * 1000, maxT - minT);
+        const leftPadMs = Math.min(detailPreStartMs(ev), Math.floor(spanT * 0.08));
+        const rightPadMs = isActive ? 8 * 1000 : Math.min(2 * 60 * 1000, Math.floor(spanT * 0.06));
+        minT -= Math.max(2 * 1000, leftPadMs);
+        maxT += rightPadMs;
+
+        const padL = 58;
+        const padR = 18;
+        const padT = 16;
+        const padB = 34;
+        const pw = Math.max(10, w - padL - padR);
+        const ph = Math.max(10, h - padT - padB);
+        const x = (t) => padL + ((t - minT) * pw) / (maxT - minT);
+        const y = (v) => padT + ((maxV - v) * ph) / (maxV - minV);
+
+        ctx.strokeStyle = "rgba(112,146,119,.14)";
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+          const yy = padT + (ph * i) / 4;
+          ctx.beginPath();
+          ctx.moveTo(padL, yy);
+          ctx.lineTo(w - padR, yy);
+          ctx.stroke();
+        }
+        for (let i = 0; i <= 4; i++) {
+          const xx = padL + (pw * i) / 4;
+          ctx.beginPath();
+          ctx.moveTo(xx, padT);
+          ctx.lineTo(xx, h - padB);
+          ctx.stroke();
+        }
+
+        const yLow = y(Number(ev.pred_low));
+        const yHigh = y(Number(ev.pred_high));
+        ctx.fillStyle = "rgba(102,255,102,.12)";
+        ctx.fillRect(padL, yHigh, pw, Math.max(1, yLow - yHigh));
+
+        ctx.strokeStyle = "rgba(156,255,156,.9)";
+        ctx.setLineDash([6, 5]);
+        ctx.beginPath();
+        ctx.moveTo(padL, y(Number(ev.pred_mid)));
+        ctx.lineTo(w - padR, y(Number(ev.pred_mid)));
+        ctx.stroke();
+
+        ctx.strokeStyle = "#ffc760";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(padL, y(Number(ev.price_t0)));
+        ctx.lineTo(w - padR, y(Number(ev.price_t0)));
+        ctx.stroke();
+
+        ctx.setLineDash([]);
+        const xy = points.map((s) => ({ x: x(s.t), y: y(Number(s.price)) }));
+        const areaFill = ctx.createLinearGradient(0, padT, 0, h - padB);
+        areaFill.addColorStop(0, "rgba(102,255,102,.26)");
+        areaFill.addColorStop(1, "rgba(102,255,102,.02)");
+        ctx.fillStyle = areaFill;
+        buildSmoothPath(ctx, xy, h - padB);
+        ctx.fill();
+
+        const lineStroke = ctx.createLinearGradient(0, padT, w, h - padB);
+        lineStroke.addColorStop(0, "#9aff9a");
+        lineStroke.addColorStop(0.5, "#66ff66");
+        lineStroke.addColorStop(1, "#43d843");
+        ctx.strokeStyle = lineStroke;
+        ctx.lineWidth = 2.1;
+        ctx.shadowColor = "rgba(102,255,102,.25)";
+        ctx.shadowBlur = 8;
+        buildSmoothPath(ctx, xy);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        if (Number.isFinite(createdT) && createdT >= minT && createdT <= maxT) {
+          ctx.strokeStyle = "rgba(102,255,102,.55)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x(createdT), padT);
+          ctx.lineTo(x(createdT), h - padB);
+          ctx.stroke();
+        }
+        if (Number.isFinite(expiresT) && expiresT >= minT && expiresT <= maxT) {
+          ctx.strokeStyle = "rgba(255,199,96,.55)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x(expiresT), padT);
+          ctx.lineTo(x(expiresT), h - padB);
+          ctx.stroke();
+        }
+        if (!isActive && Number.isFinite(closeT) && closeT >= minT && closeT <= maxT) {
+          ctx.strokeStyle = "rgba(92,255,141,.6)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x(closeT), padT);
+          ctx.lineTo(x(closeT), h - padB);
+          ctx.stroke();
+        }
+
+        if (ev.actual_price !== null && ev.actual_price !== undefined) {
+          ctx.strokeStyle = "#5cff8d";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(padL, y(Number(ev.actual_price)));
+          ctx.lineTo(w - padR, y(Number(ev.actual_price)));
+          ctx.stroke();
+        }
+
+        if (Number.isFinite(createdT)) {
+          const ox = x(createdT);
+          const oy = y(Number(ev.price_t0));
+          ctx.fillStyle = "#66ff66";
+          ctx.beginPath();
+          ctx.arc(ox, oy, 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "rgba(134,185,138,.85)";
+          ctx.font = "10px JetBrains Mono";
+          ctx.textAlign = "left";
+          ctx.textBaseline = "bottom";
+          ctx.fillText("open", Math.min(w - padR - 28, Math.max(padL + 4, ox + 6)), Math.max(padT + 10, oy - 5));
+        }
+        if (!isActive) {
+          const closePrice = Number(ev.actual_price ?? ev.current_price);
+          if (Number.isFinite(closePrice) && Number.isFinite(closeT)) {
+            const cx = x(closeT);
+            const cy = y(closePrice);
+            ctx.fillStyle = "#5cff8d";
+            ctx.beginPath();
+            ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "rgba(134,185,138,.9)";
+            ctx.font = "10px JetBrains Mono";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "bottom";
+            ctx.fillText("close", Math.min(w - padR - 32, Math.max(padL + 4, cx + 6)), Math.max(padT + 10, cy - 5));
+          }
+        }
+
+        ctx.strokeStyle = "rgba(112,146,119,.34)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padL, padT);
+        ctx.lineTo(padL, h - padB);
+        ctx.lineTo(w - padR, h - padB);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(134,185,138,.72)";
+        ctx.font = "11px JetBrains Mono";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        for (let i = 0; i <= 4; i++) {
+          const val = minV + ((4 - i) * (maxV - minV)) / 4;
+          const yy = padT + (ph * i) / 4;
+          ctx.fillText(price(val), padL - 8, yy);
+        }
+        const useSecondsAxis = (maxT - minT) <= (30 * 60 * 1000);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        for (let i = 0; i <= 4; i++) {
+          const ts = minT + (i * (maxT - minT)) / 4;
+          const xx = x(ts);
+          ctx.fillText(fmtTime(ts, useSecondsAxis), xx, h - padB + 6);
+        }
+
+        const closePrice = Number(ev.actual_price ?? ev.current_price);
+        const legendRows = [
+          `open ${price(ev.price_t0)} @ ${fmtTime(createdT, true)}`,
+          `predict [${price(ev.pred_low)}; ${price(ev.pred_high)}], mid ${price(ev.pred_mid)}`,
+          !isActive && Number.isFinite(closePrice)
+            ? `close ${price(closePrice)} @ ${fmtTime(closeT, true)}`
+            : `last ${price(points[points.length - 1].price)} @ ${fmtTime(points[points.length - 1].t, true)}`
+        ];
+        const legendX = Math.max(padL + 6, w - padR - 280);
+        const legendY = padT + 6;
+        ctx.fillStyle = "rgba(8,16,9,.74)";
+        ctx.fillRect(legendX - 6, legendY - 4, 276, legendRows.length * 13 + 8);
+        ctx.fillStyle = "rgba(134,185,138,.88)";
+        ctx.font = "10px JetBrains Mono";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        legendRows.forEach((row, idx) => ctx.fillText(row, legendX, legendY + idx * 13));
       }
       async function openEvent(eventId, resetTab = false) {
         const id = encodeURIComponent(eventId);
         const [eventPayload, prices] = await Promise.all([api(`/api/events/${id}`), api(`/api/events/${id}/prices`, { query: { limit: 500 } })]);
         state.selectedEvent = eventPayload;
         state.selectedSamples = prices.samples || [];
+        state.detailMarketSamples = [];
+        state.detailLiveSamples = [];
+        state.detailScale = null;
+        if (state.detailTab === "chart" && !resetTab) {
+          try { await loadEventMarketSeries(eventPayload); } catch {}
+        }
         if (resetTab) state.detailTab = "overview";
         renderDetailContent();
       }
-      function closeEvent() { state.selectedEvent = null; state.selectedSamples = []; renderDetailContent(); }
+      function closeEvent() { stopDetailChartTicker(); state.selectedEvent = null; state.selectedSamples = []; state.detailMarketSamples = []; state.detailLiveSamples = []; state.detailScale = null; renderDetailContent(); }
       function drawAnalysisChart(series) {
         const canvas = el("analysisChart"), ctx = canvas.getContext("2d"), w = canvas.clientWidth || 900, h = canvas.clientHeight || 280, dpr = window.devicePixelRatio || 1;
         canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h); ctx.fillStyle = "#08111c"; ctx.fillRect(0, 0, w, h);
@@ -568,18 +1032,18 @@
         drawAnalysisChart(summary.series || []);
       }
       async function loadSummary() {
-        const days = Number(el("analysisDaysFilter").value || "30"), horizon = el("analysisHorizonFilter").value;
-        state.analysis.summary = await api("/api/metrics/summary", { query: { days, horizon } });
+        const days = Number(el("analysisDaysFilter").value || "30"), horizon = el("analysisHorizonFilter").value, cycle_id = el("analysisCycleFilter").value.trim();
+        state.analysis.summary = await api("/api/metrics/summary", { query: { days, horizon, cycle_id } });
         renderSummary(state.analysis.summary);
       }
       function collectDeep() {
         const from = el("deepFromFilter").value, to = el("deepToFilter").value;
-        return { status: el("deepStatusFilter").value, horizon: el("deepHorizonFilter").value, result: el("deepResultFilter").value, model_id: el("deepModelFilter").value.trim(), created_from: from ? new Date(from).toISOString() : "", created_to: to ? new Date(to).toISOString() : "", q: el("deepSearchFilter").value.trim(), page: 1, page_size: Number(el("deepPageSizeFilter").value || "300"), sort_by: "created_at", sort_dir: "desc" };
+        return { status: el("deepStatusFilter").value, horizon: el("deepHorizonFilter").value, cycle_id: el("deepCycleFilter").value.trim(), result: el("deepResultFilter").value, model_id: el("deepModelFilter").value.trim(), created_from: from ? new Date(from).toISOString() : "", created_to: to ? new Date(to).toISOString() : "", q: el("deepSearchFilter").value.trim(), page: 1, page_size: Number(el("deepPageSizeFilter").value || "300"), sort_by: "created_at", sort_dir: "desc" };
       }
       function renderDeep() {
         const items = state.analysis.deepEvents || [], body = el("deepEventsBody");
-        if (!items.length) body.innerHTML = `<tr><td colspan="9" class="mut">Нет данных для выбранного фильтра.</td></tr>`;
-        else body.innerHTML = items.map((item) => { const m = item.metrics || {}; return `<tr class="row-clickable" data-event-id="${esc(item.event_id)}"><td>${esc(item.event_id)}</td><td>${statusTag(item.status)}</td><td>${esc(item.horizon)}</td><td>${esc(dt(item.created_at))}</td><td>${esc(price(item.price_t0))}</td><td>${resultTag(m.hit)}</td><td>${esc(price(m.abs_error))}</td><td>${esc(pctRaw(m.rel_error))}</td><td>${esc(pctRaw(m.width_pct))}</td></tr>`; }).join("");
+        if (!items.length) body.innerHTML = `<tr><td colspan="10" class="mut">Нет данных для выбранного фильтра.</td></tr>`;
+        else body.innerHTML = items.map((item) => { const m = item.metrics || {}; return `<tr class="row-clickable" data-event-id="${esc(item.event_id)}"><td>${esc(item.event_id)}</td><td>${esc(cycleText(item))}</td><td>${statusTag(item.status)}</td><td>${esc(item.horizon)}</td><td>${esc(dt(item.created_at))}</td><td>${esc(price(item.price_t0))}</td><td>${resultTag(m.hit)}</td><td>${esc(price(m.abs_error))}</td><td>${esc(pctRaw(m.rel_error))}</td><td>${esc(pctRaw(m.width_pct))}</td></tr>`; }).join("");
         const completed = items.filter((it) => it.status === "completed"), withResult = completed.filter((it) => it.metrics && typeof it.metrics.hit === "boolean"), hits = withResult.filter((it) => it.metrics.hit).length;
         const hitRate = withResult.length ? hits / withResult.length : null;
         const avgW = withResult.length ? withResult.reduce((s, it) => s + Number(it.metrics.width_pct || 0), 0) / withResult.length : null;
@@ -612,9 +1076,9 @@
       }
       function exportEventsJson() { download("events_export.json", JSON.stringify(state.events.items || [], null, 2), "application/json"); }
       function exportEventsCsv() {
-        const header = ["event_id", "status", "asset", "horizon", "created_at", "expires_at", "price_t0", "pred_low", "pred_mid", "pred_high", "actual_price", "current_price", "hit", "abs_error", "rel_error", "width_pct", "model_id", "note"];
+        const header = ["event_id", "cycle_id", "cycle_seq", "cycle_total", "status", "asset", "horizon", "created_at", "expires_at", "price_t0", "pred_low", "pred_mid", "pred_high", "actual_price", "current_price", "hit", "abs_error", "rel_error", "width_pct", "model_id", "note"];
         const row = (arr) => arr.map((v) => { const s = String(v ?? ""); return /[,"\n]/.test(s) ? `"${s.replaceAll("\"", "\"\"")}"` : s; }).join(",");
-        const rows = (state.events.items || []).map((it) => { const m = it.metrics || {}; return [it.event_id, it.status, it.asset, it.horizon, it.created_at, it.expires_at, it.price_t0, it.pred_low, it.pred_mid, it.pred_high, it.actual_price, it.current_price, m.hit, m.abs_error, m.rel_error, m.width_pct, it.model_id, it.note || ""]; });
+        const rows = (state.events.items || []).map((it) => { const m = it.metrics || {}; return [it.event_id, it.cycle_id, it.cycle_seq, it.cycle_total, it.status, it.asset, it.horizon, it.created_at, it.expires_at, it.price_t0, it.pred_low, it.pred_mid, it.pred_high, it.actual_price, it.current_price, m.hit, m.abs_error, m.rel_error, m.width_pct, it.model_id, it.note || ""]; });
         download("events_export.csv", [row(header), ...rows.map((r) => row(r))].join("\n"), "text/csv;charset=utf-8");
       }
       function exportChartPng() { const a = document.createElement("a"); a.href = el("analysisChart").toDataURL("image/png"); a.download = "analysis_chart.png"; a.click(); }
@@ -660,11 +1124,30 @@
       function openModal() { el("createEventModal").classList.add("open"); }
       function closeModal() { el("createEventModal").classList.remove("open"); }
       async function createEvent() {
+        const runs = Math.max(1, Number(el("createRunsInput").value || "1"));
         const payload = { asset: "BTC", horizon: el("createHorizonSelect").value, model_id: el("createModelSelect").value || null, price_source: el("createSourceSelect").value, note: el("createNoteInput").value.trim() || null };
+        if (runs > 1) {
+          const createdCycle = await api("/api/cycles", { method: "POST", body: { ...payload, runs } });
+          showToast(`Cycle created: ${createdCycle.cycle_id}`);
+          closeModal();
+          el("createNoteInput").value = "";
+          el("createRunsInput").value = "1";
+          const cycleId = String(createdCycle.cycle_id || "");
+          if (cycleId) {
+            el("eventsCycleFilter").value = cycleId;
+            el("analysisCycleFilter").value = cycleId;
+            el("deepCycleFilter").value = cycleId;
+          }
+          setTab("events");
+          await loadEvents(1);
+          if (createdCycle.last_event_id) await openEvent(createdCycle.last_event_id, true);
+          return;
+        }
         const created = await api("/api/events", { method: "POST", body: payload });
-        showToast(`Event создан: ${created.event_id}`);
+        showToast(`Event created: ${created.event_id}`);
         closeModal();
         el("createNoteInput").value = "";
+        el("createRunsInput").value = "1";
         setTab("events");
         await loadEvents(1);
         await openEvent(created.event_id, true);
@@ -682,6 +1165,7 @@
         el("reloadEventsBtn").addEventListener("click", () => refreshView().catch(onError));
         el("quoteAssetSelect").addEventListener("change", () => loadQuote().catch(onError));
         ["eventsStatusFilter", "eventsHorizonFilter", "eventsResultFilter"].forEach((id) => el(id).addEventListener("change", () => loadEvents(1).catch(onError)));
+        el("eventsCycleFilter").addEventListener("input", () => { if (state.searchTimer) clearTimeout(state.searchTimer); state.searchTimer = setTimeout(() => loadEvents(1).catch(onError), 280); });
         el("eventsSearchInput").addEventListener("input", () => { if (state.searchTimer) clearTimeout(state.searchTimer); state.searchTimer = setTimeout(() => loadEvents(1).catch(onError), 280); });
         el("eventsPrevBtn").addEventListener("click", () => loadEvents(Math.max(1, Number(state.events.page || 1) - 1)).catch(onError));
         el("eventsNextBtn").addEventListener("click", () => loadEvents(Number(state.events.page || 1) + 1).catch(onError));
