@@ -90,10 +90,26 @@ class EventStore:
         self._lock = Lock()
         self._conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
+        self._closed = False
         self._init_schema()
 
     def _exec(self, sql: str, params: tuple[Any, ...] = ()) -> sqlite3.Cursor:
+        if self._closed:
+            raise RuntimeError("event store is closed")
         return self._conn.execute(sql, params)
+
+    def close(self) -> None:
+        with self._lock:
+            if self._closed:
+                return
+            self._conn.close()
+            self._closed = True
+
+    def __del__(self) -> None:  # pragma: no cover - best-effort finalizer.
+        try:
+            self.close()
+        except Exception:
+            pass
 
     def _has_column(self, table: str, column: str) -> bool:
         rows = self._exec(f"PRAGMA table_info({table})").fetchall()

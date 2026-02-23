@@ -152,7 +152,6 @@ def train_horizon_model(
     }
 
     y_val = splits.val[label_col].to_numpy()
-    close_val = splits.val["close"].to_numpy()
     val_q10, val_q50, val_q90 = _predict_triplet(models, splits.val, feature_cols)
     calibrator = fit_interval_calibrator(
         y_true=y_val,
@@ -161,7 +160,6 @@ def train_horizon_model(
         q90_pred=val_q90,
         target_coverage=0.8,
     )
-    val_low_cal, val_high_cal = calibrator.apply(val_q10, val_q50, val_q90)
 
     y_test = splits.test[label_col].to_numpy()
     close_test = splits.test["close"].to_numpy()

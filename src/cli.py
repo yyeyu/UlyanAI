@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 from typing import Any
 
@@ -67,7 +68,11 @@ def cmd_doctor(args: argparse.Namespace) -> None:
 
 
 def cmd_service_run(args: argparse.Namespace) -> None:
-    cfg = _load_cfg(args.config_dir)
+    config_dir = str(Path(args.config_dir).resolve())
+    root_dir = str(Path(args.root).resolve())
+    cfg = _load_cfg(config_dir)
+    os.environ["ULYANAI_CONFIG_DIR"] = config_dir
+    os.environ["ULYANAI_ROOT"] = root_dir
     uvicorn.run(
         "src.service.api:app",
         host=str(cfg.get("service", {}).get("host", "0.0.0.0")),

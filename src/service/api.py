@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import atexit
 import asyncio
 import json
+import os
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from threading import Event, Lock, Thread
@@ -22,7 +25,7 @@ from src.models.predict import (
     predict_return_quantiles,
 )
 from src.service.cache import CandleCache
-from src.service.event_store import CycleCreateInput, EventCreateInput, EventStore, HORIZON_TO_SECONDS
+from src.service.event_store import CycleCreateInput, EventCreateInput, EventStore
 from src.service.schemas import (
     AlertsResponse,
     CreateCycleRequest,
@@ -53,15 +56,18 @@ FALLBACK_RETURNS: dict[str, ReturnQuantiles] = {
     "1w": ReturnQuantiles(q10=-0.0700, q50=0.0040, q90=0.0850),
 }
 
-CONFIG = load_config()
+CONFIG_DIR = os.getenv("ULYANAI_CONFIG_DIR", "configs")
+CONFIG_ROOT = os.getenv("ULYANAI_ROOT", ".")
+CONFIG = load_config(CONFIG_DIR)
 SUPPORTED_ASSETS = tuple(
     asset
     for asset, info in CONFIG.get("assets", {}).items()
     if str(info.get("status", "enabled")).lower() == "enabled"
 )
-PATHS = get_runtime_paths(CONFIG)
-CANDLE_CACHE = CandleCache(CONFIG)
+PATHS = get_runtime_paths(CONFIG, root=CONFIG_ROOT)
+CANDLE_CACHE = CandleCache(CONFIG, root=CONFIG_ROOT)
 EVENT_STORE = EventStore(PATHS.artifacts_root / "db" / "events.sqlite3")
+atexit.register(EVENT_STORE.close)
 
 _MODEL_BUNDLES: dict[tuple[str, str], ModelBundle | None] = {}
 _MODEL_BUNDLES_BY_ID: dict[tuple[str, str, str], ModelBundle | None] = {}
@@ -459,7 +465,18 @@ def _rate_limit_dep(request: Request) -> None:
             raise HTTPException(status_code=429, detail="rate limit exceeded")
 
 
-app = FastAPI(title="UlyanAI Inference Service", version="0.4.0")
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    _sync_models_registry()
+    _try_spawn_cycle_events()
+    _start_worker()
+    try:
+        yield
+    finally:
+        _stop_worker()
+
+
+app = FastAPI(title="UlyanAI Inference Service", version="0.4.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -467,18 +484,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-def _on_startup() -> None:
-    _sync_models_registry()
-    _try_spawn_cycle_events()
-    _start_worker()
-
-
-@app.on_event("shutdown")
-def _on_shutdown() -> None:
-    _stop_worker()
 
 
 @app.get("/", include_in_schema=False)

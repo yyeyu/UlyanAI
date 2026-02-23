@@ -4,7 +4,6 @@ pyarrow
 pyyaml
 requests
 lightgbm
-scikit-learn
 fastapi
 uvicorn
 pytest

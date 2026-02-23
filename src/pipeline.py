@@ -369,6 +369,7 @@ def run_simulation_pipeline(config: dict[str, Any], asset: str, root: str | Path
         rows=rows,
         params=SimulationParams(
             edge_threshold=float(sim_cfg.get("edge_threshold", 0.05)),
+            fees=float(sim_cfg.get("fees", 0.02)),
             max_position_per_market=float(sim_cfg.get("max_position_per_market", 1.0)),
             max_daily_loss=float(sim_cfg.get("max_daily_loss", 1.0)),
             max_total_exposure=float(sim_cfg.get("max_total_exposure", 3.0)),
