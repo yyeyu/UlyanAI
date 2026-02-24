@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import unittest
+from unittest.mock import patch
 
+import pandas as pd
+
+import src.service.api as service_api
 from src.service.api import get_health, get_predict, post_predict_batch
 from src.service.schemas import PredictBatchRequest, PredictBatchRequestItem
 
@@ -41,6 +45,26 @@ class ServiceContractTests(unittest.TestCase):
             self.assertEqual(item["mode"], "price_ranges")
             self.assertIn("price_range", item)
             self.assertNotIn("quantiles", item)
+
+    def test_predict_prefers_live_spot_quote_for_price(self) -> None:
+        feature_ts = pd.Timestamp("2026-01-01T00:00:00+00:00")
+        live_ts = pd.Timestamp("2026-01-01T00:00:05+00:00")
+        with (
+            patch.object(service_api, "_load_bundle_cached", return_value=None),
+            patch.object(
+                service_api.CANDLE_CACHE,
+                "latest_feature_row",
+                return_value=({}, 100.0, feature_ts, False),
+            ),
+            patch.object(
+                service_api.CANDLE_CACHE,
+                "latest_spot_quote",
+                return_value=(101.25, live_ts, False),
+            ),
+        ):
+            response = service_api.get_predict(asset="BTC", horizon="1h")
+        self.assertAlmostEqual(response.price_spot, 101.25, places=8)
+        self.assertTrue(response.as_of.startswith("2026-01-01T00:00:05"))
 
 
 if __name__ == "__main__":

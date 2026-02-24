@@ -15,6 +15,7 @@ from src.features.build import build_features, finalize_features
 from src.utils import read_all_parquet
 
 BINANCE_KLINES_URL = "https://api.binance.com/api/v3/klines"
+BINANCE_TICKER_URL = "https://api.binance.com/api/v3/ticker/price"
 
 
 @dataclass
@@ -136,4 +137,24 @@ class CandleCache:
             raise ValueError(f"no candles available for asset={asset}, timeframe={timeframe}")
         latest = entry.data.sort_values("ts_utc").iloc[-1]
         return float(latest["close"]), pd.Timestamp(latest["ts_utc"]), entry.stale
+
+    def latest_spot_quote(self, asset: str) -> tuple[float, pd.Timestamp, bool]:
+        """Return freshest spot quote for an asset, preferring live ticker."""
+        info = self._asset_info(asset)
+        try:
+            resp = requests.get(
+                BINANCE_TICKER_URL,
+                params={"symbol": info["market_symbol"]},
+                timeout=10,
+            )
+            resp.raise_for_status()
+            payload = resp.json()
+            price = float(payload["price"])
+            if price <= 0:
+                raise ValueError("ticker returned non-positive price")
+            return price, pd.Timestamp.now(tz="UTC"), False
+        except Exception:
+            # Fallback to last closed 1m candle when live ticker is unavailable.
+            price, ts, _ = self.latest_price(asset, timeframe="1m")
+            return price, ts, True
 

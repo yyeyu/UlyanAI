@@ -114,6 +114,8 @@
       line-height: 1.5;
     }
     .title { margin: 0; font-size: 20px; color: #f3fff8; text-shadow: 0 0 10px rgba(0,255,102,.2); }
+    .title-live { color: var(--neon-soft); text-shadow: 0 0 10px rgba(0,255,102,.22); }
+    .title-live.fallback { color: var(--amber); text-shadow: 0 0 10px rgba(255,199,96,.2); }
     .subtitle { margin-top: 4px; color: var(--mut); font-size: 12px; }
     .conn {
       display: inline-flex;
@@ -490,7 +492,7 @@
     <section class="panel pad app-header">
       <div class="topbar">
         <div>
-          <h1 class="title">ULYANAI TERMINAL // BTC</h1>
+          <h1 class="title">ULYANAI TERMINAL // BTC - <span id="headerQuotePrice">-</span> <span id="headerQuoteLive" class="title-live">LIVE</span></h1>
           <div class="subtitle">Панель управления AI-прогнозами</div>
         </div>
         <div class="row">
@@ -509,22 +511,12 @@
     <section id="paneEvents" class="pane active">
       <section class="panel pad">
         <div class="head">
-          <h2 class="ht">Котировка BTC в реальном времени</h2>
+          <h2 class="ht">Управление событиями</h2>
           <div class="btn-row">
             <button id="openCreateEventBtn" class="btn-primary">Создать Event</button>
             <button id="reloadEventsBtn">Обновить</button>
             <button id="exportEventsJsonBtn">Export JSON</button>
             <button id="exportEventsCsvBtn">Export CSV</button>
-          </div>
-        </div>
-        <div class="grid g3">
-          <div class="quote">
-            <div class="field">
-              <label for="quoteAssetSelect">Asset</label>
-              <select id="quoteAssetSelect"><option value="BTC" selected>BTC</option></select>
-            </div>
-            <div id="quotePrice" class="quote-price">-</div>
-            <div id="quoteMeta" class="quote-meta">нет данных</div>
           </div>
         </div>
       </section>
@@ -553,14 +545,16 @@
         <div class="pager">
           <div id="eventsPageInfo" class="mut">-</div>
           <div class="btn-row">
-            <label for="eventsPageSizeSelect" class="mut">На странице</label>
-            <select id="eventsPageSizeSelect">
-              <option value="20">20</option>
-              <option value="50" selected>50</option>
-              <option value="100">100</option>
-              <option value="200">200</option>
-              <option value="500">500</option>
-            </select>
+            <label for="eventsPageSizeInput" class="mut">На странице</label>
+            <input id="eventsPageSizeInput" type="number" min="1" max="500" step="1" value="10" list="eventsPageSizeHints" style="width:84px" />
+            <datalist id="eventsPageSizeHints">
+              <option value="10"></option>
+              <option value="20"></option>
+              <option value="50"></option>
+              <option value="100"></option>
+              <option value="200"></option>
+              <option value="500"></option>
+            </datalist>
             <button id="eventsPrevBtn">Назад</button>
             <button id="eventsNextBtn">Вперед</button>
           </div>
@@ -693,7 +687,7 @@
         activeTab: "events",
         statusInfo: null,
         quote: null,
-        events: { items: [], total: 0, page: 1, page_size: 50 },
+        events: { items: [], total: 0, page: 1, page_size: 10 },
         selectedEvent: null,
         selectedSamples: [],
         detailMarketSamples: [],
@@ -1227,15 +1221,17 @@
         state.settings.refreshSec = Math.max(3, Number(el("settingsRefreshSec").value || "5"));
         state.settings.autoRefresh = el("settingsAutoRefresh").value === "off" ? "off" : "on";
       }
+      function normalizeEventsPageSize(value) {
+        const parsed = Number(value);
+        if (!Number.isFinite(parsed)) return 10;
+        return Math.max(1, Math.min(500, Math.floor(parsed)));
+      }
       function renderEventPageSize() {
-        const select = el("eventsPageSizeSelect");
-        if (!select) return;
-        const current = String(Number(state.events.page_size || 50));
-        if ([...select.options].some((opt) => opt.value === current)) {
-          select.value = current;
-          return;
-        }
-        select.value = "50";
+        const input = el("eventsPageSizeInput");
+        if (!input) return;
+        const current = normalizeEventsPageSize(state.events.page_size || 10);
+        state.events.page_size = current;
+        input.value = String(current);
       }
       function headers() { const out = {}; const key = String(state.settings.apiKey || "").trim(); const head = String(state.settings.apiHeader || "").trim(); if (key && head) out[head] = key; return out; }
       async function api(path, { method = "GET", query = null, body = null, text = false } = {}) {
@@ -1314,7 +1310,7 @@
         }).join("");
         items.forEach((item) => { if (item?.event_id) state.seenEventIds.add(String(item.event_id)); });
         state.eventsLoadedOnce = true;
-        const total = Number(state.events.total || 0), pageSize = Number(state.events.page_size || 50), pages = Math.max(1, Math.ceil(total / pageSize));
+        const total = Number(state.events.total || 0), pageSize = Number(state.events.page_size || 10), pages = Math.max(1, Math.ceil(total / pageSize));
         setNodeText("eventsMeta", `Загружено ${items.length} из ${total}`);
         setNodeText("eventsPageInfo", `Страница ${page}/${pages}, всего ${total}`);
         el("eventsPrevBtn").disabled = page <= 1;
@@ -1334,14 +1330,16 @@
         });
       }
       async function loadEvents(pageOverride = null) {
-        const query = { ...collectEventFilters(), page: pageOverride ?? state.events.page ?? 1, page_size: state.events.page_size || 50, sort_by: "created_at", sort_dir: "desc" };
+        const pageSize = normalizeEventsPageSize(state.events.page_size || 10);
+        state.events.page_size = pageSize;
+        const query = { ...collectEventFilters(), page: pageOverride ?? state.events.page ?? 1, page_size: pageSize, sort_by: "created_at", sort_dir: "desc" };
         state.events = await api("/api/events", { query });
         renderEventPageSize();
         renderEventsTable();
       }
       async function loadStatus() { state.statusInfo = await api("/v1/status"); setConnection(true, "Connected"); return state.statusInfo; }
       async function loadQuoteFromBinance() {
-        const asset = el("quoteAssetSelect").value || "BTC";
+        const asset = "BTC";
         const symbol = asset === "BTC" ? "BTCUSDT" : `${asset}USDT`;
         const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${encodeURIComponent(symbol)}`, { cache: "no-store" });
         if (!response.ok) throw new Error(`Binance HTTP ${response.status}`);
@@ -1350,16 +1348,18 @@
         if (!Number.isFinite(spot)) throw new Error("Binance invalid price");
         const nowIso = new Date().toISOString();
         state.quote = { asset, price_spot: spot, as_of: nowIso, source: "binance_spot" };
-        setNodeText("quotePrice", price(spot), { flash: true });
-        setNodeText("quoteMeta", `${asset} SPOT Binance, as_of: ${dt(nowIso)}`);
-        triggerScanSweep(el("quotePrice")?.closest(".quote"));
+        setNodeText("headerQuotePrice", price(spot), { flash: true });
+        setNodeText("headerQuoteLive", "LIVE", { flash: true });
+        el("headerQuoteLive")?.classList.remove("fallback");
+        triggerScanSweep(el("headerQuotePrice")?.closest(".app-header"));
       }
       async function loadQuoteFromApiFallback() {
-        const payload = await api("/v1/predict", { query: { asset: el("quoteAssetSelect").value || "BTC", horizon: "5m" } });
+        const payload = await api("/v1/predict", { query: { asset: "BTC", horizon: "5m" } });
         state.quote = payload;
-        setNodeText("quotePrice", price(payload.price_spot), { flash: true });
-        setNodeText("quoteMeta", `${payload.asset} ${payload.horizon}, as_of: ${dt(payload.as_of)}`);
-        triggerScanSweep(el("quotePrice")?.closest(".quote"));
+        setNodeText("headerQuotePrice", price(payload.price_spot), { flash: true });
+        setNodeText("headerQuoteLive", payload.stale_data ? "LIVE*" : "LIVE", { flash: true });
+        el("headerQuoteLive")?.classList.toggle("fallback", Boolean(payload.stale_data));
+        triggerScanSweep(el("headerQuotePrice")?.closest(".app-header"));
       }
       async function loadQuote({ allowFallback = true } = {}) {
         try {
@@ -1974,11 +1974,17 @@
       function bind() {
         document.querySelectorAll(".tab-btn").forEach((btn) => btn.addEventListener("click", () => setTab(btn.dataset.tab)));
         el("reloadEventsBtn").addEventListener("click", () => refreshView().catch(onError));
-        el("quoteAssetSelect").addEventListener("change", () => loadQuote().catch(onError));
         ["eventsStatusFilter", "eventsHorizonFilter", "eventsResultFilter"].forEach((id) => el(id).addEventListener("change", () => loadEvents(1).catch(onError)));
-        el("eventsPageSizeSelect").addEventListener("change", () => {
-          state.events.page_size = Number(el("eventsPageSizeSelect").value || "50");
+        const applyEventsPageSize = () => {
+          state.events.page_size = normalizeEventsPageSize(el("eventsPageSizeInput").value || "10");
+          renderEventPageSize();
           loadEvents(1).catch(onError);
+        };
+        el("eventsPageSizeInput").addEventListener("change", applyEventsPageSize);
+        el("eventsPageSizeInput").addEventListener("keydown", (event) => {
+          if (event.key !== "Enter") return;
+          event.preventDefault();
+          applyEventsPageSize();
         });
         el("eventsCycleFilter").addEventListener("input", () => { if (state.searchTimer) clearTimeout(state.searchTimer); state.searchTimer = setTimeout(() => loadEvents(1).catch(onError), 280); });
         el("eventsSearchInput").addEventListener("input", () => { if (state.searchTimer) clearTimeout(state.searchTimer); state.searchTimer = setTimeout(() => loadEvents(1).catch(onError), 280); });

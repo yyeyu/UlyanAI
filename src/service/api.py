@@ -197,7 +197,18 @@ def _sync_models_registry() -> None:
 def _predict_internal_ctx(asset: str, horizon: str, model_id: str | None = None) -> PredictionContext:
     asset_u, horizon_u = _check_supported(asset, horizon)
     timeframe = _timeframe_for_horizon(horizon_u)
-    feature_row, spot, as_of_ts, stale = CANDLE_CACHE.latest_feature_row(asset_u, timeframe)
+    feature_row, feature_spot, feature_as_of_ts, feature_stale = CANDLE_CACHE.latest_feature_row(asset_u, timeframe)
+    spot = float(feature_spot)
+    as_of_ts = feature_as_of_ts
+    stale = bool(feature_stale)
+    try:
+        live_spot, live_as_of_ts, live_stale = CANDLE_CACHE.latest_spot_quote(asset_u)
+        spot = float(live_spot)
+        as_of_ts = live_as_of_ts
+        stale = bool(feature_stale or live_stale)
+    except Exception:
+        # If live quote is unavailable, keep candle-derived spot.
+        pass
 
     bundle: ModelBundle | None
     if model_id:
