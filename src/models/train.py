@@ -14,6 +14,7 @@ import pandas as pd
 from src.eval.metrics import coverage, mean_interval_width, pinball_loss
 from src.labels.build import join_features_labels
 from src.models.calibrate import fit_interval_calibrator
+from src.models.lgbm_compat import sanitize_model_file_in_place
 from src.models.registry import build_model_version, model_dir, write_metadata
 from src.utils import dump_json
 
@@ -189,9 +190,15 @@ def train_horizon_model(
     )
     out_dir = model_dir(artifacts_root, asset, horizon, model_version)
     out_dir.mkdir(parents=True, exist_ok=True)
-    models["q10"].save_model(str(out_dir / "model_q10.txt"))
-    models["q50"].save_model(str(out_dir / "model_q50.txt"))
-    models["q90"].save_model(str(out_dir / "model_q90.txt"))
+    q10_path = out_dir / "model_q10.txt"
+    q50_path = out_dir / "model_q50.txt"
+    q90_path = out_dir / "model_q90.txt"
+    models["q10"].save_model(str(q10_path))
+    models["q50"].save_model(str(q50_path))
+    models["q90"].save_model(str(q90_path))
+    sanitize_model_file_in_place(q10_path)
+    sanitize_model_file_in_place(q50_path)
+    sanitize_model_file_in_place(q90_path)
 
     dump_json(out_dir / "calibrator.json", calibrator.to_dict())
     metadata = {

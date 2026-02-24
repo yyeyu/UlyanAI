@@ -11,6 +11,7 @@ from typing import Any
 import numpy as np
 
 from src.models.calibrate import IntervalCalibrator
+from src.models.lgbm_compat import load_booster_compat
 from src.models.registry import latest_model_dir, read_metadata
 from src.utils import load_json
 
@@ -153,9 +154,9 @@ def load_model_bundle(
         return None
 
     models = {
-        "q10": lgb.Booster(model_file=str(q10_path)),
-        "q50": lgb.Booster(model_file=str(q50_path)),
-        "q90": lgb.Booster(model_file=str(q90_path)),
+        "q10": load_booster_compat(lgb, q10_path),
+        "q50": load_booster_compat(lgb, q50_path),
+        "q90": load_booster_compat(lgb, q90_path),
     }
     calibrator = IntervalCalibrator.from_dict(load_json(calib_path))
     metadata = read_metadata(model_path) if metadata_path.exists() else {}
