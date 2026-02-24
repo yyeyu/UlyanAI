@@ -20,8 +20,37 @@
       --neon-soft: #66ffaa;
       --amber: #ffc760;
       --red: #ff5d7f;
-    }
+      --cur-main: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'16'%20height%3D'16'%20viewBox%3D'0%200%2016%2016'%3E%3Cg%20transform%3D'translate(16%200)%20scale(-1%201)'%3E%3Cpath%20fill%3D'%2309a60c'%20d%3D'M14.082%202.182a.5.5%200%200%201%20.103.557L8.528%2015.467a.5.5%200%200%201-.917-.007L5.57%2010.694.803%208.652a.5.5%200%200%201-.006-.916l12.728-5.657a.5.5%200%200%201%20.556.103z'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") 2 2;
+      --cur-text: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'16'%20height%3D'16'%20viewBox%3D'0%200%2016%2016'%20shape-rendering%3D'crispEdges'%3E%3Crect%20width%3D'16'%20height%3D'16'%20fill%3D'none'%2F%3E%3Crect%20x%3D'7'%20y%3D'2'%20width%3D'2'%20height%3D'12'%20fill%3D'%2309a60c'%2F%3E%3Crect%20x%3D'5'%20y%3D'2'%20width%3D'6'%20height%3D'1'%20fill%3D'%230b3d21'%2F%3E%3Crect%20x%3D'5'%20y%3D'13'%20width%3D'6'%20height%3D'1'%20fill%3D'%230b3d21'%2F%3E%3C%2Fsvg%3E") 8 8;
+      --cur-cross: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'16'%20height%3D'16'%20viewBox%3D'0%200%2016%2016'%3E%3Cpath%20fill%3D'%230b3d21'%20d%3D'M8.5.5a.5.5%200%200%200-1%200v.518A7%207%200%200%200%201.018%207.5H.5a.5.5%200%200%200%200%201h.518A7%207%200%200%200%207.5%2014.982v.518a.5.5%200%200%200%201%200v-.518A7%207%200%200%200%2014.982%208.5h.518a.5.5%200%200%200%200-1h-.518A7%207%200%200%200%208.5%201.018zm-6.48%207A6%206%200%200%201%207.5%202.02v.48a.5.5%200%200%200%201%200v-.48a6%206%200%200%201%205.48%205.48h-.48a.5.5%200%200%200%200%201h.48a6%206%200%200%201-5.48%205.48v-.48a.5.5%200%200%200-1%200v.48A6%206%200%200%201%202.02%208.5h.48a.5.5%200%200%200%200-1zM8%2010a2%202%200%201%200%200-4%202%202%200%200%200%200%204'%2F%3E%3C%2Fsvg%3E") 8 8;}
     * { box-sizing: border-box; }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,255,102,.82) #070707;
+    }
+    *::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+      background: #070707;
+    }
+    *::-webkit-scrollbar-track {
+      background: linear-gradient(180deg, #070707, #0a0a0a);
+      border: 1px solid #151515;
+      border-radius: 0;
+    }
+    *::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(0,255,102,.82), rgba(102,255,170,.62));
+      border: 1px solid #050505;
+      border-radius: 0;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.46);
+    }
+    *::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, rgba(0,255,102,.92), rgba(102,255,170,.78));
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.36), 0 0 8px rgba(0,255,102,.25);
+    }
+    *::-webkit-scrollbar-corner {
+      background: #070707;
+    }
     html, body {
       margin: 0;
       min-height: 100%;
@@ -29,6 +58,7 @@
       font-family: "IBM Plex Mono", "JetBrains Mono", "Consolas", monospace;
       font-variant-numeric: tabular-nums lining-nums;
       font-feature-settings: "tnum" 1, "lnum" 1;
+      cursor: var(--cur-main), default;
       background:
         radial-gradient(1300px 760px at 10% -10%, rgba(255,255,255,.03) 0%, transparent 58%),
         radial-gradient(920px 560px at 100% 0%, rgba(255,255,255,.02) 0%, transparent 55%),
@@ -109,7 +139,20 @@
       padding: 9px 10px;
       transition: border-color .14s ease, box-shadow .14s ease, color .14s ease, background-color .14s ease;
     }
-    button, .tab-btn { cursor: pointer; font-weight: 700; }
+    button, .tab-btn { cursor: var(--cur-main), pointer; font-weight: 700; }
+    button, .tab-btn, a, [role="button"], input[type="button"], input[type="submit"], input[type="reset"], summary, label[for], select, tr.row-clickable, details > summary {
+      cursor: var(--cur-main), pointer;
+    }
+    input[type="text"], input[type="number"], input[type="search"], textarea {
+      cursor: var(--cur-text), text;
+      caret-color: var(--neon);
+    }
+    input[type="email"], input[type="url"], input[type="password"], input[type="tel"], input[type="date"], input[type="datetime-local"], input[type="time"], input[type="month"], input[type="week"], input[type="color"], input[type="range"], input[type="file"] {
+      cursor: var(--cur-main), pointer;
+    }
+    .chart, .chart canvas, .detail-tv-chart, .detail-tv-chart * {
+      cursor: crosshair !important;
+    }
     button:hover, .tab-btn:hover {
       border-color: var(--neon);
       color: #f0fff7;
@@ -200,14 +243,15 @@
     }
     .detail-chart-range {
       position: absolute;
-      left: 8px;
-      right: 8px;
+      left: 0;
+      width: 0;
       z-index: 1;
       pointer-events: none;
       display: flex;
       align-items: flex-start;
       justify-content: flex-end;
-      padding: 2px 6px;
+      box-sizing: border-box;
+      padding: 0;
       color: #e4fff0;
       font-size: 10px;
       text-transform: uppercase;
@@ -217,7 +261,7 @@
       border-bottom: 1px solid rgba(0,255,102,.66);
       background: linear-gradient(180deg, rgba(0,255,102,.2), rgba(0,255,102,.08));
       box-shadow: inset 0 0 0 1px rgba(102,255,170,.2), 0 0 22px rgba(0,255,102,.16);
-      transition: opacity .1s ease, top .1s ease, height .1s ease;
+      transition: opacity .1s ease, top .1s ease, height .1s ease, left .1s ease, width .1s ease;
       white-space: nowrap;
     }
     .detail-chart-range.show { opacity: 1; }
@@ -226,7 +270,6 @@
     table { width: 100%; min-width: 1120px; border-collapse: collapse; }
     th, td { border-bottom: 1px solid #1d1d1d; text-align: left; padding: 8px 7px; font-size: 12px; vertical-align: top; }
     th { position: sticky; top: 0; background: var(--panel-strong); color: var(--mut); z-index: 1; }
-    tr.row-clickable { cursor: pointer; }
     tr.row-clickable td { transition: background-color .12s ease, color .12s ease; }
     tr.row-clickable:hover td { background: rgba(0,255,102,.06); color: #f0fff7; }
     tr.row-new td { animation: rowNew .92s ease-out; }
@@ -259,8 +302,6 @@
       box-shadow: 0 20px 38px rgba(0, 0, 0, .64), 0 0 18px rgba(0,255,102,.12);
       animation: inspectorIn .16s ease-out;
     }
-    .detail-tabs { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
-    .detail-tab.active { color: var(--neon); border-color: rgba(0,255,102,.66); box-shadow: 0 0 0 1px rgba(0,255,102,.14), 0 0 10px rgba(0,255,102,.18); }
     .detail-content {
       position: relative;
       overflow: hidden;
@@ -271,6 +312,93 @@
       min-height: 170px;
       padding: 10px;
       animation: paneIn .14s ease-out;
+    }
+    .detail-stack { display: grid; gap: 10px; }
+    .detail-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+    }
+    .detail-section {
+      border: 1px solid var(--line-strong);
+      background: #070707;
+      padding: 10px;
+    }
+    .detail-section.full { grid-column: 1 / -1; }
+    .detail-section-title {
+      margin: 0 0 8px;
+      font-size: 10px;
+      letter-spacing: .35px;
+      color: var(--mut);
+      text-transform: uppercase;
+    }
+    .detail-accordion {
+      border: 1px solid var(--line-strong);
+      background: #050505;
+    }
+    .detail-accordion > summary {
+      list-style: none;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      font-size: 10px;
+      letter-spacing: .35px;
+      color: var(--mut);
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      transition: color .14s ease, border-color .14s ease, box-shadow .14s ease;
+    }
+    .detail-accordion > summary::-webkit-details-marker { display: none; }
+    .detail-accordion > summary::after {
+      content: "+";
+      color: var(--neon);
+      font-size: 13px;
+      line-height: 1;
+      transition: transform .16s ease, color .16s ease;
+    }
+    .detail-accordion:hover > summary {
+      color: #deffe9;
+      border-color: rgba(0,255,102,.28);
+      box-shadow: inset 0 0 0 1px rgba(0,255,102,.1);
+    }
+    .detail-accordion[open] > summary {
+      color: #f0fff7;
+      border-color: rgba(0,255,102,.4);
+      box-shadow: inset 0 0 0 1px rgba(0,255,102,.16);
+    }
+    .detail-accordion[open] > summary::after {
+      content: "-";
+      transform: scale(1.06);
+      color: #66ffaa;
+    }
+    .detail-accordion-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .18s ease;
+    }
+    .detail-accordion[open] .detail-accordion-body { grid-template-rows: 1fr; }
+    .detail-accordion-body-inner {
+      min-height: 0;
+      overflow: hidden;
+    }
+    .detail-accordion .detail-json {
+      border-left: 0;
+      border-right: 0;
+      border-bottom: 0;
+      border-top: 1px solid var(--line-strong);
+      max-height: 340px;
+    }
+    .detail-kv { display: grid; grid-template-columns: 180px 1fr; gap: 6px 10px; font-size: 12px; }
+    .detail-kv .k { color: var(--mut); }
+    .detail-json {
+      margin: 0;
+      max-height: 300px;
+      overflow: auto;
+      border: 1px solid var(--line-strong);
+      background: #050505;
+      padding: 8px;
     }
     .kv { display: grid; grid-template-columns: 240px 1fr; gap: 6px 10px; font-size: 12px; }
     .kv .k { color: var(--mut); }
@@ -290,7 +418,7 @@
       border-color: var(--neon);
       box-shadow: 0 0 0 1px rgba(0,255,102,.24), 0 0 10px rgba(0,255,102,.2);
     }
-    button:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+    button:disabled { opacity: .45; box-shadow: none; }
     .flash-update { animation: microBlink .18s steps(2, end); }
     .panel::after,
     .chart::after,
@@ -343,6 +471,7 @@
       .g3 { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
       .g2 { grid-template-columns: 1fr; }
       .kv { grid-template-columns: 1fr; }
+      .detail-kv { grid-template-columns: 1fr; }
     }
     @media (max-width: 760px) {
       .title { font-size: 15px; }
@@ -352,6 +481,7 @@
       .app-header { top: 0; }
       .details { padding: 14px; }
       .details-shell { width: min(1120px, 100%); max-height: calc(100vh - 28px); margin-top: 0; }
+      .detail-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -442,14 +572,6 @@
           <div class="head">
             <h2 id="eventDetailsTitle" class="ht">Детали события</h2>
             <div class="btn-row"><button id="closeDetailsBtn">Закрыть</button><button id="cancelEventBtn" class="btn-danger">Отменить Event</button></div>
-          </div>
-          <div class="detail-tabs">
-            <button class="detail-tab active" data-detail-tab="overview">Overview</button>
-            <button class="detail-tab" data-detail-tab="chart">Chart</button>
-            <button class="detail-tab" data-detail-tab="live">Live</button>
-            <button class="detail-tab" data-detail-tab="payload">Payload</button>
-            <button class="detail-tab" data-detail-tab="result">Result</button>
-            <button class="detail-tab" data-detail-tab="model">Model</button>
           </div>
           <div id="eventDetailsContent" class="detail-content"></div>
         </div>
@@ -583,7 +705,6 @@
         detailWindowEndMs: null,
         detailChartSeq: 0,
         detailTv: null,
-        detailTab: "overview",
         models: [],
         productionModels: [],
         analysis: { summary: null, deepEvents: [], deepTotal: 0 },
@@ -828,7 +949,7 @@
           borderDownColor: "#ff5d7f",
           wickUpColor: "#66ffaa",
           wickDownColor: "#ff8ea6",
-          priceLineVisible: false,
+          priceLineVisible: true,
           lastValueVisible: true,
         });
         const runtime = {
@@ -1007,6 +1128,11 @@
           setDetailRangeOverlayHidden();
           return;
         }
+        const chartNode = runtime.host.parentElement;
+        if (!chartNode) {
+          setDetailRangeOverlayHidden();
+          return;
+        }
         const low = Number(ev.pred_low);
         const high = Number(ev.pred_high);
         if (!Number.isFinite(low) || !Number.isFinite(high)) {
@@ -1019,13 +1145,20 @@
           setDetailRangeOverlayHidden();
           return;
         }
-        const hostHeight = Math.max(1, runtime.host.clientHeight || 0);
+        const hostRect = runtime.host.getBoundingClientRect();
+        const chartRect = chartNode.getBoundingClientRect();
+        const offsetLeft = Math.max(0, hostRect.left - chartRect.left);
+        const offsetTop = Math.max(0, hostRect.top - chartRect.top);
+        const hostWidth = Math.max(1, runtime.host.clientWidth || Math.round(hostRect.width) || 0);
+        const hostHeight = Math.max(1, runtime.host.clientHeight || Math.round(hostRect.height) || 0);
         const topRaw = Math.min(yLow, yHigh);
         const bottomRaw = Math.max(yLow, yHigh);
         const top = clamp(topRaw, 0, hostHeight);
         const bottom = clamp(bottomRaw, 0, hostHeight);
         const height = Math.max(2, bottom - top);
-        node.style.top = `${top}px`;
+        node.style.left = `${offsetLeft}px`;
+        node.style.width = `${hostWidth}px`;
+        node.style.top = `${offsetTop + top}px`;
         node.style.height = `${height}px`;
         node.textContent = "";
         node.classList.add("show");
@@ -1042,16 +1175,16 @@
         const mid = Number(ev.pred_mid);
         const closePx = Number(ev.actual_price ?? ev.current_price);
         if (Number.isFinite(low)) {
-          addDetailPriceLine(runtime, { price: low, color: "rgba(0,255,102,.36)", lineWidth: 1, lineStyle: dotted, axisLabelVisible: true, title: "model low" });
+          addDetailPriceLine(runtime, { price: low, color: "rgba(0,255,102,.36)", lineWidth: 1, lineStyle: dotted, axisLabelVisible: false, title: "model low" });
         }
         if (Number.isFinite(high)) {
-          addDetailPriceLine(runtime, { price: high, color: "rgba(0,255,102,.36)", lineWidth: 1, lineStyle: dotted, axisLabelVisible: true, title: "model high" });
+          addDetailPriceLine(runtime, { price: high, color: "rgba(0,255,102,.36)", lineWidth: 1, lineStyle: dotted, axisLabelVisible: false, title: "model high" });
         }
         if (Number.isFinite(mid)) {
-          addDetailPriceLine(runtime, { price: mid, color: "rgba(102,255,170,.76)", lineWidth: 1, lineStyle: dashed, axisLabelVisible: true, title: "median" });
+          addDetailPriceLine(runtime, { price: mid, color: "rgba(102,255,170,.76)", lineWidth: 1, lineStyle: dashed, axisLabelVisible: false, title: "median" });
         }
         if (ev.status !== "active" && Number.isFinite(closePx)) {
-          addDetailPriceLine(runtime, { price: closePx, color: "rgba(102,255,170,.92)", lineWidth: 1, lineStyle: lc.LineStyle?.Solid ?? 0, axisLabelVisible: true, title: "close" });
+          addDetailPriceLine(runtime, { price: closePx, color: "rgba(102,255,170,.92)", lineWidth: 1, lineStyle: lc.LineStyle?.Solid ?? 0, axisLabelVisible: false, title: "close" });
         }
         runtime.candleSeries.setMarkers(buildDetailMarkers(ev, candles));
         updateDetailRangeOverlay(ev, runtime);
@@ -1136,6 +1269,29 @@
         if (item.actual_price !== null && item.actual_price !== undefined) return price(item.actual_price);
         if (item.current_price !== null && item.current_price !== undefined) return price(item.current_price);
         return "-";
+      }
+      function detailLastTickSample() {
+        if (state.detailLiveSamples.length) return state.detailLiveSamples[state.detailLiveSamples.length - 1];
+        if (state.detailMarketSamples.length) return state.detailMarketSamples[state.detailMarketSamples.length - 1];
+        if (state.selectedSamples.length) return state.selectedSamples[state.selectedSamples.length - 1];
+        return null;
+      }
+      function detailLastTickText() {
+        const sample = detailLastTickSample();
+        if (!sample) return "нет данных";
+        return `${price(sample.price)} @ ${dt(sample.ts)}`;
+      }
+      function pctWithUsd(pctValue, usdValue) {
+        const pctText = pctRaw(pctValue);
+        if (pctText === "-") return "-";
+        const usd = Number(usdValue);
+        if (!Number.isFinite(usd)) return pctText;
+        return `${pctText} (${formatUsd(Math.abs(usd))})`;
+      }
+      function refreshDetailLiveBlock(ev = state.selectedEvent) {
+        if (!ev || !state.selectedEvent || state.selectedEvent.event_id !== ev.event_id) return;
+        setNodeText("detailTimerValue", timerText(ev, Date.now()));
+        setNodeText("detailLastTickValue", detailLastTickText());
       }
       function collectEventFilters() { return { status: el("eventsStatusFilter").value, horizon: el("eventsHorizonFilter").value, cycle_id: el("eventsCycleFilter").value.trim(), result: el("eventsResultFilter").value, q: el("eventsSearchInput").value.trim() }; }
       function renderEventsTable() {
@@ -1231,48 +1387,76 @@
         const ev = state.selectedEvent, m = ev.metrics || {};
         title.textContent = `Детали события ${ev.event_id}`;
         cancelBtn.disabled = ev.status !== "active";
-        document.querySelectorAll(".detail-tab").forEach((btn) => btn.classList.toggle("active", btn.dataset.detailTab === state.detailTab));
-        if (state.detailTab === "overview") {
-          content.innerHTML = `<div class="kv">
-            <div class="k">event_id</div><div>${esc(ev.event_id)}</div><div class="k">status</div><div>${statusTag(ev.status)}</div>
-            <div class="k">asset / horizon</div><div>${esc(ev.asset)} / ${esc(ev.horizon)}</div><div class="k">cycle</div><div>${esc(cycleText(ev))}</div><div class="k">created_at</div><div>${esc(dt(ev.created_at))}</div>
-            <div class="k">expires_at</div><div>${esc(dt(ev.expires_at))}</div><div class="k">price_t0</div><div>${esc(price(ev.price_t0))}</div>
-            <div class="k">price range</div><div>[${esc(price(ev.pred_low))}; ${esc(price(ev.pred_high))}]</div><div class="k">median price</div><div>${esc(price(ev.pred_mid))}</div>
-            <div class="k">result</div><div>${resultTag(m.hit)}</div><div class="k">abs / rel error</div><div>${esc(price(m.abs_error))} / ${esc(pctRaw(m.rel_error))}</div>
-            <div class="k">width_pct</div><div>${esc(pctRaw(m.width_pct))}</div><div class="k">note</div><div>${esc(ev.note || "-")}</div>
-          </div>`;
-          triggerScanSweep(content);
-          return;
-        }
-        if (state.detailTab === "chart") {
-          content.innerHTML = `<div class="chart" style="height:300px"><div id="detailTvChart" class="detail-tv-chart"></div><div id="detailChartWidth" class="detail-chart-width"></div><div id="detailChartRange" class="detail-chart-range"></div><div id="detailChartEmpty" class="detail-chart-empty">No market data for this event.</div></div>`;
-          triggerScanSweep(content);
-          updateDetailRangeWidthLabel(ev);
-          const seq = ++state.detailChartSeq;
-          requestAnimationFrame(async () => {
-            if (seq !== state.detailChartSeq || state.detailTab !== "chart" || !state.selectedEvent) return;
-            try {
-              if (!state.detailMarketSamples.length) await loadEventMarketSeries(ev);
-            } catch {}
-            if (seq !== state.detailChartSeq || state.detailTab !== "chart" || !state.selectedEvent) return;
-            drawDetailTvChart();
-            startDetailChartTicker();
-          });
-          return;
-        }
-        stopDetailChartTicker();
-        destroyDetailTvChart();
-        if (state.detailTab === "live") {
-          const last = state.selectedSamples.length ? state.selectedSamples[state.selectedSamples.length - 1] : null;
-          content.innerHTML = `<div class="kv"><div class="k">Текущий статус</div><div>${statusTag(ev.status)}</div><div class="k">Таймер</div><div>${esc(timerText(ev, Date.now()))}</div><div class="k">Последний тик</div><div>${last ? `${price(last.price)} @ ${dt(last.ts)}` : "нет данных"}</div><div class="k">Current (после horizon)</div><div>${esc(currentValue(ev, Date.now()))}</div><div class="k">Actual</div><div>${esc(price(ev.actual_price))}</div></div>`;
-          triggerScanSweep(content);
-          return;
-        }
-        if (state.detailTab === "payload") { content.innerHTML = `<pre>${esc(JSON.stringify(ev.prediction || {}, null, 2))}</pre>`; triggerScanSweep(content); return; }
-        if (state.detailTab === "result") { content.innerHTML = `<div class="kv"><div class="k">Result</div><div>${resultTag(m.hit)}</div><div class="k">Abs Error</div><div>${esc(price(m.abs_error))}</div><div class="k">Rel Error</div><div>${esc(pctRaw(m.rel_error))}</div><div class="k">Width %</div><div>${esc(pctRaw(m.width_pct))}</div><div class="k">Latency (ms)</div><div>${esc(num(m.latency_ms, 0))}</div></div>`; triggerScanSweep(content); return; }
         const meta = ev.model_meta || {};
-        content.innerHTML = `<div class="kv"><div class="k">model_id</div><div>${esc(ev.model_id || "-")}</div><div class="k">git_commit</div><div>${esc(meta.git_commit || "unknown")}</div><div class="k">train_time</div><div>${esc(meta.train_time || "unknown")}</div><div class="k">dataset_hash</div><div>${esc(meta.dataset_hash || "unknown")}</div><div class="k">config_hash</div><div>${esc(meta.config_hash || "unknown")}</div></div>`;
+        const toRows = (rows) => rows.map(([k, v]) => `<div class="k">${k}</div><div>${v}</div>`).join("");
+        const rangeWidthUsd = Math.abs(Number(ev.pred_high) - Number(ev.pred_low));
+        const marketRows = [
+          ["event_id", esc(ev.event_id)],
+          ["status", statusTag(ev.status)],
+          ["asset / horizon", `${esc(ev.asset)} / ${esc(ev.horizon)}`],
+          ["cycle", esc(cycleText(ev))],
+          ["created_at", esc(dt(ev.created_at))],
+          ["expires_at", esc(dt(ev.expires_at))],
+          ["BTC open (t0)", esc(price(ev.price_t0))],
+          ["Прогноз диапазон", `[${esc(price(ev.pred_low))}; ${esc(price(ev.pred_high))}]`],
+          ["Ширина диапазона", esc(formatUsd(rangeWidthUsd))],
+          ["Медиана прогноза", esc(price(ev.pred_mid))],
+          ["Таймер", `<span id="detailTimerValue">${esc(timerText(ev, Date.now()))}</span>`],
+          ["Последний тик", `<span id="detailLastTickValue">${esc(detailLastTickText())}</span>`],
+          ["note", esc(ev.note || "-")],
+        ];
+        const modelResultRows = [
+          ["Result", resultTag(m.hit)],
+          ["Abs Error", esc(formatUsd(m.abs_error))],
+          ["Rel Error", esc(pctRaw(m.rel_error))],
+          ["Width", esc(pctWithUsd(m.width_pct, rangeWidthUsd))],
+          ["Latency (ms)", esc(num(m.latency_ms, 0))],
+          ["model_id", esc(ev.model_id || "-")],
+          ["git_commit", esc(meta.git_commit || "unknown")],
+          ["train_time", esc(meta.train_time || "unknown")],
+          ["dataset_hash", esc(meta.dataset_hash || "unknown")],
+          ["config_hash", esc(meta.config_hash || "unknown")],
+        ];
+        content.innerHTML = `<div class="detail-stack">
+          <section class="detail-section full">
+            <h3 class="detail-section-title">Chart</h3>
+            <div class="chart" style="height:300px"><div id="detailTvChart" class="detail-tv-chart"></div><div id="detailChartRange" class="detail-chart-range"></div><div id="detailChartEmpty" class="detail-chart-empty">No market data for this event.</div></div>
+          </section>
+          <div class="detail-grid">
+            <section class="detail-section">
+              <h3 class="detail-section-title">Обзор и ход рынка</h3>
+              <div class="detail-kv">${toRows(marketRows)}</div>
+            </section>
+            <section class="detail-section">
+              <h3 class="detail-section-title">Результат и модель</h3>
+              <div class="detail-kv">${toRows(modelResultRows)}</div>
+            </section>
+            <section class="detail-section full">
+              <details class="detail-accordion">
+                <summary>Payload</summary>
+                <div class="detail-accordion-body">
+                  <div class="detail-accordion-body-inner">
+                    <pre class="detail-json">${esc(JSON.stringify(ev.prediction || {}, null, 2))}</pre>
+                  </div>
+                </div>
+              </details>
+            </section>
+          </div>
+        </div>`;
         triggerScanSweep(content);
+        updateDetailRangeWidthLabel(ev);
+        const seq = ++state.detailChartSeq;
+        const eventId = ev.event_id;
+        requestAnimationFrame(async () => {
+          if (seq !== state.detailChartSeq || !state.selectedEvent || state.selectedEvent.event_id !== eventId) return;
+          try {
+            if (!state.detailMarketSamples.length) await loadEventMarketSeries(ev);
+          } catch {}
+          if (seq !== state.detailChartSeq || !state.selectedEvent || state.selectedEvent.event_id !== eventId) return;
+          refreshDetailLiveBlock(ev);
+          drawDetailTvChart();
+          startDetailChartTicker();
+        });
       }
       async function loadEventMarketSeries(ev) {
         state.detailMarketSamples = [];
@@ -1367,6 +1551,7 @@
           }
         }
         state.detailMarketSamples = candles.map((row) => ({ ...row, ts: new Date(row.time * 1000).toISOString(), price: row.close }));
+        refreshDetailLiveBlock(ev);
       }
       function upsertDetailLiveSample(tsMs, priceValue) {
         const p = Number(priceValue);
@@ -1515,6 +1700,7 @@
         runtime.candleSeries.setMarkers(buildDetailMarkers(ev, runtime.candles));
         updateDetailRangeOverlay(ev, runtime);
         updateDetailChartLegend(ev, runtime.candles);
+        refreshDetailLiveBlock(ev);
       }
       function stopDetailChartTicker() {
         if (state.detailChartTimer) clearInterval(state.detailChartTimer);
@@ -1522,14 +1708,17 @@
       }
       function startDetailChartTicker() {
         stopDetailChartTicker();
-        if (!state.selectedEvent || state.detailTab !== "chart") return;
+        const activeEventId = state.selectedEvent?.event_id;
+        if (!activeEventId) return;
         if (state.selectedEvent.status !== "active") return;
         if (!state.detailMarketSamples.length) {
           loadEventMarketSeries(state.selectedEvent).then(() => {
-            if (state.detailTab === "chart") drawDetailTvChart();
+            if (state.selectedEvent?.event_id === activeEventId) drawDetailTvChart();
           }).catch(() => {});
         }
         const tick = async () => {
+          if (!state.selectedEvent || state.selectedEvent.event_id !== activeEventId) return;
+          refreshDetailLiveBlock(state.selectedEvent);
           let sample = null;
           try {
             sample = await pullDetailLiveTicker();
@@ -1542,16 +1731,18 @@
                 : (state.selectedSamples.length ? state.selectedSamples[state.selectedSamples.length - 1] : null));
             if (fallback && Number.isFinite(Number(fallback.price))) sample = upsertDetailLiveSample(Date.now(), Number(fallback.price));
           }
-          if (state.detailTab !== "chart") return;
+          if (!state.selectedEvent || state.selectedEvent.event_id !== activeEventId) return;
           if (sample && state.detailTv) updateDetailTvWithSample(sample);
           else drawDetailTvChart();
+          refreshDetailLiveBlock(state.selectedEvent);
         };
         tick().catch(() => {});
         state.detailChartTimer = setInterval(() => { tick().catch(() => {}); }, 1000);
       }
       function drawDetailTvChart() {
         const ev = state.selectedEvent;
-        if (!ev || state.detailTab !== "chart") return;
+        if (!ev) return;
+        refreshDetailLiveBlock(ev);
         updateDetailRangeWidthLabel(ev);
         const runtime = ensureDetailTvChart();
         if (!runtime) return;
@@ -1601,10 +1792,9 @@
           state.detailWindowEndMs = win.endMs;
         }
         state.detailChartSeq += 1;
-        if (state.detailTab === "chart" && !resetTab) {
+        if (!resetTab) {
           try { await loadEventMarketSeries(eventPayload); } catch {}
         }
-        if (resetTab) state.detailTab = "overview";
         renderDetailContent();
       }
       function closeEvent() { stopDetailChartTicker(); destroyDetailTvChart(); state.selectedEvent = null; state.selectedSamples = []; state.detailMarketSamples = []; state.detailLiveSamples = []; state.detailScale = null; state.detailMarketIntervalSec = 15; state.detailWindowStartMs = null; state.detailWindowEndMs = null; state.detailChartSeq += 1; renderDetailContent(); }
@@ -1795,7 +1985,6 @@
         el("eventsPrevBtn").addEventListener("click", () => loadEvents(Math.max(1, Number(state.events.page || 1) - 1)).catch(onError));
         el("eventsNextBtn").addEventListener("click", () => loadEvents(Number(state.events.page || 1) + 1).catch(onError));
         el("eventsTableBody").addEventListener("click", (event) => { const row = event.target.closest("tr[data-event-id]"); if (!row) return; openEvent(row.getAttribute("data-event-id"), true).catch(onError); });
-        document.querySelectorAll(".detail-tab").forEach((btn) => btn.addEventListener("click", () => { state.detailTab = btn.dataset.detailTab; renderDetailContent(); }));
         el("closeDetailsBtn").addEventListener("click", closeEvent);
         el("eventDetailsPanel").addEventListener("click", (event) => { if (event.target.id === "eventDetailsPanel") closeEvent(); });
         el("cancelEventBtn").addEventListener("click", () => cancelEvent().catch(onError));
