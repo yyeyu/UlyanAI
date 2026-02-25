@@ -505,6 +505,22 @@ def root_ui() -> FileResponse:
     return FileResponse(ui_path, media_type="text/html; charset=utf-8")
 
 
+@app.get("/styles.css", include_in_schema=False)
+def ui_styles() -> FileResponse:
+    css_path = PATHS.root / "web" / "styles.css"
+    if not css_path.exists():
+        raise HTTPException(status_code=404, detail="web/styles.css not found")
+    return FileResponse(css_path, media_type="text/css; charset=utf-8")
+
+
+@app.get("/app.js", include_in_schema=False)
+def ui_script() -> FileResponse:
+    js_path = PATHS.root / "web" / "app.js"
+    if not js_path.exists():
+        raise HTTPException(status_code=404, detail="web/app.js not found")
+    return FileResponse(js_path, media_type="application/javascript; charset=utf-8")
+
+
 @app.get("/v1/health", response_model=HealthResponse)
 def health() -> HealthResponse:
     return get_health()
