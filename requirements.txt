@@ -7,3 +7,4 @@ lightgbm
 fastapi
 uvicorn
 pytest
+reportlab

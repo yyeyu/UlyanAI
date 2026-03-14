@@ -21,7 +21,7 @@
       <div class="tabs tabs-offset-md">
         <button class="tab-btn active" data-tab="events">События</button>
         <button class="tab-btn" data-tab="markets">Маркеты</button>
-        <button class="tab-btn" data-tab="analysis">Анализ</button>
+        <button class="tab-btn" data-tab="lab">Лаборатория</button>
         <button class="tab-btn" data-tab="settings">Настройки</button>
       </div>
       <div id="globalBanner" class="banner"></div>
@@ -55,7 +55,7 @@
           <table>
             <thead>
               <tr>
-                <th>Статус</th><th>Cycle</th><th>T0 UTC</th><th>Horizon</th><th>BTC Open</th><th>Price Range</th><th>Таймер</th><th>Current</th><th>Model</th><th>Result</th><th>Abs Error</th><th>Rel Error</th><th>Width %</th>
+                <th>Статус</th><th>Cycle</th><th>T0 UTC</th><th>Horizon</th><th>BTC Open</th><th title="Median Price is available in event details">Price Range</th><th>Таймер</th><th>Current</th><th>Model</th><th>Result</th><th>Abs Error</th><th>Rel Error</th><th>Width %</th>
               </tr>
             </thead>
             <tbody id="eventsTableBody"></tbody>
@@ -94,68 +94,448 @@
     <section id="paneMarkets" class="pane">
       <section class="panel pad">
         <div class="head">
-          <h2 class="ht">Polymarket, Kalshi, ...</h2>
+          <h2 class="ht">Polymarket / Crypto</h2>
+          <div class="btn-row">
+            <button id="reloadMarketsBtn">Обновить</button>
+          </div>
+        </div>
+        <div id="marketsMeta" class="mut field-offset-sm">-</div>
+        <div class="tw tw-offset-sm">
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>TF</th>
+                <th>Event</th>
+                <th>Top Market</th>
+                <th>End UTC</th>
+                <th>Expires In</th>
+                <th>Volume</th>
+                <th>Liquidity</th>
+                <th>OI</th>
+                <th>Markets</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody id="marketsTableBody"></tbody>
+          </table>
         </div>
       </section>
     </section>
 
-    <section id="paneAnalysis" class="pane">
+    <section id="paneLab" class="pane">
       <section class="panel pad">
         <div class="head">
-          <h2 class="ht">Сводный анализ</h2>
-          <div class="btn-row"><button id="reloadAnalysisBtn">Обновить анализ</button><button id="exportChartPngBtn">Export PNG</button><button id="exportReportPdfBtn">Export PDF</button></div>
+          <h2 class="ht">Лаборатория моделей</h2>
+          <div class="mut">Model Builder + Compare Desk</div>
         </div>
-        <div class="grid g4">
-          <div class="field"><label for="analysisHorizonFilter">Horizon</label><select id="analysisHorizonFilter"><option value="">All</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
-          <div class="field"><label for="analysisDaysFilter">Period (days)</label><select id="analysisDaysFilter"><option value="7">7</option><option value="30" selected>30</option><option value="90">90</option><option value="180">180</option></select></div>
-          <div class="field"><label for="analysisCycleFilter">Cycle ID</label><input id="analysisCycleFilter" placeholder="cycle_id" /></div>
-          <div class="field"><label>&nbsp;</label><button id="applyAnalysisFiltersBtn" class="btn-primary">Apply</button></div>
-        </div>
-        <div class="kpi-grid kpi-grid-offset-sm">
-          <div class="kpi"><div class="n">Coverage факт / target</div><div id="kpiCoverage" class="v">-</div><div class="h">target: 80%</div></div>
-          <div class="kpi"><div class="n">Calibration</div><div id="kpiCalibration" class="v">-</div><div class="h">под / в норме / выше</div></div>
-          <div class="kpi"><div class="n">Best Horizon</div><div id="kpiBestHorizon" class="v">-</div><div class="h">макс coverage</div></div>
-          <div class="kpi"><div class="n">Completed Events</div><div id="kpiCompleted" class="v">-</div><div class="h">по фильтру периода</div></div>
-          <div class="kpi"><div class="n">Active Events</div><div id="kpiActive" class="v">-</div><div class="h">в системе сейчас</div></div>
-          <div class="kpi"><div class="n">Data Freshness</div><div id="kpiFreshness" class="v">-</div><div class="h">TTL cache</div></div>
+        <div class="subtabs lab-subtabs">
+          <button class="subtab-btn" data-lab-tab="create">Создание</button>
+          <button class="subtab-btn active" data-lab-tab="compare">Сравнение</button>
         </div>
       </section>
 
-      <section class="panel pad">
-        <div class="head"><h2 class="ht">Coverage / Width по времени</h2></div>
-        <div class="chart"><canvas id="analysisChart"></canvas></div>
-      </section>
+      <div id="labCreatePane" class="subpane">
+        <div class="lab-builder-grid">
+          <section class="panel pad">
+            <div class="head">
+              <h2 class="ht">Model Builder Form</h2>
+              <div class="btn-row">
+                <button id="builderValidateBtn">Validate</button>
+                <button id="builderStartTrainBtn" class="btn-primary">Start Training</button>
+                <button id="builderStartSweepBtn">Start Sweep</button>
+                <button id="builderStartWfEvalBtn">Start WF Eval</button>
+              </div>
+            </div>
+            <div id="builderBanner" class="banner"></div>
 
-      <section class="panel pad">
-        <div class="head"><h2 class="ht">Срез по горизонтам</h2></div>
-        <div class="tw">
-          <table>
-            <thead><tr><th>Horizon</th><th>Count</th><th>Coverage</th><th>Avg Width %</th><th>Avg Abs Error</th></tr></thead>
-            <tbody id="horizonBreakdownBody"></tbody>
-          </table>
+            <details class="detail-accordion" open>
+              <summary>Target & Data</summary>
+              <div class="detail-accordion-body">
+                <div class="detail-accordion-body-inner">
+                  <div class="lab-form-grid">
+                    <div class="field"><label for="builderAsset">Asset</label><select id="builderAsset"><option value="BTC" selected>BTC</option></select></div>
+                    <div class="field"><label for="builderBudgetPreset">Training budget preset</label><select id="builderBudgetPreset"><option value="F0">F0 (Fast)</option><option value="F1" selected>F1 (Balanced)</option><option value="F2">F2 (Thorough)</option><option value="custom">Custom</option></select></div>
+                    <div class="field"><label for="builderBaseMode">Base timeframe mode</label><select id="builderBaseMode"><option value="legacy" selected>Legacy (horizon == timeframe)</option><option value="base_1m">Base=1m + steps_ahead</option></select></div>
+                  </div>
+                  <div class="field field-offset-sm">
+                    <label>Horizons</label>
+                    <div class="choice-row">
+                      <label class="choice-pill"><input id="builderHorizon5m" type="checkbox" checked />5m</label>
+                      <label class="choice-pill"><input id="builderHorizon15m" type="checkbox" checked />15m</label>
+                      <label class="choice-pill"><input id="builderHorizon1h" type="checkbox" checked />1h</label>
+                    </div>
+                  </div>
+                  <div class="grid g3 field-offset-sm">
+                    <div class="field"><label for="builderStep5m">steps_ahead 5m</label><input id="builderStep5m" type="number" min="1" max="10000" value="5" /></div>
+                    <div class="field"><label for="builderStep15m">steps_ahead 15m</label><input id="builderStep15m" type="number" min="1" max="10000" value="15" /></div>
+                    <div class="field"><label for="builderStep1h">steps_ahead 1h</label><input id="builderStep1h" type="number" min="1" max="10000" value="60" /></div>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="detail-accordion" open>
+              <summary>Coverage & Interval Definition</summary>
+              <div class="detail-accordion-body">
+                <div class="detail-accordion-body-inner">
+                  <div class="field">
+                    <label for="builderCoverage">target_coverage_percent</label>
+                    <input id="builderCoverage" type="range" min="1" max="99" step="1" value="80" />
+                    <div class="mut">Selected: <span id="builderCoverageValue">80%</span></div>
+                  </div>
+                  <div class="lab-form-grid field-offset-sm">
+                    <div class="field"><label for="builderIntervalMode">Interval mode</label><select id="builderIntervalMode"><option value="symmetric" selected>Symmetric-by-coverage</option><option value="custom">Custom low/high</option><option value="multi_pack">Multi-interval pack</option></select></div>
+                    <div class="field"><label for="builderMultiCoverages">Multi-interval coverages</label><input id="builderMultiCoverages" placeholder="50,80,90" /></div>
+                    <div class="field"><label for="builderCustomLow">Custom q_low %</label><input id="builderCustomLow" type="number" min="1" max="99" step="1" value="10" /></div>
+                    <div class="field"><label for="builderCustomHigh">Custom q_high %</label><input id="builderCustomHigh" type="number" min="1" max="99" step="1" value="90" /></div>
+                  </div>
+                  <div class="stats field-offset-sm">
+                    <span>requested: <strong id="builderRequestedCoverage">80.00%</strong></span>
+                    <span>q_low: <strong id="builderDerivedLow">q10</strong></span>
+                    <span>q_high: <strong id="builderDerivedHigh">q90</strong></span>
+                    <span>effective: <strong id="builderEffectiveCoverage">80.00%</strong></span>
+                    <span>implied: <strong id="builderImpliedCoverage">80.00%</strong></span>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="detail-accordion" open>
+              <summary>Q-grid</summary>
+              <div class="detail-accordion-body">
+                <div class="detail-accordion-body-inner">
+                  <div class="lab-form-grid">
+                    <div class="field"><label for="builderQStrategy">Strategy</label><select id="builderQStrategy"><option value="interval_only" selected>Interval-only</option><option value="selected_set">Selected set</option><option value="full_grid">Full grid q01..q99</option></select></div>
+                    <div class="field"><label for="builderQSearch">Search q-values</label><input id="builderQSearch" placeholder="q05 / q50 / 05" /></div>
+                    <div class="field"><label for="builderQSoftLimit">Q soft-limit</label><input id="builderQSoftLimit" type="number" min="1" max="99" step="1" value="11" /></div>
+                  </div>
+                  <div class="btn-row field-offset-sm">
+                    <button id="builderAddQ50Btn" type="button">Add q50</button>
+                    <button id="builderSelectPrimaryBtn" type="button">Select Primary</button>
+                    <button id="builderSelectDecilesBtn" type="button">Select Deciles</button>
+                    <button id="builderSelectRangeBtn" type="button">Select Range</button>
+                    <button id="builderClearQBtn" type="button">Clear</button>
+                  </div>
+                  <div class="lab-form-grid field-offset-sm">
+                    <div class="field"><label for="builderQRangeStart">Q range start</label><input id="builderQRangeStart" type="number" min="1" max="99" step="1" value="10" /></div>
+                    <div class="field"><label for="builderQRangeEnd">Q range end</label><input id="builderQRangeEnd" type="number" min="1" max="99" step="1" value="90" /></div>
+                  </div>
+                  <div class="field field-offset-sm">
+                    <label class="choice-pill choice-pill-inline"><input id="builderQuantileConfirm" type="checkbox" />I understand (resource heavy)</label>
+                  </div>
+                  <div id="builderQuantileGrid" class="quantile-grid field-offset-sm"></div>
+                  <div class="stats field-offset-sm">
+                    <span>count: <strong id="builderQuantileCount">3</strong></span>
+                    <span id="builderQuantileWarning">soft-limit: 11</span>
+                  </div>
+                  <pre id="builderQuantileList" class="detail-json field-offset-sm">q10, q50, q90</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="detail-accordion">
+              <summary>Training Windows & Split</summary>
+              <div class="detail-accordion-body">
+                <div class="detail-accordion-body-inner">
+                  <div class="lab-form-grid">
+                    <div class="field"><label for="builderTrainWindowMode">train_window_mode</label><select id="builderTrainWindowMode"><option value="expanding" selected>expanding</option><option value="rolling">rolling</option></select></div>
+                    <div class="field"><label for="builderTrainWindowDays">train_window_days</label><input id="builderTrainWindowDays" type="number" min="1" max="3650" value="365" /></div>
+                    <div class="field"><label for="builderValDays">val_days</label><input id="builderValDays" type="number" min="1" max="3650" value="30" /></div>
+                    <div class="field"><label for="builderTestDays">test_days</label><input id="builderTestDays" type="number" min="1" max="3650" value="30" /></div>
+                  </div>
+                  <div class="field field-offset-sm"><label class="choice-pill choice-pill-inline"><input id="builderWalkForwardEnabled" type="checkbox" />Walk-forward</label></div>
+                  <div class="grid g4 field-offset-sm">
+                    <div class="field"><label for="builderWfTrainDays">wf_train_days</label><input id="builderWfTrainDays" type="number" min="1" max="3650" value="180" /></div>
+                    <div class="field"><label for="builderWfValDays">wf_val_days</label><input id="builderWfValDays" type="number" min="1" max="3650" value="30" /></div>
+                    <div class="field"><label for="builderWfStepDays">wf_step_days</label><input id="builderWfStepDays" type="number" min="1" max="3650" value="30" /></div>
+                    <div class="field"><label for="builderWfFolds">wf_folds</label><input id="builderWfFolds" type="number" min="1" max="100" value="3" /></div>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="detail-accordion">
+              <summary>Features</summary>
+              <div class="detail-accordion-body">
+                <div class="detail-accordion-body-inner">
+                  <div class="lab-form-grid">
+                    <div class="field"><label for="builderFeatureSetVersion">feature_set_version</label><select id="builderFeatureSetVersion"><option value="feat_v1" selected>feat_v1</option><option value="feat_v2">feat_v2 (fallback to v1)</option></select></div>
+                  </div>
+                  <div class="choice-grid field-offset-sm">
+                    <label class="choice-pill"><input id="builderFeatureReturns" type="checkbox" checked />Returns</label>
+                    <label class="choice-pill"><input id="builderFeatureVolatility" type="checkbox" checked />Volatility</label>
+                    <label class="choice-pill"><input id="builderFeatureVolume" type="checkbox" checked />Volume</label>
+                    <label class="choice-pill"><input id="builderFeatureTrend" type="checkbox" checked />Trend</label>
+                    <label class="choice-pill"><input id="builderFeatureRsi" type="checkbox" checked />RSI</label>
+                    <label class="choice-pill"><input id="builderFeatureAtr" type="checkbox" checked />ATR</label>
+                    <label class="choice-pill"><input id="builderFeatureMacd" type="checkbox" checked />MACD</label>
+                  </div>
+                  <div class="grid g4 field-offset-sm">
+                    <div class="field"><label for="builderReturnWindows">return_windows</label><input id="builderReturnWindows" value="1,2,3,6,12" /></div>
+                    <div class="field"><label for="builderVolWindows">vol_windows</label><input id="builderVolWindows" value="10,20,50" /></div>
+                    <div class="field"><label for="builderVolumeWindows">volume_windows</label><input id="builderVolumeWindows" value="20,50" /></div>
+                    <div class="field"><label for="builderTrendWindows">trend_windows</label><input id="builderTrendWindows" value="20,50,200" /></div>
+                    <div class="field"><label for="builderRsiWindow">rsi_window</label><input id="builderRsiWindow" type="number" min="2" max="1000" value="14" /></div>
+                    <div class="field"><label for="builderAtrWindow">atr_window</label><input id="builderAtrWindow" type="number" min="2" max="1000" value="14" /></div>
+                    <div class="field"><label for="builderMacdFast">macd.fast</label><input id="builderMacdFast" type="number" min="2" max="1000" value="12" /></div>
+                    <div class="field"><label for="builderMacdSlow">macd.slow</label><input id="builderMacdSlow" type="number" min="2" max="1000" value="26" /></div>
+                    <div class="field"><label for="builderMacdSignal">macd.signal</label><input id="builderMacdSignal" type="number" min="2" max="1000" value="9" /></div>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="detail-accordion">
+              <summary>Model Hyperparams</summary>
+              <div class="detail-accordion-body">
+                <div class="detail-accordion-body-inner">
+                  <div class="grid g4">
+                    <div class="field"><label for="builderLearningRate">learning_rate</label><input id="builderLearningRate" type="number" min="0.0001" step="0.0001" value="0.05" /></div>
+                    <div class="field"><label for="builderNumLeaves">num_leaves</label><input id="builderNumLeaves" type="number" min="2" step="1" value="31" /></div>
+                    <div class="field"><label for="builderMaxDepth">max_depth</label><input id="builderMaxDepth" type="number" min="-1" step="1" value="-1" /></div>
+                    <div class="field"><label for="builderMinDataLeaf">min_data_in_leaf</label><input id="builderMinDataLeaf" type="number" min="1" step="1" value="20" /></div>
+                    <div class="field"><label for="builderFeatureFraction">feature_fraction</label><input id="builderFeatureFraction" type="number" min="0" max="1" step="0.01" value="1.00" /></div>
+                    <div class="field"><label for="builderBaggingFraction">bagging_fraction</label><input id="builderBaggingFraction" type="number" min="0" max="1" step="0.01" value="1.00" /></div>
+                    <div class="field"><label for="builderBaggingFreq">bagging_freq</label><input id="builderBaggingFreq" type="number" min="0" step="1" value="0" /></div>
+                    <div class="field"><label for="builderLambdaL1">lambda_l1</label><input id="builderLambdaL1" type="number" min="0" step="0.01" value="0.00" /></div>
+                    <div class="field"><label for="builderLambdaL2">lambda_l2</label><input id="builderLambdaL2" type="number" min="0" step="0.01" value="0.00" /></div>
+                    <div class="field"><label for="builderBoostRounds">num_boost_round</label><input id="builderBoostRounds" type="number" min="1" step="1" value="120" /></div>
+                    <div class="field"><label for="builderEarlyStopping">early_stopping_rounds</label><input id="builderEarlyStopping" type="number" min="0" step="1" value="0" /></div>
+                    <div class="field"><label for="builderSeed">seed</label><input id="builderSeed" type="number" step="1" value="42" /></div>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="detail-accordion">
+              <summary>Calibration</summary>
+              <div class="detail-accordion-body">
+                <div class="detail-accordion-body-inner">
+                  <div class="lab-form-grid">
+                    <div class="field"><label for="builderCalibrationMethod">calibration_method</label><select id="builderCalibrationMethod"><option value="grid_scale" selected>grid_scale</option><option value="conformal_cqr">conformal_cqr (fallback)</option></select></div>
+                    <div class="field"><label for="builderScaleRule">selection rule</label><input id="builderScaleRule" value="min_abs_coverage_gap_then_width" /></div>
+                  </div>
+                  <div class="field field-offset-sm"><label for="builderScaleGrid">scale_grid</label><input id="builderScaleGrid" value="0.5,0.75,1.0,1.2,1.5,2.0,3.0" /></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="detail-accordion">
+              <summary>Sweep</summary>
+              <div class="detail-accordion-body">
+                <div class="detail-accordion-body-inner">
+                  <div class="grid g4">
+                    <div class="field"><label for="builderSweepCoverages">coverage list</label><input id="builderSweepCoverages" placeholder="80..95 step=1 or 80,85,90" /></div>
+                    <div class="field"><label for="builderSweepWindowDays">window list</label><input id="builderSweepWindowDays" placeholder="180,365,540" /></div>
+                    <div class="field"><label for="builderSweepFeatureSets">feature_set list</label><input id="builderSweepFeatureSets" placeholder="feat_v1,feat_v2" /></div>
+                    <div class="field"><label for="builderSweepCalibrationMethods">calibration methods</label><input id="builderSweepCalibrationMethods" placeholder="grid_scale,conformal_cqr" /></div>
+                  </div>
+                  <div class="field field-offset-sm">
+                    <label for="builderSweepHyperparams">sweep_hyperparams</label>
+                    <textarea id="builderSweepHyperparams" rows="4" placeholder="learning_rate=0.02..0.05 step=0.03&#10;num_leaves=31,63"></textarea>
+                  </div>
+                  <div class="stats field-offset-sm">
+                    <span>effective sweep variants: <strong id="builderSweepVariants">1</strong></span>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="detail-accordion">
+              <summary>Metadata</summary>
+              <div class="detail-accordion-body">
+                <div class="detail-accordion-body-inner">
+                  <div class="lab-form-grid">
+                    <div class="field"><label for="builderExperimentId">experiment_id</label><input id="builderExperimentId" placeholder="exp_btc_lab_01" /></div>
+                    <div class="field"><label for="builderParentModelId">parent_model_id</label><input id="builderParentModelId" placeholder="optional" /></div>
+                  </div>
+                  <div class="lab-form-grid field-offset-sm">
+                    <div class="field"><label for="builderReportCycleId">report cycle_id (optional)</label><input id="builderReportCycleId" placeholder="cycle UUID" /></div>
+                    <div class="field">
+                      <label>&nbsp;</label>
+                      <div class="btn-row">
+                        <button id="builderDownloadReportBtn" type="button">Download Report PDF</button>
+                        <button id="builderDownloadReportTxtBtn" type="button">Download TXT</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field field-offset-sm"><label for="builderNotes">notes</label><textarea id="builderNotes" rows="3" placeholder="Research notes"></textarea></div>
+                  <div class="field field-offset-sm"><label for="builderTags">tags editor (key:value)</label><textarea id="builderTags" rows="4" placeholder="owner:lab&#10;purpose:tournament"></textarea></div>
+                </div>
+              </div>
+            </details>
+          </section>
+
+          <div class="lab-side-stack">
+            <section class="panel pad">
+              <div class="head">
+                <h2 class="ht">Jobs Queue</h2>
+                <div class="btn-row"><button id="builderReloadJobsBtn">Reload</button><button id="builderAddJobModelsToCompareBtn" disabled>Add all to Compare</button></div>
+              </div>
+              <div class="field"><label for="builderJobStatusFilter">Status filter</label><input id="builderJobStatusFilter" placeholder="pending,running" /></div>
+              <div class="tw tw-offset-sm">
+                <table>
+                  <thead><tr><th>Status</th><th>Kind</th><th>Asset</th><th>Horizons</th><th>Stage</th><th>Progress</th><th>Created</th><th>Started</th><th>Finished</th><th>Actions</th></tr></thead>
+                  <tbody id="builderJobsBody"></tbody>
+                </table>
+              </div>
+              <div class="field field-offset-sm"><label for="builderJobLogs">Job logs</label><pre id="builderJobLogs" class="detail-json">Select a job to view logs.</pre></div>
+            </section>
+
+            <section class="panel pad">
+              <div class="head">
+                <h2 class="ht">Recently Created Models</h2>
+                <div class="btn-row"><button id="builderReloadModelsBtn">Reload</button></div>
+              </div>
+              <div class="choice-row">
+                <label class="choice-pill choice-pill-inline"><input id="builderShowArchived" type="checkbox" />Show archived</label>
+                <label class="choice-pill choice-pill-inline"><input id="builderShowDeleted" type="checkbox" />Show deleted</label>
+              </div>
+              <div class="tw tw-offset-sm">
+                <table>
+                  <thead><tr><th>Status</th><th>Model</th><th>Asset</th><th>Horizon</th><th>Created</th><th>Refs</th></tr></thead>
+                  <tbody id="builderModelsBody"></tbody>
+                </table>
+              </div>
+              <div class="detail-section field-offset-sm">
+                <h3 class="detail-section-title">Selected Model</h3>
+                <div class="kv">
+                  <div class="k">model_id</div><div id="builderSelectedModelId">-</div>
+                  <div class="k">status</div><div id="builderSelectedModelStatus">-</div>
+                </div>
+                <div class="field field-offset-sm"><label for="builderModelNotes">notes</label><textarea id="builderModelNotes" rows="3"></textarea></div>
+                <div class="field field-offset-sm"><label for="builderModelTags">tags (key:value)</label><textarea id="builderModelTags" rows="4"></textarea></div>
+                <div class="btn-row field-offset-sm">
+                  <button id="builderUseModelForEventsBtn">Use in Events</button>
+                  <button id="builderUseModelForCompareBtn">Add to Compare</button>
+                </div>
+                <div class="btn-row field-offset-sm">
+                  <button id="builderSaveModelMetaBtn">Save Meta</button>
+                  <button id="builderPromoteModelBtn" class="btn-primary">Promote</button>
+                  <button id="builderArchiveModelBtn">Archive</button>
+                  <button id="builderUnarchiveModelBtn">Unarchive</button>
+                  <button id="builderSoftDeleteModelBtn">Soft Delete</button>
+                  <button id="builderPurgeModelBtn" class="btn-danger">Purge</button>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
-      </section>
-      <section class="panel pad">
-        <div class="head"><h2 class="ht">Глубокий фильтр событий</h2><button id="applyDeepAnalysisBtn" class="btn-primary">Применить фильтр</button></div>
-        <div class="grid g4">
-          <div class="field"><label for="deepStatusFilter">Статус</label><select id="deepStatusFilter"><option value="">Все</option><option value="active">active</option><option value="completed">completed</option><option value="cancelled">cancelled</option></select></div>
-          <div class="field"><label for="deepHorizonFilter">Horizon</label><select id="deepHorizonFilter"><option value="">Все</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
-          <div class="field"><label for="deepResultFilter">Result</label><select id="deepResultFilter"><option value="">Все</option><option value="hit">hit</option><option value="miss">miss</option></select></div>
-          <div class="field"><label for="deepCycleFilter">Cycle ID</label><input id="deepCycleFilter" placeholder="cycle_id" /></div>
-          <div class="field"><label for="deepModelFilter">Model</label><input id="deepModelFilter" placeholder="model_id" /></div>
-          <div class="field"><label for="deepFromFilter">Дата с</label><input id="deepFromFilter" type="datetime-local" /></div>
-          <div class="field"><label for="deepToFilter">Дата по</label><input id="deepToFilter" type="datetime-local" /></div>
-          <div class="field"><label for="deepSearchFilter">Поиск</label><input id="deepSearchFilter" placeholder="event_id / note" /></div>
-          <div class="field"><label for="deepPageSizeFilter">Лимит</label><select id="deepPageSizeFilter"><option value="100">100</option><option value="300" selected>300</option><option value="500">500</option></select></div>
-        </div>
-        <div id="deepStats" class="stats"></div>
-        <div class="tw tw-offset-sm">
-          <table>
-            <thead><tr><th>event_id</th><th>Cycle</th><th>Статус</th><th>Horizon</th><th>T0 UTC</th><th>BTC Open</th><th>Result</th><th>Abs Error</th><th>Rel Error</th><th>Width %</th></tr></thead>
-            <tbody id="deepEventsBody"></tbody>
-          </table>
-        </div>
-      </section>
+      </div>
+
+      <div id="labComparePane" class="subpane active">
+        <section class="panel pad">
+          <div class="head">
+            <h2 class="ht">Сравнение / Аналитика</h2>
+            <div class="btn-row"><button id="reloadAnalysisBtn">Обновить анализ</button><button id="exportChartPngBtn">Export PNG</button><button id="exportReportPdfBtn">Export PDF</button></div>
+          </div>
+          <div class="btn-row compare-toolbar-extra">
+            <button id="compareExportJsonBtn">Scoreboard JSON</button>
+            <button id="compareExportCsvBtn">Scoreboard CSV</button>
+            <button id="tournamentComparePresetBtn">Tournament Compare</button>
+            <button id="showTournamentSummaryBtn">Show summary</button>
+          </div>
+          <div class="grid g4">
+            <div class="field"><label for="compareModeSelect">Mode</label><select id="compareModeSelect"><option value="simple" selected>SIMPLE</option><option value="matched">MATCHED</option><option value="grouped">GROUPED</option></select></div>
+            <div class="field"><label for="analysisHorizonFilter">Horizon</label><select id="analysisHorizonFilter"><option value="">All</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
+            <div class="field"><label for="analysisDaysFilter">Period (days)</label><select id="analysisDaysFilter"><option value="7">7</option><option value="30" selected>30</option><option value="90">90</option><option value="180">180</option></select></div>
+            <div class="field"><label for="analysisCycleFilter">Cycle ID</label><input id="analysisCycleFilter" placeholder="cycle_id" /></div>
+            <div class="field"><label for="compareModelSearch">Model search</label><input id="compareModelSearch" placeholder="model_id contains..." /></div>
+            <div class="field field-span-2"><label for="compareModelsSelect">Models (multi-select)</label><select id="compareModelsSelect" class="compare-model-select" multiple size="6"></select></div>
+            <div class="field"><label for="compareBaselineSelect">Baseline</label><select id="compareBaselineSelect"><option value="">None</option></select></div>
+            <div class="field"><label class="choice-pill choice-pill-inline"><input id="compareExcludeStale" type="checkbox" />Exclude stale</label></div>
+            <div class="field"><label>&nbsp;</label><button id="applyAnalysisFiltersBtn" class="btn-primary">Apply Compare</button></div>
+            <div class="field field-span-4">
+              <label>Scoreboard columns</label>
+              <div id="compareColumnPicker" class="choice-row">
+                <label class="choice-pill"><input data-col="asset" type="checkbox" checked />asset</label>
+                <label class="choice-pill"><input data-col="horizon" type="checkbox" checked />horizon</label>
+                <label class="choice-pill"><input data-col="base_timeframe" type="checkbox" />base_tf</label>
+                <label class="choice-pill"><input data-col="steps_ahead" type="checkbox" />steps</label>
+                <label class="choice-pill"><input data-col="q_count" type="checkbox" />q_count</label>
+                <label class="choice-pill"><input data-col="target_coverage_effective" type="checkbox" />eff_cov</label>
+                <label class="choice-pill"><input data-col="completed_events" type="checkbox" checked />events</label>
+                <label class="choice-pill"><input data-col="coverage" type="checkbox" checked />coverage</label>
+                <label class="choice-pill"><input data-col="avg_width_pct" type="checkbox" checked />avg_width</label>
+                <label class="choice-pill"><input data-col="avg_abs_error" type="checkbox" checked />avg_abs</label>
+                <label class="choice-pill"><input data-col="avg_rel_error" type="checkbox" />avg_rel</label>
+                <label class="choice-pill"><input data-col="avg_interval_score" type="checkbox" />avg_is</label>
+                <label class="choice-pill"><input data-col="avg_wis" type="checkbox" />avg_wis</label>
+                <label class="choice-pill"><input data-col="matched_groups" type="checkbox" />groups</label>
+                <label class="choice-pill"><input data-col="group_wins" type="checkbox" />wins</label>
+                <label class="choice-pill"><input data-col="status" type="checkbox" />status</label>
+                <label class="choice-pill"><input data-col="group_key" type="checkbox" />group_key</label>
+              </div>
+            </div>
+          </div>
+          <div id="compareSummaryHint" class="stats compare-summary-hint"></div>
+          <pre id="tournamentSummaryJson" class="detail-json field-offset-sm">Tournament summary will appear here.</pre>
+          <div class="kpi-grid kpi-grid-offset-sm">
+            <div class="kpi"><div class="n">Coverage факт / target</div><div id="kpiCoverage" class="v">-</div><div class="h">target: 80%</div></div>
+            <div class="kpi"><div class="n">Calibration</div><div id="kpiCalibration" class="v">-</div><div class="h">под / в норме / выше</div></div>
+            <div class="kpi"><div class="n">Best Horizon</div><div id="kpiBestHorizon" class="v">-</div><div class="h">макс coverage</div></div>
+            <div class="kpi"><div class="n">Completed Events</div><div id="kpiCompleted" class="v">-</div><div class="h">по фильтру периода</div></div>
+            <div class="kpi"><div class="n">Active Events</div><div id="kpiActive" class="v">-</div><div class="h">в системе сейчас</div></div>
+            <div class="kpi"><div class="n">Data Freshness</div><div id="kpiFreshness" class="v">-</div><div class="h">TTL cache</div></div>
+          </div>
+        </section>
+
+        <section class="panel pad">
+          <div class="head"><h2 class="ht">Coverage / Width по времени</h2></div>
+          <div class="btn-row field-offset-sm"><button id="compareApplyChartBtn">Apply Chart</button></div>
+          <div class="grid g4 field-offset-sm">
+            <div class="field"><label for="compareChartTypeSelect">Chart type</label><select id="compareChartTypeSelect"><option value="scatter" selected>Scatter</option><option value="series">Time series</option><option value="hist">Histogram</option></select></div>
+            <div class="field"><label for="compareScatterXMetric">Scatter X</label><select id="compareScatterXMetric"><option value="coverage" selected>coverage</option><option value="avg_abs_error">avg_abs_error</option><option value="avg_width_pct">avg_width_pct</option><option value="avg_rel_error">avg_rel_error</option><option value="avg_interval_score">avg_interval_score</option><option value="avg_wis">avg_wis</option><option value="completed_events">completed_events</option><option value="group_wins">group_wins</option></select></div>
+            <div class="field"><label for="compareScatterYMetric">Scatter Y</label><select id="compareScatterYMetric"><option value="avg_abs_error" selected>avg_abs_error</option><option value="coverage">coverage</option><option value="avg_width_pct">avg_width_pct</option><option value="avg_rel_error">avg_rel_error</option><option value="avg_interval_score">avg_interval_score</option><option value="avg_wis">avg_wis</option><option value="completed_events">completed_events</option><option value="group_wins">group_wins</option></select></div>
+            <div class="field"><label for="compareSeriesMetric">Series metric</label><select id="compareSeriesMetric"><option value="coverage" selected>coverage</option><option value="abs_error">abs_error</option><option value="width_pct">width_pct</option><option value="rel_error">rel_error</option><option value="interval_score">interval_score</option><option value="wis">wis</option></select></div>
+            <div class="field"><label for="compareRollingDays">Rolling days</label><input id="compareRollingDays" type="number" min="1" max="365" value="7" /></div>
+            <div class="field"><label for="compareHistMetric">Histogram metric</label><select id="compareHistMetric"><option value="abs_error" selected>abs_error</option><option value="width_pct">width_pct</option><option value="rel_error">rel_error</option><option value="coverage">coverage</option><option value="interval_score">interval_score</option><option value="wis">wis</option></select></div>
+            <div class="field"><label for="compareHistBins">Bins</label><input id="compareHistBins" type="number" min="1" max="100" value="10" /></div>
+          </div>
+          <div class="chart"><canvas id="analysisChart"></canvas></div>
+        </section>
+
+        <section class="panel pad">
+          <div class="head"><h2 class="ht">Срез по горизонтам</h2></div>
+          <div class="tw">
+            <table>
+              <thead id="compareScoreboardHead"><tr><th>Model</th><th>Events</th><th>Coverage</th><th>Avg Width %</th><th>Avg Abs Error</th></tr></thead>
+              <tbody id="horizonBreakdownBody"></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="panel pad">
+          <div class="head"><h2 class="ht">Matched Groups</h2></div>
+          <div class="tw">
+            <table>
+              <thead><tr><th>Key</th><th>Created</th><th>Cycle</th><th>Models</th><th>Winner</th><th>Best Abs Error</th><th>Hits</th></tr></thead>
+              <tbody id="compareGroupBreakdownBody"></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="panel pad">
+          <div class="head"><h2 class="ht">Глубокий фильтр событий</h2><button id="applyDeepAnalysisBtn" class="btn-primary">Применить фильтр</button></div>
+          <div class="grid g4">
+            <div class="field"><label for="deepStatusFilter">Статус</label><select id="deepStatusFilter"><option value="">Все</option><option value="active">active</option><option value="completed">completed</option><option value="cancelled">cancelled</option></select></div>
+            <div class="field"><label for="deepHorizonFilter">Horizon</label><select id="deepHorizonFilter"><option value="">Все</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
+            <div class="field"><label for="deepResultFilter">Result</label><select id="deepResultFilter"><option value="">Все</option><option value="hit">hit</option><option value="miss">miss</option></select></div>
+            <div class="field"><label for="deepCycleFilter">Cycle ID</label><input id="deepCycleFilter" placeholder="cycle_id" /></div>
+            <div class="field"><label for="deepModelFilter">Model</label><input id="deepModelFilter" placeholder="model_id" /></div>
+            <div class="field"><label for="deepFromFilter">Дата с</label><input id="deepFromFilter" type="datetime-local" /></div>
+            <div class="field"><label for="deepToFilter">Дата по</label><input id="deepToFilter" type="datetime-local" /></div>
+            <div class="field"><label for="deepSearchFilter">Поиск</label><input id="deepSearchFilter" placeholder="event_id / note" /></div>
+            <div class="field"><label for="deepPageSizeFilter">Лимит</label><select id="deepPageSizeFilter"><option value="100">100</option><option value="300" selected>300</option><option value="500">500</option></select></div>
+          </div>
+          <div id="deepStats" class="stats"></div>
+          <div class="tw tw-offset-sm">
+            <table>
+              <thead><tr><th>event_id</th><th>Cycle</th><th>Статус</th><th>Horizon</th><th>T0 UTC</th><th>BTC Open</th><th>Result</th><th>Abs Error</th><th>Rel Error</th><th>Width %</th></tr></thead>
+              <tbody id="deepEventsBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </section>
 
     <section id="paneSettings" class="pane">
@@ -177,17 +557,56 @@
       <h3 class="modal-title create-event-modal-title">Создать Event</h3>
       <div class="modal-grid">
         <div class="field"><label>Asset</label><input value="BTC" disabled /></div>
+        <div class="field"><label for="createModeSelect">Mode</label><select id="createModeSelect"><option value="single">Single</option><option value="cycle">Cycle</option><option value="tournament">Tournament</option></select></div>
         <div class="field"><label for="createHorizonSelect">Horizon</label><select id="createHorizonSelect"><option value="5m">5m</option><option value="15m">15m</option><option value="1h" selected>1h</option><option value="4h">4h</option><option value="1d">1d</option><option value="1w">1w</option></select></div>
-        <div class="field"><label for="createRunsInput">Runs</label><input id="createRunsInput" type="number" min="1" max="500" value="1" /></div>
-        <div class="field"><label for="createModelSelect">Model</label><select id="createModelSelect"></select></div>
+        <div id="createRunsField" class="field"><label for="createRunsInput">Runs</label><input id="createRunsInput" type="number" min="1" max="500" value="1" /></div>
+        <div id="createModelSingleField" class="field"><label for="createModelSelect">Model</label><select id="createModelSelect"></select></div>
+        <div id="createModelMultiField" class="field"><label for="createModelMultiSelect">Models</label><select id="createModelMultiSelect" multiple size="6"></select></div>
         <div class="field"><label for="createSourceSelect">Price Source</label><select id="createSourceSelect"><option value="binance_spot" selected>binance_spot</option><option value="index">index</option></select></div>
       </div>
+      <div id="createPlanHint" class="modal-plan-hint">Single mode creates exactly one event.</div>
       <div class="field field-offset-sm"><label for="createNoteInput">Комментарий</label><textarea id="createNoteInput" rows="3" placeholder="Опционально"></textarea></div>
       <div class="modal-actions"><button id="closeCreateModalBtn">Закрыть</button><button id="submitCreateEventBtn" class="btn-primary">Создать</button></div>
     </div>
   </section>
 
   <div id="toastWrap" class="toast-wrap"></div>
+
+  <audio id="backgroundMusic" src="/music.mp3" autoplay loop preload="auto" hidden></audio>
+
+  <script>
+    (() => {
+      const player = document.getElementById("backgroundMusic");
+      if (!player) return;
+      const audioUrl = `/music.mp3?v=${Date.now()}`;
+      if (player.getAttribute("src") !== audioUrl) {
+        player.setAttribute("src", audioUrl);
+        player.load();
+      }
+      player.loop = true;
+      const tryPlay = () => {
+        const result = player.play();
+        if (result && typeof result.catch === "function") {
+          result.catch(() => {});
+        }
+      };
+      const unlockPlayback = () => {
+        tryPlay();
+        document.removeEventListener("pointerdown", unlockPlayback);
+        document.removeEventListener("keydown", unlockPlayback);
+        document.removeEventListener("touchstart", unlockPlayback);
+      };
+      tryPlay();
+      document.addEventListener("pointerdown", unlockPlayback, { passive: true });
+      document.addEventListener("keydown", unlockPlayback, { passive: true });
+      document.addEventListener("touchstart", unlockPlayback, { passive: true });
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden && player.paused) {
+          tryPlay();
+        }
+      });
+    })();
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
   <script src="/app.js"></script>

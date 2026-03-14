@@ -9,7 +9,7 @@ from typing import Any
 
 import uvicorn
 
-from src.config import load_config
+from src.config import get_runtime_paths, load_config
 from src.pipeline import (
     run_all,
     run_data_pipeline,
@@ -19,6 +19,8 @@ from src.pipeline import (
     run_training_pipeline,
     run_walk_forward_pipeline,
 )
+from src.service.event_store import EventStore
+from src.worker import main as worker_main
 
 
 def _load_cfg(path: str) -> dict[str, Any]:
@@ -81,6 +83,34 @@ def cmd_service_run(args: argparse.Namespace) -> None:
     )
 
 
+def cmd_worker_run(args: argparse.Namespace) -> None:
+    config_dir = str(Path(args.config_dir).resolve())
+    root_dir = str(Path(args.root).resolve())
+    os.environ["ULYANAI_CONFIG_DIR"] = config_dir
+    os.environ["ULYANAI_ROOT"] = root_dir
+    worker_main(
+        [
+            "--config-dir",
+            config_dir,
+            "--root",
+            root_dir,
+            "--poll-seconds",
+            str(args.poll_seconds),
+        ]
+    )
+
+
+def cmd_events_backfill_eval_keys(args: argparse.Namespace) -> None:
+    cfg = _load_cfg(args.config_dir)
+    paths = get_runtime_paths(cfg, root=args.root)
+    store = EventStore(paths.artifacts_root / "db" / "events.sqlite3")
+    try:
+        updated = store.backfill_event_eval_keys(only_missing=bool(args.only_missing))
+    finally:
+        store.close()
+    print({"updated": updated, "only_missing": bool(args.only_missing)})
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ulyanai")
     parser.add_argument("--config-dir", default="configs")
@@ -113,6 +143,14 @@ def build_parser() -> argparse.ArgumentParser:
     service = sub.add_parser("service-run", help="Start FastAPI service")
     service.add_argument("--reload", action="store_true")
     service.set_defaults(func=cmd_service_run)
+
+    worker = sub.add_parser("worker-run", help="Start background training worker")
+    worker.add_argument("--poll-seconds", type=float, default=1.0)
+    worker.set_defaults(func=cmd_worker_run)
+
+    backfill = sub.add_parser("events-backfill-eval-keys", help="Backfill eval_key for historical events")
+    backfill.add_argument("--only-missing", action="store_true")
+    backfill.set_defaults(func=cmd_events_backfill_eval_keys)
     return parser
 
 
