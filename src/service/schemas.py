@@ -342,6 +342,48 @@ class ModelMetadataUpdateRequest(BaseModel):
     experiment_id: str | None = None
 
 
+class SweepAxisRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    path: str
+    mode: Literal["list", "range"] = "list"
+    values: list = Field(default_factory=list)
+    start: float | int | None = None
+    end: float | int | None = None
+    step: float | int | None = None
+
+
+class SweepAxisPreview(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    path: str
+    label: str
+    source: Literal["sweep_axes", "legacy"]
+    mode: Literal["list", "range"]
+    value_type: str
+    requested_count: int = 0
+    effective_count: int = 0
+    dropped_count: int = 0
+    requested_values: list = Field(default_factory=list)
+    normalized_values: list = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+    errors: list[str] = Field(default_factory=list)
+
+
+class SweepPreviewResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    requested_total: int = 1
+    effective_total: int = 1
+    duplicate_count: int = 0
+    invalid_count: int = 0
+    estimated_model_count: int = 0
+    resource_heavy: bool = False
+    heavy_reasons: list[str] = Field(default_factory=list)
+    duplicate_reasons: list[str] = Field(default_factory=list)
+    axes: list[SweepAxisPreview] = Field(default_factory=list)
+
+
 class ModelBuilderRequestBase(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -375,6 +417,7 @@ class ModelBuilderRequestBase(BaseModel):
     calibration_method: Literal["grid_scale", "conformal_cqr"] = "grid_scale"
     scale_grid: list[float] = Field(default_factory=lambda: [0.5, 0.75, 1.0, 1.2, 1.5, 2.0, 3.0])
     scale_selection_rule: str = "min_abs_coverage_gap_then_width"
+    sweep_axes: list[SweepAxisRequest] = Field(default_factory=list)
     sweep_target_coverages: list[int] = Field(default_factory=list)
     sweep_train_window_days: list[int] = Field(default_factory=list)
     sweep_feature_set_versions: list[str] = Field(default_factory=list)
@@ -410,7 +453,9 @@ class ModelBuilderValidateResponse(BaseModel):
     quantiles_primary: list[str] = Field(default_factory=list)
     quantiles_multi_interval: list[str] = Field(default_factory=list)
     requires_confirmation: bool = False
+    confirmation_reasons: list[str] = Field(default_factory=list)
     sweep_variants_count: int = 1
+    sweep_preview: SweepPreviewResponse = Field(default_factory=SweepPreviewResponse)
 
 
 class TrainingJobLogRecord(BaseModel):

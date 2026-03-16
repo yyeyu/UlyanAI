@@ -138,12 +138,30 @@ POLYMARKET_CRYPTO_TAG_SLUG = "crypto"
 POLYMARKET_EVENTS_PAGE_SIZE = 500
 POLYMARKET_EVENTS_MAX_PAGES = 200
 POLYMARKET_REQUEST_TIMEOUT_SEC = 15.0
+UI_NO_CACHE_HEADERS = {
+    "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+    "Pragma": "no-cache",
+    "Expires": "0",
+}
 
 
 def _env_flag(name: str, default: bool = False) -> bool:
     raw = os.getenv(name)
     if raw is None:
         return default
+    return str(raw).strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _job_worker_enabled() -> bool:
+    env_value = os.getenv("ULYANAI_ENABLE_INPROCESS_JOB_WORKER")
+    if env_value is not None:
+        return _env_flag("ULYANAI_ENABLE_INPROCESS_JOB_WORKER", default=True)
+    service_cfg = CONFIG.get("service", {})
+    raw = service_cfg.get("enable_inprocess_job_worker") if isinstance(service_cfg, dict) else None
+    if raw is None:
+        return True
+    if isinstance(raw, bool):
+        return raw
     return str(raw).strip().lower() in {"1", "true", "yes", "on"}
 
 
@@ -1158,7 +1176,7 @@ async def lifespan(_: FastAPI):
     _sync_models_registry()
     _try_spawn_cycle_events()
     _start_worker()
-    enable_inprocess_job_worker = _env_flag("ULYANAI_ENABLE_INPROCESS_JOB_WORKER", False)
+    enable_inprocess_job_worker = _job_worker_enabled()
     if enable_inprocess_job_worker:
         _start_job_worker()
     try:
@@ -1184,7 +1202,7 @@ def root_ui() -> FileResponse:
     ui_path = PATHS.root / "web" / "index.html"
     if not ui_path.exists():
         raise HTTPException(status_code=404, detail="web/index.html not found")
-    return FileResponse(ui_path, media_type="text/html; charset=utf-8")
+    return FileResponse(ui_path, media_type="text/html; charset=utf-8", headers=dict(UI_NO_CACHE_HEADERS))
 
 
 @app.get("/styles.css", include_in_schema=False)
@@ -1192,7 +1210,7 @@ def ui_styles() -> FileResponse:
     css_path = PATHS.root / "web" / "styles.css"
     if not css_path.exists():
         raise HTTPException(status_code=404, detail="web/styles.css not found")
-    return FileResponse(css_path, media_type="text/css; charset=utf-8")
+    return FileResponse(css_path, media_type="text/css; charset=utf-8", headers=dict(UI_NO_CACHE_HEADERS))
 
 
 @app.get("/app.js", include_in_schema=False)
@@ -1200,7 +1218,7 @@ def ui_script() -> FileResponse:
     js_path = PATHS.root / "web" / "app.js"
     if not js_path.exists():
         raise HTTPException(status_code=404, detail="web/app.js not found")
-    return FileResponse(js_path, media_type="application/javascript; charset=utf-8")
+    return FileResponse(js_path, media_type="application/javascript; charset=utf-8", headers=dict(UI_NO_CACHE_HEADERS))
 
 
 @app.get("/music.mp3", include_in_schema=False)
@@ -1667,10 +1685,15 @@ def purge_model(
 @app.post("/api/lab/validate", response_model=ModelBuilderValidateResponse)
 def validate_model_builder(
     request: ModelBuilderValidateRequest,
+    job_type: str | None = Query(default=None, pattern="^(train_model|sweep_train|wf_eval)?$"),
     _: None = Depends(_auth_dep),
     __: None = Depends(_rate_limit_dep),
 ) -> ModelBuilderValidateResponse:
-    validation = validate_builder_payload(request.model_dump(), require_confirmation=False)
+    validation = validate_builder_payload(
+        request.model_dump(),
+        require_confirmation=False,
+        job_type=job_type,
+    )
     return ModelBuilderValidateResponse.model_validate(validation.response)
 
 

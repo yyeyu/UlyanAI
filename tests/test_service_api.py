@@ -1,17 +1,42 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import os
 import unittest
 from unittest.mock import patch
 
 import pandas as pd
 
 import src.service.api as service_api
-from src.service.api import get_health, get_predict, post_predict_batch
+from src.service.api import get_health, get_predict, post_predict_batch, root_ui, ui_script, ui_styles
 from src.service.schemas import PredictBatchRequest, PredictBatchRequestItem
 
 
 class ServiceContractTests(unittest.TestCase):
+    def test_ui_assets_disable_browser_cache(self) -> None:
+        responses = [root_ui(), ui_styles(), ui_script()]
+        for response in responses:
+            self.assertEqual(
+                response.headers.get("cache-control"),
+                "no-store, no-cache, must-revalidate, max-age=0",
+            )
+            self.assertEqual(response.headers.get("pragma"), "no-cache")
+            self.assertEqual(response.headers.get("expires"), "0")
+
+    def test_job_worker_enabled_defaults_to_true(self) -> None:
+        with (
+            patch.dict(os.environ, {}, clear=False),
+            patch.object(service_api, "CONFIG", {"service": {}}),
+        ):
+            self.assertTrue(service_api._job_worker_enabled())
+
+    def test_job_worker_enabled_respects_env_override(self) -> None:
+        with (
+            patch.dict(os.environ, {"ULYANAI_ENABLE_INPROCESS_JOB_WORKER": "0"}, clear=False),
+            patch.object(service_api, "CONFIG", {"service": {"enable_inprocess_job_worker": True}}),
+        ):
+            self.assertFalse(service_api._job_worker_enabled())
+
     def test_health_contract_contains_fallback_flags(self) -> None:
         payload = get_health().model_dump()
         self.assertTrue(payload["ok"])

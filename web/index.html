@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UlyanAI Terminal</title>
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/styles.css?v=lab_sweep_builder_v2" />
 </head>
 <body>
   <div class="app">
@@ -164,12 +164,18 @@
                       <label class="choice-pill"><input id="builderHorizon5m" type="checkbox" checked />5m</label>
                       <label class="choice-pill"><input id="builderHorizon15m" type="checkbox" checked />15m</label>
                       <label class="choice-pill"><input id="builderHorizon1h" type="checkbox" checked />1h</label>
+                      <label class="choice-pill"><input id="builderHorizon4h" type="checkbox" />4h</label>
+                      <label class="choice-pill"><input id="builderHorizon1d" type="checkbox" />1d</label>
+                      <label class="choice-pill"><input id="builderHorizon1w" type="checkbox" />1w</label>
                     </div>
                   </div>
                   <div class="grid g3 field-offset-sm">
                     <div class="field"><label for="builderStep5m">steps_ahead 5m</label><input id="builderStep5m" type="number" min="1" max="10000" value="5" /></div>
                     <div class="field"><label for="builderStep15m">steps_ahead 15m</label><input id="builderStep15m" type="number" min="1" max="10000" value="15" /></div>
                     <div class="field"><label for="builderStep1h">steps_ahead 1h</label><input id="builderStep1h" type="number" min="1" max="10000" value="60" /></div>
+                    <div class="field"><label for="builderStep4h">steps_ahead 4h</label><input id="builderStep4h" type="number" min="1" max="10000" value="240" /></div>
+                    <div class="field"><label for="builderStep1d">steps_ahead 1d</label><input id="builderStep1d" type="number" min="1" max="10000" value="1440" /></div>
+                    <div class="field"><label for="builderStep1w">steps_ahead 1w</label><input id="builderStep1w" type="number" min="1" max="10000" value="10080" /></div>
                   </div>
                 </div>
               </div>
@@ -313,31 +319,44 @@
               <div class="detail-accordion-body">
                 <div class="detail-accordion-body-inner">
                   <div class="lab-form-grid">
-                    <div class="field"><label for="builderCalibrationMethod">calibration_method</label><select id="builderCalibrationMethod"><option value="grid_scale" selected>grid_scale</option><option value="conformal_cqr">conformal_cqr (fallback)</option></select></div>
+                    <div class="field"><label for="builderCalibrationMethod">calibration_method</label><select id="builderCalibrationMethod"><option value="grid_scale" selected>grid_scale</option><option value="conformal_cqr" disabled>conformal_cqr (not implemented)</option></select></div>
                     <div class="field"><label for="builderScaleRule">selection rule</label><input id="builderScaleRule" value="min_abs_coverage_gap_then_width" /></div>
                   </div>
+                  <div class="mut field-offset-sm">Only `grid_scale` is implemented end-to-end right now.</div>
                   <div class="field field-offset-sm"><label for="builderScaleGrid">scale_grid</label><input id="builderScaleGrid" value="0.5,0.75,1.0,1.2,1.5,2.0,3.0" /></div>
                 </div>
               </div>
             </details>
 
             <details class="detail-accordion">
-              <summary>Sweep</summary>
+              <summary>Sweep Builder</summary>
               <div class="detail-accordion-body">
                 <div class="detail-accordion-body-inner">
-                  <div class="grid g4">
-                    <div class="field"><label for="builderSweepCoverages">coverage list</label><input id="builderSweepCoverages" placeholder="80..95 step=1 or 80,85,90" /></div>
-                    <div class="field"><label for="builderSweepWindowDays">window list</label><input id="builderSweepWindowDays" placeholder="180,365,540" /></div>
-                    <div class="field"><label for="builderSweepFeatureSets">feature_set list</label><input id="builderSweepFeatureSets" placeholder="feat_v1,feat_v2" /></div>
-                    <div class="field"><label for="builderSweepCalibrationMethods">calibration methods</label><input id="builderSweepCalibrationMethods" placeholder="grid_scale,conformal_cqr" /></div>
+                  <div class="mut">Base form values stay fixed. Add sweep axes to override any supported parameter with a list or a numeric range.</div>
+                  <div class="btn-row field-offset-sm">
+                    <button id="builderAddSweepAxisBtn" type="button">Add axis</button>
+                    <button id="builderAddCoverageAxisBtn" type="button">Coverage axis</button>
+                    <button id="builderAddWindowAxisBtn" type="button">Window axis</button>
+                    <button id="builderAddHyperparamAxisBtn" type="button">LR axis</button>
+                    <button id="builderClearSweepAxesBtn" type="button">Clear axes</button>
                   </div>
-                  <div class="field field-offset-sm">
-                    <label for="builderSweepHyperparams">sweep_hyperparams</label>
-                    <textarea id="builderSweepHyperparams" rows="4" placeholder="learning_rate=0.02..0.05 step=0.03&#10;num_leaves=31,63"></textarea>
-                  </div>
+                  <div id="builderSweepAxesEmpty" class="mut field-offset-sm">No sweep axes. The sweep job would use the current fixed base config as a single variant.</div>
+                  <div id="builderSweepAxesList" class="sweep-axis-list field-offset-sm"></div>
                   <div class="stats field-offset-sm">
-                    <span>effective sweep variants: <strong id="builderSweepVariants">1</strong></span>
+                    <span>requested variants: <strong id="builderSweepRequested">1</strong></span>
+                    <span>effective variants: <strong id="builderSweepEffective">1</strong></span>
+                    <span>duplicates: <strong id="builderSweepDuplicates">0</strong></span>
+                    <span>invalid: <strong id="builderSweepInvalid">0</strong></span>
+                    <span>models est.: <strong id="builderSweepModels">0</strong></span>
+                    <span>load: <strong id="builderSweepHeavy">normal</strong></span>
                   </div>
+                  <div class="tw tw-offset-sm">
+                    <table>
+                      <thead><tr><th>Axis</th><th>Mode</th><th>Requested</th><th>Effective</th><th>Dropped</th><th>Notes</th></tr></thead>
+                      <tbody id="builderSweepPreviewBody"></tbody>
+                    </table>
+                  </div>
+                  <pre id="builderSweepPreviewJson" class="detail-json field-offset-sm">Sweep preview will appear here.</pre>
                 </div>
               </div>
             </details>
@@ -609,7 +628,7 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="/app.js"></script>
+  <script src="/app.js?v=lab_sweep_builder_v2"></script>
 </body>
 </html>
 

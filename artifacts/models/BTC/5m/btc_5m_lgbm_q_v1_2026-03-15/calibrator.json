@@ -1,0 +1,59 @@
+{
+  "target_coverage": 0.8,
+  "spread_scale": 1.0,
+  "chosen_scale": 1.0,
+  "selection_rule": "min_abs_coverage_gap_then_min_width",
+  "score_weight_gap": 1.0,
+  "score_weight_width": 1.0,
+  "scale_table": [
+    {
+      "scale": 0.7,
+      "cov_val": 0.6663194444444445,
+      "width_val": 0.0014357577795576933,
+      "coverage_gap": 0.13368055555555558,
+      "score_val": 0.13511631333511329
+    },
+    {
+      "scale": 0.85,
+      "cov_val": 0.7472222222222222,
+      "width_val": 0.001743420160891485,
+      "coverage_gap": 0.05277777777777781,
+      "score_val": 0.054521197938669295
+    },
+    {
+      "scale": 1.0,
+      "cov_val": 0.8101851851851852,
+      "width_val": 0.0020510825422252765,
+      "coverage_gap": 0.010185185185185186,
+      "score_val": 0.012236267727410462
+    },
+    {
+      "scale": 1.15,
+      "cov_val": 0.8561342592592592,
+      "width_val": 0.002358744923559067,
+      "coverage_gap": 0.05613425925925919,
+      "score_val": 0.058493004182818255
+    },
+    {
+      "scale": 1.3,
+      "cov_val": 0.8887731481481481,
+      "width_val": 0.002666407304892859,
+      "coverage_gap": 0.08877314814814807,
+      "score_val": 0.09143955545304093
+    },
+    {
+      "scale": 1.6,
+      "cov_val": 0.9356481481481481,
+      "width_val": 0.003281732067560443,
+      "coverage_gap": 0.13564814814814807,
+      "score_val": 0.1389298802157085
+    },
+    {
+      "scale": 2.0,
+      "cov_val": 0.9672453703703704,
+      "width_val": 0.004102165084450553,
+      "coverage_gap": 0.16724537037037035,
+      "score_val": 0.1713475354548209
+    }
+  ]
+}

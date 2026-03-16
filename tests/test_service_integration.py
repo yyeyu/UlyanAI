@@ -10,7 +10,7 @@ from fastapi import HTTPException
 
 import src.service.api as service_api
 from src.service.event_store import CycleCreateInput, EventCreateInput, EventStore
-from src.service.schemas import CreateCycleRequest, TrainingJobCreateRequest
+from src.service.schemas import CreateCycleRequest, ModelBuilderValidateRequest, TrainingJobCreateRequest
 from src.worker import _process_next_job
 
 
@@ -515,6 +515,24 @@ class ServiceIntegrationTests(unittest.TestCase):
                 self.assertEqual(created.items[0].status, "pending")
             finally:
                 store.close()
+
+    def test_lab_validate_returns_generic_sweep_preview(self) -> None:
+        payload = ModelBuilderValidateRequest(
+            asset="BTC",
+            horizons=["5m"],
+            sweep_axes=[
+                {"path": "target_coverage_percent", "mode": "list", "values": [80, 81, 82]},
+                {"path": "feature_groups.rsi", "mode": "list", "values": [True, False]},
+            ],
+        )
+
+        response = service_api.validate_model_builder(payload, job_type="sweep_train")
+
+        self.assertTrue(response.ok)
+        self.assertEqual(response.sweep_preview.requested_total, 6)
+        self.assertEqual(response.sweep_preview.effective_total, 4)
+        self.assertEqual(response.sweep_preview.duplicate_count, 2)
+        self.assertTrue(response.sweep_preview.axes)
 
 
 if __name__ == "__main__":

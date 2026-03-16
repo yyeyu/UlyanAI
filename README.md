@@ -77,6 +77,7 @@ curl -H "X-API-Key: dev-key" "http://localhost:8000/v1/predict?asset=BTC&horizon
 - `pipeline-all` — полный цикл.
 - `doctor` — preflight-проверки конфигов, данных, моделей и Binance connectivity.
 - `service-run` — запуск FastAPI сервиса.
+- `worker-run` — отдельный background worker для training jobs, если хотите вынести очередь из процесса API.
 
 Примеры:
 ```powershell
@@ -84,6 +85,7 @@ python -m src.cli --asset BTC data-sync
 python -m src.cli --asset BTC train-run
 python -m src.cli --asset BTC doctor
 python -m src.cli service-run --reload
+python -m src.cli worker-run
 ```
 
 ## PowerShell скрипты

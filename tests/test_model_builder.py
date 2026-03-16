@@ -22,6 +22,52 @@ from src.service.model_builder import (
 
 
 class ModelBuilderSweepTests(unittest.TestCase):
+    def test_generic_sweep_axes_preview_reports_breakdown_and_dedupe(self) -> None:
+        payload = {
+            "asset": "BTC",
+            "horizons": ["5m"],
+            "sweep_axes": [
+                {"path": "target_coverage_percent", "mode": "list", "values": [80, 81, 82]},
+                {"path": "feature_groups.rsi", "mode": "list", "values": [True, False]},
+                {"path": "hyperparams.num_leaves", "mode": "range", "start": 31, "end": 63, "step": 32},
+            ],
+        }
+
+        validation = validate_builder_payload(payload, require_confirmation=False, job_type="sweep_train")
+
+        self.assertTrue(validation.response["ok"])
+        preview = validation.response["sweep_preview"]
+        self.assertEqual(preview["requested_total"], 12)
+        self.assertEqual(preview["effective_total"], 8)
+        self.assertEqual(preview["duplicate_count"], 4)
+        self.assertEqual(preview["estimated_model_count"], 8)
+        self.assertEqual(validation.response["sweep_variants_count"], 8)
+        axis_preview = {str(item["path"]): item for item in preview["axes"]}
+        self.assertIn("target_coverage_percent", axis_preview)
+        self.assertEqual(int(axis_preview["target_coverage_percent"]["requested_count"]), 3)
+        self.assertIn("feature_groups.rsi", axis_preview)
+        self.assertIn("hyperparams.num_leaves", axis_preview)
+
+    def test_generic_sweep_axes_support_enum_bool_and_numeric_variants(self) -> None:
+        payload = {
+            "asset": "BTC",
+            "horizons": ["5m"],
+            "sweep_axes": [
+                {"path": "base_timeframe_mode", "mode": "list", "values": ["legacy", "base_1m"]},
+                {"path": "feature_groups.rsi", "mode": "list", "values": [True, False]},
+                {"path": "hyperparams.learning_rate", "mode": "range", "start": 0.02, "end": 0.05, "step": 0.03},
+            ],
+            "confirm_resource_heavy": True,
+        }
+
+        variants = _expand_training_variants(job_type="sweep_train", payload=payload)
+
+        self.assertEqual(len(variants), 8)
+        labels = [str(item["label"]) for item in variants]
+        self.assertTrue(any("base_timeframe_mode=base_1m" in label for label in labels))
+        self.assertTrue(any("feature_groups.rsi=false" in label for label in labels))
+        self.assertTrue(any("hyperparams.learning_rate=0.02" in label for label in labels))
+
     def test_validate_builder_reports_sweep_variant_count(self) -> None:
         payload = {
             "asset": "BTC",
@@ -93,6 +139,25 @@ class ModelBuilderSweepTests(unittest.TestCase):
             any("hard limit" in str(item).lower() for item in validation.response["errors"])
         )
 
+    def test_validate_builder_rejects_generic_sweep_over_hard_limit(self) -> None:
+        payload = {
+            "asset": "BTC",
+            "horizons": ["5m"],
+            "sweep_axes": [
+                {
+                    "path": "hyperparams.num_leaves",
+                    "mode": "list",
+                    "values": list(range(31, 241)),
+                }
+            ],
+            "confirm_resource_heavy": True,
+        }
+
+        validation = validate_builder_payload(payload, require_confirmation=True, job_type="sweep_train")
+
+        self.assertFalse(validation.response["ok"])
+        self.assertTrue(any("hard limit" in str(item).lower() for item in validation.response["errors"]))
+
     def test_validate_builder_allows_plain_train_even_if_sweep_axes_are_large(self) -> None:
         payload = {
             "asset": "BTC",
@@ -105,6 +170,34 @@ class ModelBuilderSweepTests(unittest.TestCase):
         validation = validate_builder_payload(payload, require_confirmation=True, job_type="train_model")
 
         self.assertTrue(validation.response["ok"])
+
+    def test_validate_builder_rejects_unsupported_sweep_axis_path(self) -> None:
+        payload = {
+            "asset": "BTC",
+            "horizons": ["5m"],
+            "sweep_axes": [
+                {"path": "hyperparams.unknown_knob", "mode": "list", "values": [1, 2]},
+            ],
+        }
+
+        validation = validate_builder_payload(payload, require_confirmation=False, job_type="sweep_train")
+
+        self.assertFalse(validation.response["ok"])
+        self.assertTrue(any("unsupported sweep axis path" in str(item).lower() for item in validation.response["errors"]))
+
+    def test_validate_builder_rejects_unimplemented_sweep_method_axis(self) -> None:
+        payload = {
+            "asset": "BTC",
+            "horizons": ["5m"],
+            "sweep_axes": [
+                {"path": "calibration_method", "mode": "list", "values": ["grid_scale", "conformal_cqr"]},
+            ],
+        }
+
+        validation = validate_builder_payload(payload, require_confirmation=False, job_type="sweep_train")
+
+        self.assertFalse(validation.response["ok"])
+        self.assertTrue(any("not implemented" in str(item).lower() for item in validation.response["errors"]))
 
     def test_validate_builder_keeps_training_budget_preset(self) -> None:
         payload = {

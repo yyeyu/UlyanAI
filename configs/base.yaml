@@ -17,6 +17,7 @@ storage:
   parquet_compression: "snappy"
 data:
   download_days: 365
+  download_days: 365
   ohlcv_limit_per_call: 1000
   cache_ttl_seconds: 300
   allow_offline_synthetic_fallback: true
@@ -48,3 +49,4 @@ service:
   api_key: "dev-key"
   rate_limit_per_min: 120
   event_worker_interval_seconds: 5
+  enable_inprocess_job_worker: true

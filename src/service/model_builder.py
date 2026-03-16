@@ -44,10 +44,58 @@ HYPERPARAM_SPECS: dict[str, dict[str, Any]] = {
     "early_stopping_rounds": {"kind": "int", "minimum": 0, "maximum": 1000000},
     "seed": {"kind": "int", "minimum": -2147483648, "maximum": 2147483647},
 }
+SUPPORTED_SWEEP_HORIZONS = ("5m", "15m", "1h", "4h", "1d", "1w")
+SUPPORTED_FEATURE_GROUPS = ("returns", "volatility", "volume", "trend", "rsi", "atr", "macd")
+SUPPORTED_SCALE_SELECTION_RULES = (
+    "min_abs_coverage_gap",
+    "min_abs_coverage_gap_then_min_width",
+    "min_abs_coverage_gap_then_width",
+    "min_score",
+)
+MAX_SWEEP_PREVIEW_COMBINATIONS = 10000
 
 
 class TrainingJobCancelled(RuntimeError):
     """Raised when a running training job is cancelled."""
+
+
+@dataclass(frozen=True)
+class SweepAxisSpec:
+    path: str
+    label: str
+    value_type: str
+    allow_range: bool = False
+    minimum: float | int | None = None
+    maximum: float | int | None = None
+    choices: tuple[str, ...] = ()
+    implemented_values: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class NormalizedSweepAxis:
+    path: str
+    label: str
+    source: str
+    mode: str
+    value_type: str
+    requested_values: list[Any]
+    normalized_values: list[Any]
+    warnings: list[str]
+    errors: list[str]
+
+
+@dataclass(frozen=True)
+class SweepExpansionResult:
+    requested_total: int
+    effective_total: int
+    duplicate_count: int
+    invalid_count: int
+    estimated_model_count: int
+    resource_heavy: bool
+    heavy_reasons: list[str]
+    duplicate_reasons: list[str]
+    axes_preview: list[dict[str, Any]]
+    variants: list[dict[str, Any]]
 
 
 def _normalize_training_budget_preset(raw: Any) -> str:
@@ -261,8 +309,8 @@ def _estimate_sweep_variant_count_from_dimensions(
 
 
 def estimate_sweep_variant_count(payload: dict[str, Any]) -> int:
-    dimensions = _normalized_sweep_dimensions(payload)
-    return _estimate_sweep_variant_count_from_dimensions(payload, dimensions)
+    expansion = _build_sweep_expansion(payload, job_type="sweep_train")
+    return max(1, int(expansion.effective_total))
 
 
 def _normalize_feature_set_version(raw: Any) -> tuple[str, str | None]:
@@ -388,6 +436,798 @@ def _build_feature_config(base_feature_cfg: dict[str, Any], payload: dict[str, A
     return feature_cfg
 
 
+def _append_unique_message(messages: list[str], message: str | None) -> None:
+    text = str(message or "").strip()
+    if text and text not in messages:
+        messages.append(text)
+
+
+def _value_signature(value: Any) -> Any:
+    if isinstance(value, list):
+        return tuple(_value_signature(item) for item in value)
+    if isinstance(value, tuple):
+        return tuple(_value_signature(item) for item in value)
+    if isinstance(value, dict):
+        return tuple(sorted((str(key), _value_signature(item)) for key, item in value.items()))
+    if isinstance(value, float):
+        return round(float(value), 10)
+    return value
+
+
+def _format_axis_value(value: Any) -> str:
+    if isinstance(value, list):
+        return "[" + ", ".join(_format_axis_value(item) for item in value) + "]"
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    return _format_variant_value(value)
+
+
+def _parse_axis_bool(raw: Any) -> bool | None:
+    if isinstance(raw, bool):
+        return raw
+    text = str(raw or "").strip().lower()
+    if text in {"1", "true", "yes", "on"}:
+        return True
+    if text in {"0", "false", "no", "off"}:
+        return False
+    return None
+
+
+def _coerce_axis_sequence(raw: Any) -> list[Any]:
+    if isinstance(raw, list):
+        return list(raw)
+    if isinstance(raw, tuple):
+        return list(raw)
+    if isinstance(raw, set):
+        return list(raw)
+    text = str(raw or "").strip()
+    if not text:
+        return []
+    return [item.strip() for item in text.replace(";", ",").replace("\n", ",").split(",")]
+
+
+def _normalize_quantile_items(raw: Any) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for item in _coerce_axis_sequence(raw):
+        text = str(item).strip().lower()
+        if not text:
+            continue
+        if text.startswith("q"):
+            percent = _quantile_percent_from_key(text)
+        else:
+            try:
+                percent = int(text)
+            except ValueError:
+                percent = None
+        if percent is None:
+            continue
+        key = _quantile_key_from_percent(percent)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(key)
+    return _sorted_quantile_keys(set(out))
+
+
+def _normalize_numeric_sequence(
+    raw: Any,
+    *,
+    integer_only: bool,
+    minimum: float | int | None = None,
+    maximum: float | int | None = None,
+) -> list[int | float]:
+    out: list[int | float] = []
+    seen: set[Any] = set()
+    for item in _coerce_axis_sequence(raw):
+        try:
+            value = int(item) if integer_only else float(item)
+        except (TypeError, ValueError):
+            continue
+        if minimum is not None and value < minimum:
+            continue
+        if maximum is not None and value > maximum:
+            continue
+        if integer_only:
+            value = int(value)
+        else:
+            value = round(float(value), 10)
+        signature = _value_signature(value)
+        if signature in seen:
+            continue
+        seen.add(signature)
+        out.append(value)
+    return out
+
+
+def _sweep_axis_spec(path: str) -> SweepAxisSpec | None:
+    cleaned = str(path or "").strip()
+    if not cleaned:
+        return None
+
+    exact_specs: dict[str, SweepAxisSpec] = {
+        "horizons": SweepAxisSpec("horizons", "Horizons", "enum_list", choices=tuple(SUPPORTED_SWEEP_HORIZONS)),
+        "base_timeframe_mode": SweepAxisSpec(
+            "base_timeframe_mode",
+            "Base timeframe mode",
+            "enum",
+            choices=("legacy", "base_1m"),
+        ),
+        "train_window_mode": SweepAxisSpec(
+            "train_window_mode",
+            "Train window mode",
+            "enum",
+            choices=("expanding", "rolling"),
+        ),
+        "train_window_days": SweepAxisSpec("train_window_days", "Train window days", "int", allow_range=True, minimum=1, maximum=3650),
+        "val_days": SweepAxisSpec("val_days", "Validation days", "int", allow_range=True, minimum=1, maximum=3650),
+        "test_days": SweepAxisSpec("test_days", "Test days", "int", allow_range=True, minimum=1, maximum=3650),
+        "walk_forward_enabled": SweepAxisSpec("walk_forward_enabled", "Walk-forward enabled", "bool"),
+        "wf_train_days": SweepAxisSpec("wf_train_days", "WF train days", "int", allow_range=True, minimum=1, maximum=3650),
+        "wf_val_days": SweepAxisSpec("wf_val_days", "WF validation days", "int", allow_range=True, minimum=1, maximum=3650),
+        "wf_step_days": SweepAxisSpec("wf_step_days", "WF step days", "int", allow_range=True, minimum=1, maximum=3650),
+        "wf_folds": SweepAxisSpec("wf_folds", "WF folds", "int", allow_range=True, minimum=1, maximum=100),
+        "target_coverage_percent": SweepAxisSpec("target_coverage_percent", "Target coverage %", "int", allow_range=True, minimum=1, maximum=99),
+        "interval_mode": SweepAxisSpec(
+            "interval_mode",
+            "Interval mode",
+            "enum",
+            choices=("symmetric", "custom", "multi_pack"),
+        ),
+        "custom_q_low_percent": SweepAxisSpec("custom_q_low_percent", "Custom q low %", "int", allow_range=True, minimum=1, maximum=98),
+        "custom_q_high_percent": SweepAxisSpec("custom_q_high_percent", "Custom q high %", "int", allow_range=True, minimum=2, maximum=99),
+        "multi_interval_coverages": SweepAxisSpec("multi_interval_coverages", "Multi interval coverages", "int_list", minimum=1, maximum=99),
+        "quantile_strategy": SweepAxisSpec(
+            "quantile_strategy",
+            "Q strategy",
+            "enum",
+            choices=("interval_only", "selected_set", "full_grid"),
+        ),
+        "selected_quantiles": SweepAxisSpec("selected_quantiles", "Selected q-set", "quantile_list"),
+        "feature_set_version": SweepAxisSpec("feature_set_version", "Feature set", "string"),
+        "scale_grid": SweepAxisSpec("scale_grid", "Scale grid", "float_list"),
+        "scale_selection_rule": SweepAxisSpec(
+            "scale_selection_rule",
+            "Scale selection rule",
+            "enum",
+            choices=SUPPORTED_SCALE_SELECTION_RULES,
+        ),
+        "calibration_method": SweepAxisSpec(
+            "calibration_method",
+            "Calibration method",
+            "enum",
+            choices=("grid_scale", "conformal_cqr"),
+            implemented_values=("grid_scale",),
+        ),
+        "feature_overrides.return_windows": SweepAxisSpec("feature_overrides.return_windows", "Return windows", "int_list", minimum=1, maximum=10000),
+        "feature_overrides.vol_windows": SweepAxisSpec("feature_overrides.vol_windows", "Volatility windows", "int_list", minimum=2, maximum=10000),
+        "feature_overrides.volume_windows": SweepAxisSpec("feature_overrides.volume_windows", "Volume windows", "int_list", minimum=2, maximum=10000),
+        "feature_overrides.trend_windows": SweepAxisSpec("feature_overrides.trend_windows", "Trend windows", "int_list", minimum=2, maximum=10000),
+        "feature_overrides.rsi_window": SweepAxisSpec("feature_overrides.rsi_window", "RSI window", "int", allow_range=True, minimum=2, maximum=1000),
+        "feature_overrides.atr_window": SweepAxisSpec("feature_overrides.atr_window", "ATR window", "int", allow_range=True, minimum=2, maximum=1000),
+    }
+    if cleaned in exact_specs:
+        return exact_specs[cleaned]
+
+    if cleaned.startswith("steps_overrides."):
+        horizon = cleaned.split(".", 1)[1]
+        if horizon in SUPPORTED_SWEEP_HORIZONS:
+            return SweepAxisSpec(cleaned, f"steps_ahead {horizon}", "int", allow_range=True, minimum=1, maximum=10080)
+        return None
+
+    if cleaned.startswith("feature_groups."):
+        group_name = cleaned.split(".", 1)[1]
+        if group_name in SUPPORTED_FEATURE_GROUPS:
+            return SweepAxisSpec(cleaned, f"Feature group {group_name}", "bool")
+        return None
+
+    if cleaned.startswith("feature_overrides.macd."):
+        macd_part = cleaned.split(".", 2)[2]
+        if macd_part in {"fast", "slow", "signal"}:
+            return SweepAxisSpec(cleaned, f"MACD {macd_part}", "int", allow_range=True, minimum=2, maximum=1000)
+        return None
+
+    if cleaned.startswith("hyperparams."):
+        hyperparam_name = cleaned.split(".", 1)[1]
+        spec = HYPERPARAM_SPECS.get(hyperparam_name)
+        if not spec:
+            return None
+        kind = "int" if str(spec["kind"]) == "int" else "float"
+        return SweepAxisSpec(
+            cleaned,
+            hyperparam_name,
+            kind,
+            allow_range=True,
+            minimum=spec.get("minimum"),
+            maximum=spec.get("maximum"),
+        )
+
+    return None
+
+
+def _normalize_axis_scalar_value(
+    spec: SweepAxisSpec,
+    raw: Any,
+    *,
+    strict_unimplemented: bool,
+    warnings: list[str],
+    errors: list[str],
+) -> Any:
+    if spec.value_type == "bool":
+        value = _parse_axis_bool(raw)
+        if value is None:
+            errors.append(f"{spec.path} expects a boolean value")
+        return value
+
+    if spec.value_type == "enum":
+        text = str(raw or "").strip().lower()
+        if not text:
+            errors.append(f"{spec.path} requires a value")
+            return None
+        if spec.choices and text not in spec.choices:
+            errors.append(f"{spec.path} does not support value={raw}")
+            return None
+        if spec.implemented_values and text not in spec.implemented_values:
+            if strict_unimplemented:
+                errors.append(f"{spec.path} value={text} is not implemented")
+                return None
+            fallback = spec.implemented_values[0]
+            warnings.append(f"{spec.path} value={text} falls back to {fallback}")
+            return fallback
+        return text
+
+    if spec.value_type == "string":
+        text = str(raw or "").strip()
+        if not text:
+            errors.append(f"{spec.path} requires a non-empty value")
+            return None
+        return text
+
+    if spec.value_type == "int":
+        try:
+            value = int(raw)
+        except (TypeError, ValueError):
+            errors.append(f"{spec.path} expects an integer value")
+            return None
+        if spec.minimum is not None and value < spec.minimum:
+            errors.append(f"{spec.path} must be >= {int(spec.minimum)}")
+            return None
+        if spec.maximum is not None and value > spec.maximum:
+            errors.append(f"{spec.path} must be <= {int(spec.maximum)}")
+            return None
+        return value
+
+    if spec.value_type == "float":
+        try:
+            value = round(float(raw), 10)
+        except (TypeError, ValueError):
+            errors.append(f"{spec.path} expects a numeric value")
+            return None
+        if spec.minimum is not None and value < float(spec.minimum):
+            errors.append(f"{spec.path} must be >= {spec.minimum}")
+            return None
+        if spec.maximum is not None and value > float(spec.maximum):
+            errors.append(f"{spec.path} must be <= {spec.maximum}")
+            return None
+        return value
+
+    errors.append(f"{spec.path} uses unsupported scalar type={spec.value_type}")
+    return None
+
+
+def _normalize_axis_list_value(spec: SweepAxisSpec, raw: Any, *, warnings: list[str], errors: list[str]) -> Any:
+    if spec.value_type == "enum_list":
+        items = [str(item).strip() for item in _coerce_axis_sequence(raw) if str(item).strip()]
+        normalized: list[str] = []
+        seen: set[str] = set()
+        for item in items:
+            cleaned = item.lower()
+            if spec.choices and cleaned not in spec.choices:
+                errors.append(f"{spec.path} contains unsupported value={item}")
+                continue
+            if cleaned in seen:
+                continue
+            seen.add(cleaned)
+            normalized.append(cleaned)
+        if not normalized:
+            errors.append(f"{spec.path} requires at least one value")
+            return None
+        return normalized
+
+    if spec.value_type == "quantile_list":
+        normalized = _normalize_quantile_items(raw)
+        if not normalized:
+            errors.append(f"{spec.path} requires at least one q-value")
+            return None
+        return normalized
+
+    if spec.value_type == "int_list":
+        normalized = _normalize_numeric_sequence(
+            raw,
+            integer_only=True,
+            minimum=spec.minimum,
+            maximum=spec.maximum,
+        )
+        if not normalized:
+            errors.append(f"{spec.path} requires at least one integer value")
+            return None
+        return [int(item) for item in normalized]
+
+    if spec.value_type == "float_list":
+        normalized = _normalize_numeric_sequence(
+            raw,
+            integer_only=False,
+            minimum=spec.minimum,
+            maximum=spec.maximum,
+        )
+        if not normalized:
+            errors.append(f"{spec.path} requires at least one numeric value")
+            return None
+        return [float(item) for item in normalized]
+
+    errors.append(f"{spec.path} uses unsupported list type={spec.value_type}")
+    return None
+
+
+def _normalize_axis_candidate(
+    spec: SweepAxisSpec,
+    raw: Any,
+    *,
+    strict_unimplemented: bool,
+) -> tuple[Any, list[str], list[str]]:
+    warnings: list[str] = []
+    errors: list[str] = []
+    if spec.value_type.endswith("_list"):
+        value = _normalize_axis_list_value(spec, raw, warnings=warnings, errors=errors)
+    else:
+        value = _normalize_axis_scalar_value(
+            spec,
+            raw,
+            strict_unimplemented=strict_unimplemented,
+            warnings=warnings,
+            errors=errors,
+        )
+    return value, warnings, errors
+
+
+def _generate_axis_range_values(
+    spec: SweepAxisSpec,
+    *,
+    start: Any,
+    end: Any,
+    step: Any,
+    errors: list[str],
+) -> list[int | float]:
+    if not spec.allow_range:
+        errors.append(f"{spec.path} does not support range mode")
+        return []
+    if spec.value_type not in {"int", "float"}:
+        errors.append(f"{spec.path} does not support numeric ranges")
+        return []
+    try:
+        start_num = int(start) if spec.value_type == "int" else float(start)
+        end_num = int(end) if spec.value_type == "int" else float(end)
+        step_num = int(step) if spec.value_type == "int" else float(step)
+    except (TypeError, ValueError):
+        errors.append(f"{spec.path} range requires numeric start/end/step")
+        return []
+    if step_num == 0:
+        errors.append(f"{spec.path} range step must be non-zero")
+        return []
+    if spec.value_type == "int":
+        start_num = int(start_num)
+        end_num = int(end_num)
+        step_num = abs(int(step_num))
+    else:
+        start_num = round(float(start_num), 10)
+        end_num = round(float(end_num), 10)
+        step_num = abs(round(float(step_num), 10))
+    if step_num <= 0:
+        errors.append(f"{spec.path} range step must be > 0")
+        return []
+    direction = 1 if start_num <= end_num else -1
+    values: list[int | float] = []
+    current = start_num
+    iterations = 0
+    while direction > 0 and current <= end_num + 1e-9:
+        values.append(int(current) if spec.value_type == "int" else round(float(current), 10))
+        current += direction * step_num
+        iterations += 1
+        if iterations > 10000:
+            errors.append(f"{spec.path} range expansion exceeded safety limit")
+            break
+    while direction < 0 and current >= end_num - 1e-9:
+        values.append(int(current) if spec.value_type == "int" else round(float(current), 10))
+        current += direction * step_num
+        iterations += 1
+        if iterations > 10000:
+            errors.append(f"{spec.path} range expansion exceeded safety limit")
+            break
+    return values
+
+
+def _normalize_single_sweep_axis(
+    raw_axis: dict[str, Any],
+    *,
+    source: str,
+    strict_unimplemented: bool,
+) -> NormalizedSweepAxis:
+    path = str(raw_axis.get("path", "")).strip()
+    spec = _sweep_axis_spec(path)
+    label = spec.label if spec else path
+    mode = str(raw_axis.get("mode", "list")).strip().lower()
+    requested_values: list[Any] = []
+    normalized_values: list[Any] = []
+    warnings: list[str] = []
+    errors: list[str] = []
+
+    if spec is None:
+        errors.append(f"unsupported sweep axis path: {path}")
+        return NormalizedSweepAxis(
+            path=path,
+            label=label or path,
+            source=source,
+            mode="list" if mode != "range" else "range",
+            value_type="unsupported",
+            requested_values=[],
+            normalized_values=[],
+            warnings=warnings,
+            errors=errors,
+        )
+
+    if mode not in {"list", "range"}:
+        errors.append(f"{path} uses unsupported sweep mode={mode}")
+        mode = "list"
+
+    if mode == "range":
+        requested_values = _generate_axis_range_values(
+            spec,
+            start=raw_axis.get("start"),
+            end=raw_axis.get("end"),
+            step=raw_axis.get("step"),
+            errors=errors,
+        )
+    else:
+        raw_values = raw_axis.get("values", [])
+        if not isinstance(raw_values, list):
+            errors.append(f"{path} expects values as a list")
+            raw_values = []
+        requested_values = list(raw_values)
+
+    seen: set[Any] = set()
+    for raw_value in requested_values:
+        value, item_warnings, item_errors = _normalize_axis_candidate(
+            spec,
+            raw_value,
+            strict_unimplemented=strict_unimplemented,
+        )
+        for item_warning in item_warnings:
+            _append_unique_message(warnings, item_warning)
+        for item_error in item_errors:
+            _append_unique_message(errors, item_error)
+        if item_errors or value is None:
+            continue
+        signature = _value_signature(value)
+        if signature in seen:
+            continue
+        seen.add(signature)
+        normalized_values.append(value)
+
+    if requested_values and len(normalized_values) < len(requested_values):
+        _append_unique_message(warnings, f"{path} collapsed duplicate values during normalization")
+    if not requested_values:
+        _append_unique_message(errors, f"{path} requires at least one candidate value")
+
+    return NormalizedSweepAxis(
+        path=path,
+        label=spec.label,
+        source=source,
+        mode=mode,
+        value_type=spec.value_type,
+        requested_values=requested_values,
+        normalized_values=normalized_values,
+        warnings=warnings,
+        errors=errors,
+    )
+
+
+def _legacy_sweep_axes_from_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    axes: list[dict[str, Any]] = []
+    if payload.get("sweep_target_coverages"):
+        axes.append(
+            {
+                "path": "target_coverage_percent",
+                "mode": "list",
+                "values": list(payload.get("sweep_target_coverages", [])),
+            }
+        )
+    if payload.get("sweep_train_window_days"):
+        axes.append(
+            {
+                "path": "train_window_days",
+                "mode": "list",
+                "values": list(payload.get("sweep_train_window_days", [])),
+            }
+        )
+    if payload.get("sweep_feature_set_versions"):
+        axes.append(
+            {
+                "path": "feature_set_version",
+                "mode": "list",
+                "values": list(payload.get("sweep_feature_set_versions", [])),
+            }
+        )
+    if payload.get("sweep_calibration_methods"):
+        axes.append(
+            {
+                "path": "calibration_method",
+                "mode": "list",
+                "values": list(payload.get("sweep_calibration_methods", [])),
+            }
+        )
+    if isinstance(payload.get("sweep_hyperparams"), dict):
+        for key, values in dict(payload.get("sweep_hyperparams", {})).items():
+            axes.append(
+                {
+                    "path": f"hyperparams.{key}",
+                    "mode": "list",
+                    "values": list(values) if isinstance(values, list) else [],
+                }
+            )
+    return axes
+
+
+def _collect_sweep_axes(payload: dict[str, Any]) -> tuple[list[NormalizedSweepAxis], list[str]]:
+    warnings: list[str] = []
+    raw_axes = payload.get("sweep_axes", [])
+    normalized_axes: list[NormalizedSweepAxis] = []
+    seen_paths: set[str] = set()
+
+    if isinstance(raw_axes, list):
+        for raw_axis in raw_axes:
+            if not isinstance(raw_axis, dict):
+                normalized_axes.append(
+                    NormalizedSweepAxis(
+                        path="",
+                        label="",
+                        source="sweep_axes",
+                        mode="list",
+                        value_type="unsupported",
+                        requested_values=[],
+                        normalized_values=[],
+                        warnings=[],
+                        errors=["sweep_axes items must be objects"],
+                    )
+                )
+                continue
+            axis = _normalize_single_sweep_axis(raw_axis, source="sweep_axes", strict_unimplemented=True)
+            normalized_axes.append(axis)
+            if axis.path:
+                seen_paths.add(axis.path)
+
+    for legacy_axis in _legacy_sweep_axes_from_payload(payload):
+        path = str(legacy_axis.get("path", "")).strip()
+        if path in seen_paths:
+            _append_unique_message(warnings, f"legacy sweep axis ignored because sweep_axes already defines {path}")
+            continue
+        normalized_axes.append(
+            _normalize_single_sweep_axis(legacy_axis, source="legacy", strict_unimplemented=False)
+        )
+        seen_paths.add(path)
+
+    return normalized_axes, warnings
+
+
+def _payload_without_sweep_axes(payload: dict[str, Any]) -> dict[str, Any]:
+    cleaned = deepcopy(payload)
+    cleaned["sweep_axes"] = []
+    cleaned["sweep_target_coverages"] = []
+    cleaned["sweep_train_window_days"] = []
+    cleaned["sweep_feature_set_versions"] = []
+    cleaned["sweep_calibration_methods"] = []
+    cleaned["sweep_hyperparams"] = {}
+    return cleaned
+
+
+def _set_payload_path(payload: dict[str, Any], path: str, value: Any) -> None:
+    parts = [str(item).strip() for item in str(path or "").split(".") if str(item).strip()]
+    if not parts:
+        return
+    cursor: Any = payload
+    for part in parts[:-1]:
+        if not isinstance(cursor, dict):
+            return
+        if part not in cursor or not isinstance(cursor[part], dict):
+            cursor[part] = {}
+        cursor = cursor[part]
+    if isinstance(cursor, dict):
+        cursor[parts[-1]] = deepcopy(value)
+
+
+def _axis_label_fragment(axis: NormalizedSweepAxis, value: Any) -> str:
+    return f"{axis.path}={_format_axis_value(value)}"
+
+
+def _empty_sweep_expansion(
+    *,
+    base_payload: dict[str, Any],
+    base_validation: "BuilderValidation" | None = None,
+    axes_preview: list[dict[str, Any]] | None = None,
+) -> SweepExpansionResult:
+    if base_validation is None:
+        requested_horizons = [
+            str(item)
+            for item in list(base_payload.get("horizons", []) or ["5m"])
+            if str(item).strip()
+        ]
+        estimated_model_count = len(list(dict.fromkeys(requested_horizons)))
+        variants: list[dict[str, Any]] = []
+    else:
+        estimated_model_count = len(base_validation.normalized.get("horizons", []))
+        variants = [
+            {
+                "payload": _payload_without_sweep_axes(base_payload),
+                "validation": base_validation,
+                "label": "base config",
+                "axis_values": {},
+            }
+        ]
+    return SweepExpansionResult(
+        requested_total=1,
+        effective_total=1,
+        duplicate_count=0,
+        invalid_count=0,
+        estimated_model_count=estimated_model_count,
+        resource_heavy=False,
+        heavy_reasons=[],
+        duplicate_reasons=[],
+        axes_preview=list(axes_preview or []),
+        variants=variants,
+    )
+
+
+def _build_sweep_expansion(payload: dict[str, Any], *, job_type: str | None = None) -> SweepExpansionResult:
+    base_payload = _payload_without_sweep_axes(payload)
+    axes, collection_warnings = _collect_sweep_axes(payload)
+    axes_preview = [
+        {
+            "path": axis.path,
+            "label": axis.label,
+            "source": axis.source,
+            "mode": axis.mode,
+            "value_type": axis.value_type,
+            "requested_count": len(axis.requested_values),
+            "effective_count": len(axis.normalized_values),
+            "dropped_count": max(0, len(axis.requested_values) - len(axis.normalized_values)),
+            "requested_values": deepcopy(axis.requested_values),
+            "normalized_values": deepcopy(axis.normalized_values),
+            "warnings": list(axis.warnings),
+            "errors": list(axis.errors),
+        }
+        for axis in axes
+    ]
+    for warning in collection_warnings:
+        if axes_preview:
+            axes_preview[0]["warnings"].append(warning)
+
+    if not axes:
+        base_validation = validate_builder_payload(
+            base_payload,
+            require_confirmation=False,
+            job_type="train_model",
+            include_sweep_preview=False,
+        )
+        return _empty_sweep_expansion(
+            base_payload=base_payload,
+            base_validation=base_validation,
+            axes_preview=axes_preview,
+        )
+
+    if any(axis.errors for axis in axes):
+        base_validation = validate_builder_payload(
+            base_payload,
+            require_confirmation=False,
+            job_type="train_model",
+            include_sweep_preview=False,
+        )
+        return SweepExpansionResult(
+            requested_total=max(1, int(pd.Series([max(1, len(axis.requested_values)) for axis in axes]).prod())),
+            effective_total=0,
+            duplicate_count=0,
+            invalid_count=0,
+            estimated_model_count=0,
+            resource_heavy=False,
+            heavy_reasons=[],
+            duplicate_reasons=[],
+            axes_preview=axes_preview,
+            variants=[],
+        )
+
+    requested_total = 1
+    for axis in axes:
+        requested_total *= max(1, len(axis.requested_values))
+
+    seen_signatures: set[tuple[Any, ...]] = set()
+    variants: list[dict[str, Any]] = []
+    duplicate_count = 0
+    invalid_count = 0
+    estimated_model_count = 0
+    duplicate_reasons: list[str] = []
+    truncated_preview = False
+
+    axis_values_product = [axis.normalized_values for axis in axes]
+    for combo_index, combo in enumerate(product(*axis_values_product), start=1):
+        if combo_index > MAX_SWEEP_PREVIEW_COMBINATIONS:
+            truncated_preview = True
+            break
+        variant_payload = _payload_without_sweep_axes(base_payload)
+        label_parts: list[str] = []
+        axis_value_map: dict[str, Any] = {}
+        for axis, value in zip(axes, combo):
+            _set_payload_path(variant_payload, axis.path, value)
+            axis_value_map[axis.path] = deepcopy(value)
+            label_parts.append(_axis_label_fragment(axis, value))
+        combo_validation = validate_builder_payload(
+            variant_payload,
+            require_confirmation=False,
+            job_type="train_model",
+            include_sweep_preview=False,
+        )
+        if not combo_validation.response["ok"]:
+            invalid_count += 1
+            continue
+        signature = _training_variant_signature(combo_validation.normalized)
+        if signature in seen_signatures:
+            duplicate_count += 1
+            if len(duplicate_reasons) < 8:
+                _append_unique_message(
+                    duplicate_reasons,
+                    f"{' | '.join(label_parts)} collapsed into an existing normalized variant",
+                )
+            continue
+        seen_signatures.add(signature)
+        variants.append(
+            {
+                "payload": variant_payload,
+                "validation": combo_validation,
+                "label": " ".join(label_parts) if label_parts else "variant",
+                "axis_values": axis_value_map,
+            }
+        )
+        estimated_model_count += len(combo_validation.normalized.get("horizons", []))
+        if len(variants) > SWEEP_VARIANT_HARD_LIMIT:
+            break
+
+    if truncated_preview:
+        _append_unique_message(
+            duplicate_reasons,
+            f"preview stopped after {MAX_SWEEP_PREVIEW_COMBINATIONS} combinations",
+        )
+
+    effective_total = len(variants)
+    heavy_reasons: list[str] = []
+    if effective_total > SWEEP_VARIANT_CONFIRM_LIMIT:
+        heavy_reasons.append(
+            f"sweep expands to {effective_total} effective variants"
+        )
+    if estimated_model_count > SWEEP_VARIANT_CONFIRM_LIMIT:
+        heavy_reasons.append(
+            f"sweep is estimated to train {estimated_model_count} models"
+        )
+    return SweepExpansionResult(
+        requested_total=requested_total,
+        effective_total=effective_total,
+        duplicate_count=duplicate_count,
+        invalid_count=invalid_count,
+        estimated_model_count=estimated_model_count,
+        resource_heavy=bool(heavy_reasons),
+        heavy_reasons=heavy_reasons,
+        duplicate_reasons=duplicate_reasons,
+        axes_preview=axes_preview,
+        variants=variants,
+    )
+
+
 @dataclass(frozen=True)
 class BuilderValidation:
     response: dict[str, Any]
@@ -399,6 +1239,7 @@ def validate_builder_payload(
     *,
     require_confirmation: bool = False,
     job_type: str | None = None,
+    include_sweep_preview: bool = True,
 ) -> BuilderValidation:
     warnings: list[str] = []
     errors: list[str] = []
@@ -509,12 +1350,11 @@ def validate_builder_payload(
         warnings.append("full grid selected: resource heavy")
 
     final_quantiles_sorted = _sorted_quantile_keys(final_quantiles)
-    requires_confirmation = len(final_quantiles_sorted) > quantile_soft_limit or quantile_strategy == "full_grid"
-    if requires_confirmation:
+    quantile_confirmation_required = (
+        len(final_quantiles_sorted) > quantile_soft_limit or quantile_strategy == "full_grid"
+    )
+    if quantile_confirmation_required:
         warnings.append("selected quantile set is resource heavy")
-
-    if require_confirmation and requires_confirmation and not bool(payload.get("confirm_resource_heavy", False)):
-        errors.append("resource-heavy quantile set requires explicit confirmation")
 
     hyperparams = _normalize_hyperparams(payload.get("hyperparams", {}), warnings=warnings)
 
@@ -549,32 +1389,40 @@ def validate_builder_payload(
             continue
         if value > 0:
             steps_overrides[str(horizon)] = value
-
-    sweep_dimensions = _normalized_sweep_dimensions(payload, warnings=warnings)
-    sweep_variants_count = _estimate_sweep_variant_count_from_dimensions(payload, sweep_dimensions)
-    enforce_sweep_rules = str(job_type or "").strip().lower() != "train_model"
-    if enforce_sweep_rules and sweep_variants_count > SWEEP_VARIANT_CONFIRM_LIMIT:
-        warnings.append(
-            f"sweep expands to {sweep_variants_count} variants; explicit confirmation is recommended"
-        )
-    if enforce_sweep_rules and sweep_variants_count > SWEEP_VARIANT_HARD_LIMIT:
-        errors.append(
-            f"sweep expands to {sweep_variants_count} variants; hard limit is {SWEEP_VARIANT_HARD_LIMIT}"
-        )
-    if (
-        enforce_sweep_rules
-        and require_confirmation
-        and sweep_variants_count > SWEEP_VARIANT_CONFIRM_LIMIT
-        and not bool(payload.get("confirm_resource_heavy", False))
-    ):
-        errors.append(
-            f"sweep with more than {SWEEP_VARIANT_CONFIRM_LIMIT} variants requires explicit confirmation"
-        )
-
-    requires_confirmation = bool(
-        requires_confirmation
-        or (enforce_sweep_rules and sweep_variants_count > SWEEP_VARIANT_CONFIRM_LIMIT)
+    sweep_preview = (
+        _build_sweep_expansion(payload, job_type=job_type)
+        if include_sweep_preview
+        else _empty_sweep_expansion(base_payload=_payload_without_sweep_axes(payload))
     )
+    confirmation_reasons: list[str] = []
+    enforce_sweep_rules = str(job_type or "").strip().lower() != "train_model"
+    if quantile_confirmation_required:
+        confirmation_reasons.append("resource-heavy q-set")
+    if enforce_sweep_rules and sweep_preview.resource_heavy:
+        confirmation_reasons.extend(
+            [reason for reason in sweep_preview.heavy_reasons if reason not in confirmation_reasons]
+        )
+
+    for axis_preview in sweep_preview.axes_preview:
+        for item in axis_preview.get("warnings", []):
+            _append_unique_message(warnings, str(item))
+        for item in axis_preview.get("errors", []):
+            _append_unique_message(errors, str(item))
+
+    if enforce_sweep_rules and sweep_preview.effective_total > SWEEP_VARIANT_HARD_LIMIT:
+        errors.append(
+            f"sweep expands to {sweep_preview.effective_total} variants; hard limit is {SWEEP_VARIANT_HARD_LIMIT}"
+        )
+
+    if require_confirmation and confirmation_reasons and not bool(payload.get("confirm_resource_heavy", False)):
+        if quantile_confirmation_required:
+            errors.append("resource-heavy q-set requires explicit confirmation")
+        if enforce_sweep_rules and sweep_preview.resource_heavy:
+            errors.append(
+                f"sweep with more than {SWEEP_VARIANT_CONFIRM_LIMIT} effective variants requires explicit confirmation"
+            )
+
+    requires_confirmation = bool(confirmation_reasons)
 
     response = {
         "ok": not errors,
@@ -594,7 +1442,19 @@ def validate_builder_payload(
         ],
         "quantiles_multi_interval": _sorted_quantile_keys(multi_interval_keys),
         "requires_confirmation": requires_confirmation,
-        "sweep_variants_count": sweep_variants_count,
+        "confirmation_reasons": confirmation_reasons,
+        "sweep_variants_count": max(1, int(sweep_preview.effective_total)),
+        "sweep_preview": {
+            "requested_total": int(sweep_preview.requested_total),
+            "effective_total": int(sweep_preview.effective_total),
+            "duplicate_count": int(sweep_preview.duplicate_count),
+            "invalid_count": int(sweep_preview.invalid_count),
+            "estimated_model_count": int(sweep_preview.estimated_model_count),
+            "resource_heavy": bool(sweep_preview.resource_heavy),
+            "heavy_reasons": list(sweep_preview.heavy_reasons),
+            "duplicate_reasons": list(sweep_preview.duplicate_reasons),
+            "axes": [dict(item) for item in sweep_preview.axes_preview],
+        },
     }
 
     normalized = {
@@ -632,7 +1492,7 @@ def validate_builder_payload(
         "calibration_method": calibration_method,
         "scale_grid": cleaned_scale_grid,
         "scale_selection_rule": str(payload.get("scale_selection_rule", "min_abs_coverage_gap_then_width")),
-        "sweep_hyperparams": dict(sweep_dimensions.get("hyperparams", {})),
+        "sweep_axes": [dict(item) for item in payload.get("sweep_axes", []) if isinstance(item, dict)],
         "experiment_id": str(payload.get("experiment_id")).strip() if payload.get("experiment_id") else None,
         "parent_model_id": str(payload.get("parent_model_id")).strip() if payload.get("parent_model_id") else None,
         "notes": str(payload.get("notes")).strip() if payload.get("notes") else None,
@@ -749,7 +1609,12 @@ def _training_variant_signature(normalized: dict[str, Any]) -> tuple[Any, ...]:
 def _expand_training_variants(*, job_type: str, payload: dict[str, Any]) -> list[dict[str, Any]]:
     raw_payload = deepcopy(payload)
     if job_type != "sweep_train":
-        validation = validate_builder_payload(raw_payload, require_confirmation=True, job_type="train_model")
+        validation = validate_builder_payload(
+            raw_payload,
+            require_confirmation=True,
+            job_type="train_model",
+            include_sweep_preview=False,
+        )
         if not validation.response["ok"]:
             raise ValueError("; ".join(validation.response["errors"]))
         return [
@@ -760,59 +1625,20 @@ def _expand_training_variants(*, job_type: str, payload: dict[str, Any]) -> list
             }
         ]
 
-    dimensions = _normalized_sweep_dimensions(raw_payload)
-    variants: list[dict[str, Any]] = []
-    seen_signatures: set[tuple[Any, ...]] = set()
-    requested_total = _estimate_sweep_variant_count_from_dimensions(raw_payload, dimensions)
-    hyperparam_axes = sorted(dict(dimensions.get("hyperparams", {})).items())
-
-    for combo in product(
-        dimensions["target_coverages"],
-        dimensions["train_window_days"],
-        dimensions["feature_set_versions"],
-        dimensions["calibration_methods"],
-        *[values for _, values in hyperparam_axes],
-    ):
-        coverage_value, train_window_days, feature_set_version, calibration_method, *hyperparam_values = combo
-        variant_payload = deepcopy(raw_payload)
-        variant_payload["target_coverage_percent"] = int(coverage_value)
-        variant_payload["train_window_days"] = int(train_window_days)
-        variant_payload["feature_set_version"] = str(feature_set_version)
-        variant_payload["calibration_method"] = str(calibration_method)
-        variant_payload["hyperparams"] = {
-            **dict(raw_payload.get("hyperparams", {})),
-        }
-        hyperparam_label_parts: list[str] = []
-        for index, (name, _) in enumerate(hyperparam_axes):
-            value = hyperparam_values[index]
-            variant_payload["hyperparams"][name] = value
-            hyperparam_label_parts.append(f"{name}={_format_variant_value(value)}")
-        validation = validate_builder_payload(variant_payload, require_confirmation=True, job_type="sweep_train")
-        if not validation.response["ok"]:
-            raise ValueError("; ".join(validation.response["errors"]))
-        signature = _training_variant_signature(validation.normalized)
-        if signature in seen_signatures:
-            continue
-        seen_signatures.add(signature)
-        if len(seen_signatures) > SWEEP_VARIANT_HARD_LIMIT:
-            raise ValueError(
-                f"sweep expands to more than {SWEEP_VARIANT_HARD_LIMIT} effective variants"
-            )
-        label_parts = [
-            f"coverage={int(coverage_value)}",
-            f"window={int(train_window_days)}",
-            f"feature_set={feature_set_version}",
-            f"calibration={calibration_method}",
-            *hyperparam_label_parts,
-        ]
-        variants.append(
-            {
-                "payload": variant_payload,
-                "validation": validation,
-                "label": " ".join(label_parts),
-            }
+    expansion = _build_sweep_expansion(raw_payload, job_type=job_type)
+    if expansion.effective_total > SWEEP_VARIANT_HARD_LIMIT:
+        raise ValueError(
+            f"sweep expands to more than {SWEEP_VARIANT_HARD_LIMIT} effective variants"
         )
-
+    variants = [
+        {
+            "payload": deepcopy(item["payload"]),
+            "validation": item["validation"],
+            "label": str(item["label"]),
+            "axis_values": dict(item.get("axis_values", {})),
+        }
+        for item in expansion.variants
+    ]
     if not variants:
         raise ValueError("sweep produced no effective variants")
 
@@ -820,7 +1646,7 @@ def _expand_training_variants(*, job_type: str, payload: dict[str, Any]) -> list
     for index, variant in enumerate(variants, start=1):
         variant["variant_id"] = f"v{index:03d}"
         variant["label"] = f"variant {index}/{total_effective} [{variant['label']}]"
-        variant["requested_total"] = requested_total
+        variant["requested_total"] = int(expansion.requested_total)
         variant["effective_total"] = total_effective
     return variants
 

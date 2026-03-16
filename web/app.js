@@ -39,6 +39,71 @@
           scale_grid: [0.5, 0.75, 1.0, 1.2, 1.5, 2.0, 3.0],
         },
       };
+      const SCALE_SELECTION_RULE_OPTIONS = [
+        { value: "min_abs_coverage_gap_then_width", label: "Gap then width" },
+        { value: "min_abs_coverage_gap_then_min_width", label: "Gap then min width" },
+        { value: "min_abs_coverage_gap", label: "Coverage gap only" },
+        { value: "min_score", label: "Min score" },
+      ];
+      const SWEEP_AXIS_DEFS = (() => {
+        const rows = [
+          { group: "Target", path: "horizons", label: "Horizons", kind: "enum_list", options: HORIZONS },
+          { group: "Target", path: "base_timeframe_mode", label: "Base timeframe mode", kind: "enum", options: ["legacy", "base_1m"] },
+          { group: "Split", path: "train_window_mode", label: "Train window mode", kind: "enum", options: ["expanding", "rolling"] },
+          { group: "Split", path: "train_window_days", label: "Train window days", kind: "int", allowRange: true, min: 1, max: 3650 },
+          { group: "Split", path: "val_days", label: "Validation days", kind: "int", allowRange: true, min: 1, max: 3650 },
+          { group: "Split", path: "test_days", label: "Test days", kind: "int", allowRange: true, min: 1, max: 3650 },
+          { group: "Walk-forward", path: "walk_forward_enabled", label: "Walk-forward enabled", kind: "bool" },
+          { group: "Walk-forward", path: "wf_train_days", label: "WF train days", kind: "int", allowRange: true, min: 1, max: 3650 },
+          { group: "Walk-forward", path: "wf_val_days", label: "WF validation days", kind: "int", allowRange: true, min: 1, max: 3650 },
+          { group: "Walk-forward", path: "wf_step_days", label: "WF step days", kind: "int", allowRange: true, min: 1, max: 3650 },
+          { group: "Walk-forward", path: "wf_folds", label: "WF folds", kind: "int", allowRange: true, min: 1, max: 100 },
+          { group: "Interval", path: "target_coverage_percent", label: "Target coverage %", kind: "int", allowRange: true, min: 1, max: 99 },
+          { group: "Interval", path: "interval_mode", label: "Interval mode", kind: "enum", options: ["symmetric", "custom", "multi_pack"] },
+          { group: "Interval", path: "custom_q_low_percent", label: "Custom q low %", kind: "int", allowRange: true, min: 1, max: 98 },
+          { group: "Interval", path: "custom_q_high_percent", label: "Custom q high %", kind: "int", allowRange: true, min: 2, max: 99 },
+          { group: "Interval", path: "multi_interval_coverages", label: "Multi interval coverages", kind: "int_list", min: 1, max: 99 },
+          { group: "Interval", path: "quantile_strategy", label: "Q strategy", kind: "enum", options: ["interval_only", "selected_set", "full_grid"] },
+          { group: "Interval", path: "selected_quantiles", label: "Selected q-set", kind: "quantile_list" },
+          { group: "Features", path: "feature_set_version", label: "Feature set", kind: "enum", options: ["feat_v1", "feat_v2"] },
+          { group: "Calibration", path: "scale_grid", label: "Scale grid", kind: "float_list" },
+          { group: "Calibration", path: "scale_selection_rule", label: "Scale selection rule", kind: "enum", options: SCALE_SELECTION_RULE_OPTIONS.map((item) => item.value) },
+          { group: "Calibration", path: "calibration_method", label: "Calibration method", kind: "enum", options: ["grid_scale"] },
+          { group: "Feature Overrides", path: "feature_overrides.return_windows", label: "Return windows", kind: "int_list", min: 1, max: 10000 },
+          { group: "Feature Overrides", path: "feature_overrides.vol_windows", label: "Volatility windows", kind: "int_list", min: 2, max: 10000 },
+          { group: "Feature Overrides", path: "feature_overrides.volume_windows", label: "Volume windows", kind: "int_list", min: 2, max: 10000 },
+          { group: "Feature Overrides", path: "feature_overrides.trend_windows", label: "Trend windows", kind: "int_list", min: 2, max: 10000 },
+          { group: "Feature Overrides", path: "feature_overrides.rsi_window", label: "RSI window", kind: "int", allowRange: true, min: 2, max: 1000 },
+          { group: "Feature Overrides", path: "feature_overrides.atr_window", label: "ATR window", kind: "int", allowRange: true, min: 2, max: 1000 },
+          { group: "Feature Overrides", path: "feature_overrides.macd.fast", label: "MACD fast", kind: "int", allowRange: true, min: 2, max: 1000 },
+          { group: "Feature Overrides", path: "feature_overrides.macd.slow", label: "MACD slow", kind: "int", allowRange: true, min: 2, max: 1000 },
+          { group: "Feature Overrides", path: "feature_overrides.macd.signal", label: "MACD signal", kind: "int", allowRange: true, min: 2, max: 1000 },
+        ];
+        HORIZONS.forEach((horizon) => {
+          rows.push({ group: "Target", path: `steps_overrides.${horizon}`, label: `steps_ahead ${horizon}`, kind: "int", allowRange: true, min: 1, max: 10080 });
+        });
+        ["returns", "volatility", "volume", "trend", "rsi", "atr", "macd"].forEach((name) => {
+          rows.push({ group: "Feature Groups", path: `feature_groups.${name}`, label: `Feature group ${name}`, kind: "bool" });
+        });
+        [
+          ["learning_rate", "float", 0.0001, 10],
+          ["num_leaves", "int", 2, 131072],
+          ["max_depth", "int", -1, 4096],
+          ["min_data_in_leaf", "int", 1, 1000000],
+          ["feature_fraction", "float", 0, 1],
+          ["bagging_fraction", "float", 0, 1],
+          ["bagging_freq", "int", 0, 100000],
+          ["lambda_l1", "float", 0, 1000000],
+          ["lambda_l2", "float", 0, 1000000],
+          ["num_boost_round", "int", 1, 1000000],
+          ["early_stopping_rounds", "int", 0, 1000000],
+          ["seed", "int", -2147483648, 2147483647],
+        ].forEach(([name, kind, min, max]) => {
+          rows.push({ group: "Hyperparams", path: `hyperparams.${name}`, label: name, kind, allowRange: true, min, max });
+        });
+        return rows;
+      })();
+      const SWEEP_AXIS_BY_PATH = Object.fromEntries(SWEEP_AXIS_DEFS.map((item) => [item.path, item]));
       const defaultSettings = {
         apiBase: location.protocol === "file:" ? "http://localhost:8000" : location.origin,
         apiHeader: "X-API-Key",
@@ -88,6 +153,8 @@
           validateTimer: null,
           jobStatusById: {},
           budgetPresetInitialized: false,
+          sweepAxes: [],
+          sweepAxisSeq: 1,
         },
         pollTimer: null,
         tickerTimer: null,
@@ -1408,6 +1475,271 @@
       function tagsToText(tags) {
         return Object.entries(tags || {}).map(([k, v]) => `${k}: ${v}`).join("\n");
       }
+      function sweepAxisSpec(path) {
+        return SWEEP_AXIS_BY_PATH[String(path || "").trim()] || null;
+      }
+      function sweepAxisModeOptions(spec) {
+        const options = [{ value: "fixed", label: "Fixed" }, { value: "list", label: "Sweep list" }];
+        if (spec && spec.allowRange && (spec.kind === "int" || spec.kind === "float")) {
+          options.push({ value: "range", label: "Sweep range" });
+        }
+        return options;
+      }
+      function nextSweepAxisId() {
+        const next = Number(state.lab.sweepAxisSeq || 1);
+        state.lab.sweepAxisSeq = next + 1;
+        return `axis_${next}`;
+      }
+      function baseValueForSweepPath(path) {
+        const clean = String(path || "").trim();
+        if (!clean) return null;
+        if (clean === "horizons") return builderSelectedHorizons();
+        if (clean === "base_timeframe_mode") return el("builderBaseMode")?.value || "legacy";
+        if (clean === "train_window_mode") return el("builderTrainWindowMode")?.value || "expanding";
+        if (clean === "train_window_days") return Number(el("builderTrainWindowDays")?.value || "365");
+        if (clean === "val_days") return Number(el("builderValDays")?.value || "30");
+        if (clean === "test_days") return Number(el("builderTestDays")?.value || "30");
+        if (clean === "walk_forward_enabled") return Boolean(el("builderWalkForwardEnabled")?.checked);
+        if (clean === "wf_train_days") return Number(el("builderWfTrainDays")?.value || "180");
+        if (clean === "wf_val_days") return Number(el("builderWfValDays")?.value || "30");
+        if (clean === "wf_step_days") return Number(el("builderWfStepDays")?.value || "30");
+        if (clean === "wf_folds") return Number(el("builderWfFolds")?.value || "3");
+        if (clean === "target_coverage_percent") return Number(el("builderCoverage")?.value || "80");
+        if (clean === "interval_mode") return el("builderIntervalMode")?.value || "symmetric";
+        if (clean === "custom_q_low_percent") return Number(el("builderCustomLow")?.value || "10");
+        if (clean === "custom_q_high_percent") return Number(el("builderCustomHigh")?.value || "90");
+        if (clean === "multi_interval_coverages") return parseCsvInts(el("builderMultiCoverages")?.value || "", { minimum: 1, maximum: 99 });
+        if (clean === "quantile_strategy") return el("builderQStrategy")?.value || "interval_only";
+        if (clean === "selected_quantiles") return builderSelectedQuantiles();
+        if (clean === "feature_set_version") return el("builderFeatureSetVersion")?.value || "feat_v1";
+        if (clean === "scale_grid") return parseCsvFloats(el("builderScaleGrid")?.value || "");
+        if (clean === "scale_selection_rule") return el("builderScaleRule")?.value || "min_abs_coverage_gap_then_width";
+        if (clean === "calibration_method") return el("builderCalibrationMethod")?.value || "grid_scale";
+        if (clean.startsWith("steps_overrides.")) {
+          const horizon = clean.split(".")[1];
+          return Number(el(`builderStep${horizon}`)?.value || "1");
+        }
+        if (clean.startsWith("feature_groups.")) {
+          const suffix = clean.split(".")[1];
+          const map = {
+            returns: "builderFeatureReturns",
+            volatility: "builderFeatureVolatility",
+            volume: "builderFeatureVolume",
+            trend: "builderFeatureTrend",
+            rsi: "builderFeatureRsi",
+            atr: "builderFeatureAtr",
+            macd: "builderFeatureMacd",
+          };
+          return Boolean(el(map[suffix])?.checked);
+        }
+        if (clean.startsWith("feature_overrides.")) {
+          const suffix = clean.replace("feature_overrides.", "");
+          if (suffix === "return_windows") return parseCsvInts(el("builderReturnWindows")?.value || "", { minimum: 1, maximum: 10000 });
+          if (suffix === "vol_windows") return parseCsvInts(el("builderVolWindows")?.value || "", { minimum: 2, maximum: 10000 });
+          if (suffix === "volume_windows") return parseCsvInts(el("builderVolumeWindows")?.value || "", { minimum: 2, maximum: 10000 });
+          if (suffix === "trend_windows") return parseCsvInts(el("builderTrendWindows")?.value || "", { minimum: 2, maximum: 10000 });
+          if (suffix === "rsi_window") return Number(el("builderRsiWindow")?.value || "14");
+          if (suffix === "atr_window") return Number(el("builderAtrWindow")?.value || "14");
+          if (suffix === "macd.fast") return Number(el("builderMacdFast")?.value || "12");
+          if (suffix === "macd.slow") return Number(el("builderMacdSlow")?.value || "26");
+          if (suffix === "macd.signal") return Number(el("builderMacdSignal")?.value || "9");
+        }
+        if (clean.startsWith("hyperparams.")) {
+          const suffix = clean.replace("hyperparams.", "");
+          const map = {
+            learning_rate: "builderLearningRate",
+            num_leaves: "builderNumLeaves",
+            max_depth: "builderMaxDepth",
+            min_data_in_leaf: "builderMinDataLeaf",
+            feature_fraction: "builderFeatureFraction",
+            bagging_fraction: "builderBaggingFraction",
+            bagging_freq: "builderBaggingFreq",
+            lambda_l1: "builderLambdaL1",
+            lambda_l2: "builderLambdaL2",
+            num_boost_round: "builderBoostRounds",
+            early_stopping_rounds: "builderEarlyStopping",
+            seed: "builderSeed",
+          };
+          return asNumber(el(map[suffix])?.value);
+        }
+        return null;
+      }
+      function buildQuantileOptions(selectedValues) {
+        const selected = new Set((selectedValues || []).map((item) => String(item)));
+        const rows = [];
+        for (let idx = 1; idx <= 99; idx += 1) {
+          const key = `q${String(idx).padStart(2, "0")}`;
+          rows.push(`<option value="${key}"${selected.has(key) ? " selected" : ""}>${key}</option>`);
+        }
+        return rows.join("");
+      }
+      function cloneAxisValue(value) {
+        if (Array.isArray(value)) return value.map((item) => cloneAxisValue(item));
+        return value;
+      }
+      function seedSweepAxisValue(path) {
+        const spec = sweepAxisSpec(path);
+        const baseValue = cloneAxisValue(baseValueForSweepPath(path));
+        if (!spec) {
+          return { mode: "list", values: [baseValue], start: null, end: null, step: null };
+        }
+        if (spec.kind === "enum_list" || spec.kind === "quantile_list" || spec.kind === "int_list" || spec.kind === "float_list") {
+          const candidate = Array.isArray(baseValue) ? baseValue : [];
+          return { mode: "list", values: [candidate], start: null, end: null, step: null };
+        }
+        const scalar = baseValue !== null && baseValue !== undefined ? baseValue : (spec.kind === "bool" ? false : "");
+        return {
+          mode: "list",
+          values: [scalar],
+          start: spec.allowRange ? scalar : null,
+          end: spec.allowRange ? scalar : null,
+          step: spec.kind === "int" ? 1 : 0.1,
+        };
+      }
+      function createSweepAxis(path = "target_coverage_percent") {
+        const seeded = seedSweepAxisValue(path);
+        return {
+          id: nextSweepAxisId(),
+          path,
+          mode: seeded.mode,
+          values: seeded.values,
+          start: seeded.start,
+          end: seeded.end,
+          step: seeded.step,
+        };
+      }
+      function renderSweepScalarInput(axisId, valueIndex, spec, value) {
+        if (spec.kind === "enum") {
+          const options = (spec.options || []).map((option) => `<option value="${esc(option)}"${String(value) === String(option) ? " selected" : ""}>${esc(option)}</option>`).join("");
+          return `<select data-role="axis-value" data-axis-id="${esc(axisId)}" data-index="${valueIndex}">${options}</select>`;
+        }
+        if (spec.kind === "bool") {
+          return `<select data-role="axis-value" data-axis-id="${esc(axisId)}" data-index="${valueIndex}"><option value="true"${value === true ? " selected" : ""}>true</option><option value="false"${value === false ? " selected" : ""}>false</option></select>`;
+        }
+        if (spec.kind === "int") {
+          return `<input data-role="axis-value" data-axis-id="${esc(axisId)}" data-index="${valueIndex}" type="number" step="1" value="${esc(value ?? "")}" />`;
+        }
+        if (spec.kind === "float") {
+          return `<input data-role="axis-value" data-axis-id="${esc(axisId)}" data-index="${valueIndex}" type="number" step="0.0001" value="${esc(value ?? "")}" />`;
+        }
+        return `<input data-role="axis-value" data-axis-id="${esc(axisId)}" data-index="${valueIndex}" value="${esc(value ?? "")}" />`;
+      }
+      function renderSweepListCandidate(axis, spec, candidate, valueIndex) {
+        if (spec.kind === "enum_list") {
+          const selected = new Set(Array.isArray(candidate) ? candidate.map((item) => String(item)) : []);
+          return `<div class="sweep-chip-grid">${(spec.options || []).map((option) => `<label class="choice-pill"><input data-role="axis-enum-list-item" data-axis-id="${esc(axis.id)}" data-index="${valueIndex}" value="${esc(option)}" type="checkbox"${selected.has(option) ? " checked" : ""} />${esc(option)}</label>`).join("")}</div>`;
+        }
+        if (spec.kind === "quantile_list") {
+          return `<select multiple size="8" data-role="axis-multi-select" data-axis-id="${esc(axis.id)}" data-index="${valueIndex}" class="compare-model-select">${buildQuantileOptions(Array.isArray(candidate) ? candidate : [])}</select>`;
+        }
+        const nested = Array.isArray(candidate) ? candidate : [];
+        const step = spec.kind === "int_list" ? "1" : "0.01";
+        const type = "number";
+        return `<div class="sweep-nested-list">${nested.map((item, nestedIndex) => `<div class="sweep-inline-row"><input data-role="axis-nested-item" data-axis-id="${esc(axis.id)}" data-index="${valueIndex}" data-nested-index="${nestedIndex}" type="${type}" step="${step}" value="${esc(item)}" /><button type="button" data-action="remove-axis-nested-item" data-axis-id="${esc(axis.id)}" data-index="${valueIndex}" data-nested-index="${nestedIndex}">Remove</button></div>`).join("")}<button type="button" data-action="add-axis-nested-item" data-axis-id="${esc(axis.id)}" data-index="${valueIndex}">Add item</button></div>`;
+      }
+      function renderSweepAxisEditor(axis, spec) {
+        if (!spec) return `<div class="mut">Unsupported axis.</div>`;
+        if (axis.mode === "fixed") {
+          return `<div class="mut">Using the fixed base-form value for ${esc(spec.label)}.</div>`;
+        }
+        if (axis.mode === "range") {
+          return `<div class="sweep-inline-row"><input data-role="axis-range-start" data-axis-id="${esc(axis.id)}" type="number" step="${spec.kind === "int" ? "1" : "0.0001"}" value="${esc(axis.start ?? "")}" placeholder="start" /><input data-role="axis-range-end" data-axis-id="${esc(axis.id)}" type="number" step="${spec.kind === "int" ? "1" : "0.0001"}" value="${esc(axis.end ?? "")}" placeholder="end" /><input data-role="axis-range-step" data-axis-id="${esc(axis.id)}" type="number" step="${spec.kind === "int" ? "1" : "0.0001"}" value="${esc(axis.step ?? "")}" placeholder="step" /></div>`;
+        }
+        return `<div class="sweep-values-stack">${(axis.values || []).map((value, valueIndex) => `<div class="sweep-value-card">${renderSweepScalarOrListValue(axis, spec, value, valueIndex)}<div class="btn-row field-offset-sm"><button type="button" data-action="remove-axis-value" data-axis-id="${esc(axis.id)}" data-index="${valueIndex}">Remove value</button></div></div>`).join("")}<button type="button" data-action="add-axis-value" data-axis-id="${esc(axis.id)}">Add value</button></div>`;
+      }
+      function renderSweepScalarOrListValue(axis, spec, value, valueIndex) {
+        if (spec.kind === "enum_list" || spec.kind === "quantile_list" || spec.kind === "int_list" || spec.kind === "float_list") {
+          return renderSweepListCandidate(axis, spec, value, valueIndex);
+        }
+        return renderSweepScalarInput(axis.id, valueIndex, spec, value);
+      }
+      function renderSweepAxisRow(axis) {
+        const spec = sweepAxisSpec(axis.path);
+        const modeOptions = sweepAxisModeOptions(spec).map((item) => `<option value="${esc(item.value)}"${axis.mode === item.value ? " selected" : ""}>${esc(item.label)}</option>`).join("");
+        const groupedOptions = [];
+        const groups = [...new Set(SWEEP_AXIS_DEFS.map((item) => item.group))];
+        groups.forEach((group) => {
+          const options = SWEEP_AXIS_DEFS.filter((item) => item.group === group).map((item) => `<option value="${esc(item.path)}"${item.path === axis.path ? " selected" : ""}>${esc(item.label)}</option>`).join("");
+          groupedOptions.push(`<optgroup label="${esc(group)}">${options}</optgroup>`);
+        });
+        return `<article class="sweep-axis-card" data-axis-id="${esc(axis.id)}"><div class="sweep-axis-top"><div class="field"><label>Parameter</label><select data-role="axis-path" data-axis-id="${esc(axis.id)}">${groupedOptions.join("")}</select></div><div class="field"><label>Mode</label><select data-role="axis-mode" data-axis-id="${esc(axis.id)}">${modeOptions}</select></div><div class="field"><label>Base value</label><div class="mut sweep-base-value">${esc(JSON.stringify(baseValueForSweepPath(axis.path)))}</div></div><div class="field"><label>&nbsp;</label><button type="button" data-action="remove-axis" data-axis-id="${esc(axis.id)}">Remove axis</button></div></div>${renderSweepAxisEditor(axis, spec)}</article>`;
+      }
+      function renderSweepAxisBuilder() {
+        const host = el("builderSweepAxesList");
+        const empty = el("builderSweepAxesEmpty");
+        if (!host || !empty) return;
+        const axes = state.lab.sweepAxes || [];
+        empty.style.display = axes.length ? "none" : "block";
+        host.innerHTML = axes.map((axis) => renderSweepAxisRow(axis)).join("");
+      }
+      function addSweepAxis(path = "target_coverage_percent") {
+        state.lab.sweepAxes = [...(state.lab.sweepAxes || []), createSweepAxis(path)];
+        renderSweepAxisBuilder();
+        scheduleBuilderValidate();
+      }
+      function updateSweepAxis(axisId, updater) {
+        state.lab.sweepAxes = (state.lab.sweepAxes || []).map((axis) => axis.id === axisId ? { ...axis, ...updater(axis) } : axis);
+        renderSweepAxisBuilder();
+        scheduleBuilderValidate();
+      }
+      function removeSweepAxis(axisId) {
+        state.lab.sweepAxes = (state.lab.sweepAxes || []).filter((axis) => axis.id !== axisId);
+        renderSweepAxisBuilder();
+        scheduleBuilderValidate();
+      }
+      function appendSweepAxisValue(axisId) {
+        updateSweepAxis(axisId, (axis) => {
+          const spec = sweepAxisSpec(axis.path);
+          const baseValue = cloneAxisValue(baseValueForSweepPath(axis.path));
+          let nextValue = baseValue;
+          if (spec && (spec.kind === "enum_list" || spec.kind === "quantile_list" || spec.kind === "int_list" || spec.kind === "float_list")) nextValue = Array.isArray(baseValue) ? baseValue : [];
+          if (spec && spec.kind === "bool") nextValue = false;
+          return { values: [...(axis.values || []), cloneAxisValue(nextValue)] };
+        });
+      }
+      function setAxisPath(axisId, path) {
+        const next = createSweepAxis(path);
+        updateSweepAxis(axisId, () => ({ path: next.path, mode: next.mode, values: next.values, start: next.start, end: next.end, step: next.step }));
+      }
+      function setAxisMode(axisId, mode) {
+        updateSweepAxis(axisId, (axis) => {
+          const spec = sweepAxisSpec(axis.path);
+          if (mode === "range" && !(spec && spec.allowRange)) return {};
+          return { mode };
+        });
+      }
+      function collectSweepAxesPayload() {
+        return (state.lab.sweepAxes || [])
+          .filter((axis) => axis.mode === "list" || axis.mode === "range")
+          .map((axis) => ({
+            path: axis.path,
+            mode: axis.mode,
+            values: axis.mode === "list" ? cloneAxisValue(axis.values || []) : [],
+            start: axis.mode === "range" ? asNumber(axis.start) : null,
+            end: axis.mode === "range" ? asNumber(axis.end) : null,
+            step: axis.mode === "range" ? asNumber(axis.step) : null,
+          }));
+      }
+      function renderSweepPreview(preview) {
+        const payload = preview || {};
+        setNodeText("builderSweepRequested", String(payload.requested_total ?? 1));
+        setNodeText("builderSweepEffective", String(payload.effective_total ?? 1));
+        setNodeText("builderSweepDuplicates", String(payload.duplicate_count ?? 0));
+        setNodeText("builderSweepInvalid", String(payload.invalid_count ?? 0));
+        setNodeText("builderSweepModels", String(payload.estimated_model_count ?? 0));
+        setNodeText("builderSweepHeavy", payload.resource_heavy ? "high" : "normal");
+        const body = el("builderSweepPreviewBody");
+        if (body) {
+          const axes = Array.isArray(payload.axes) ? payload.axes : [];
+          body.innerHTML = axes.length
+            ? axes.map((item) => `<tr><td>${esc(item.label || item.path)}</td><td>${esc(item.mode || "-")}</td><td>${esc(String(item.requested_count ?? 0))}</td><td>${esc(String(item.effective_count ?? 0))}</td><td>${esc(String(item.dropped_count ?? 0))}</td><td>${esc(((item.warnings || []).concat(item.errors || [])).join(" | ") || "-")}</td></tr>`).join("")
+            : `<tr><td colspan="6" class="mut">No sweep axes. Base form remains fixed.</td></tr>`;
+        }
+        const lines = [];
+        (payload.heavy_reasons || []).forEach((item) => lines.push(`heavy: ${item}`));
+        (payload.duplicate_reasons || []).forEach((item) => lines.push(`dedupe: ${item}`));
+        setNodeText("builderSweepPreviewJson", lines.length ? lines.join("\n") : "Sweep preview is clean.");
+      }
       function modelStatusTag(status) {
         const value = String(status || "active");
         if (value === "archived") return `<span class="tag cancelled">archived</span>`;
@@ -1429,7 +1761,7 @@
       }
       function setBuilderHorizons(horizons) {
         const selected = new Set((horizons || []).map((item) => String(item)));
-        ["5m", "15m", "1h"].forEach((horizon) => {
+        HORIZONS.forEach((horizon) => {
           const node = el(`builderHorizon${horizon}`);
           if (!node) return;
           node.checked = selected.has(horizon);
@@ -1457,6 +1789,7 @@
         }
         if (el("builderQuantileConfirm")) el("builderQuantileConfirm").checked = false;
         syncBuilderModeStates();
+        renderSweepAxisBuilder();
         if (scheduleValidate) scheduleBuilderValidate();
         return true;
       }
@@ -1478,7 +1811,7 @@
         const intervalMode = el("builderIntervalMode")?.value || "symmetric";
         const quantileStrategy = el("builderQStrategy")?.value || "interval_only";
         const stepInputsEnabled = baseMode === "base_1m";
-        ["builderStep5m", "builderStep15m", "builderStep1h"].forEach((id) => {
+        HORIZONS.map((horizon) => `builderStep${horizon}`).forEach((id) => {
           const node = el(id);
           if (node) node.disabled = !stepInputsEnabled;
         });
@@ -1514,7 +1847,7 @@
         }
       }
       function builderSelectedHorizons() {
-        return ["5m", "15m", "1h"].filter((h) => el(`builderHorizon${h}`)?.checked);
+        return HORIZONS.filter((h) => el(`builderHorizon${h}`)?.checked);
       }
       function builderSelectedQuantiles() {
         return [...document.querySelectorAll("#builderQuantileGrid input[type='checkbox']:checked")]
@@ -1590,6 +1923,9 @@
             "5m": Number(el("builderStep5m").value || "5"),
             "15m": Number(el("builderStep15m").value || "15"),
             "1h": Number(el("builderStep1h").value || "60"),
+            "4h": Number(el("builderStep4h").value || "240"),
+            "1d": Number(el("builderStep1d").value || "1440"),
+            "1w": Number(el("builderStep1w").value || "10080"),
           },
           target_coverage_percent: Number(el("builderCoverage").value || "80"),
           interval_mode: el("builderIntervalMode").value || "symmetric",
@@ -1641,11 +1977,12 @@
             calibration_method: el("builderCalibrationMethod").value || "grid_scale",
             scale_grid: parseCsvFloats(el("builderScaleGrid").value || ""),
             scale_selection_rule: el("builderScaleRule").value.trim() || "min_abs_coverage_gap_then_width",
-            sweep_target_coverages: parseSweepIntSpec(el("builderSweepCoverages")?.value || "", { minimum: 1, maximum: 99 }),
-            sweep_train_window_days: parseSweepIntSpec(el("builderSweepWindowDays")?.value || "", { minimum: 1, maximum: 3650 }),
-            sweep_feature_set_versions: parseCsvStrings(el("builderSweepFeatureSets")?.value || ""),
-            sweep_calibration_methods: parseCsvStrings(el("builderSweepCalibrationMethods")?.value || "").map((item) => item.toLowerCase()),
-            sweep_hyperparams: parseSweepHyperparamsSpec(el("builderSweepHyperparams")?.value || ""),
+            sweep_axes: collectSweepAxesPayload(),
+            sweep_target_coverages: [],
+            sweep_train_window_days: [],
+            sweep_feature_set_versions: [],
+            sweep_calibration_methods: [],
+            sweep_hyperparams: {},
             experiment_id: el("builderExperimentId").value.trim() || null,
             parent_model_id: el("builderParentModelId").value.trim() || null,
             notes: el("builderNotes").value.trim() || null,
@@ -1660,7 +1997,7 @@
           setNodeText("builderDerivedHigh", result?.q_high || "-");
           setNodeText("builderEffectiveCoverage", pct(result?.effective_coverage));
           setNodeText("builderImpliedCoverage", pct(result?.implied_coverage));
-          setNodeText("builderSweepVariants", String(Number(result?.sweep_variants_count || 1)));
+          renderSweepPreview(result?.sweep_preview || {});
           if (el("builderQSoftLimit")) el("builderQSoftLimit").value = String(result?.quantile_soft_limit || 11);
         if (Array.isArray(result?.quantiles_final) && result.quantiles_final.length) {
           if (String(result?.quantile_strategy || "") !== "selected_set") {
@@ -1675,12 +2012,15 @@
         setNodeText("builderQuantileWarning", result?.requires_confirmation ? `resource heavy: confirmation required (> ${softLimit} q)` : `q soft-limit: ${softLimit}`);
         syncBuilderModeStates();
         if (showBanner) {
-          const text = errors.length ? errors.join(" | ") : warnings.join(" | ");
+          const confirmationReasons = Array.isArray(result?.confirmation_reasons) ? result.confirmation_reasons : [];
+          const text = errors.length ? errors.join(" | ") : [...warnings, ...confirmationReasons].join(" | ");
           showBuilderBanner(text, errors.length > 0);
         }
       }
-        async function validateBuilder({ showBanner = true } = {}) {
-          const result = await api("/api/lab/validate", { method: "POST", body: collectBuilderPayload() });
+        async function validateBuilder({ showBanner = true, jobType = null } = {}) {
+          const body = collectBuilderPayload();
+          const activeJobType = jobType || (body.sweep_axes?.length ? "sweep_train" : "train_model");
+          const result = await api("/api/lab/validate", { method: "POST", query: { job_type: activeJobType }, body });
           applyBuilderValidation(result, { showBanner });
           return result;
         }
@@ -1927,7 +2267,8 @@
           const route = kind === "sweep"
             ? "/api/lab/jobs/sweep"
             : (kind === "wf_eval" ? "/api/lab/jobs/wf_eval" : "/api/lab/jobs/train");
-          const validation = await validateBuilder({ showBanner: true });
+          const jobType = kind === "sweep" ? "sweep_train" : (kind === "wf_eval" ? "wf_eval" : "train_model");
+          const validation = await validateBuilder({ showBanner: true, jobType });
           if (!validation?.ok) throw new Error((validation?.errors || []).join(" | ") || "Builder validation failed");
           const response = await api(route, { method: "POST", body: collectBuilderPayload() });
           const count = Number((response.items || []).length || 0);
@@ -1943,6 +2284,7 @@
         }
       async function loadLabCreateData() {
         renderBuilderQuantileGrid();
+        renderSweepAxisBuilder();
         if (!state.lab.budgetPresetInitialized) {
           const preset = String(el("builderBudgetPreset")?.value || "custom").trim();
           if (preset && preset.toLowerCase() !== "custom") {
@@ -2885,6 +3227,7 @@
         const builderForm = document.querySelector("#labCreatePane .lab-builder-grid > section.panel");
         const onBuilderFieldChange = () => {
           syncBuilderModeStates();
+          renderSweepAxisBuilder();
           scheduleBuilderValidate();
         };
         builderForm?.querySelectorAll("input, select, textarea").forEach((node) => {
@@ -2897,11 +3240,133 @@
         el("builderBudgetPreset").addEventListener("change", () => {
           const preset = String(el("builderBudgetPreset")?.value || "custom").trim();
           if (preset.toLowerCase() === "custom") {
+            renderSweepAxisBuilder();
             scheduleBuilderValidate();
             return;
           }
           if (applyTrainingBudgetPreset(preset, { scheduleValidate: true })) {
             showToast(`Applied training preset ${preset.toUpperCase()}.`);
+          }
+        });
+        el("builderAddSweepAxisBtn").addEventListener("click", () => addSweepAxis("target_coverage_percent"));
+        el("builderAddCoverageAxisBtn").addEventListener("click", () => addSweepAxis("target_coverage_percent"));
+        el("builderAddWindowAxisBtn").addEventListener("click", () => addSweepAxis("train_window_days"));
+        el("builderAddHyperparamAxisBtn").addEventListener("click", () => addSweepAxis("hyperparams.learning_rate"));
+        el("builderClearSweepAxesBtn").addEventListener("click", () => {
+          state.lab.sweepAxes = [];
+          renderSweepAxisBuilder();
+          scheduleBuilderValidate();
+        });
+        el("builderSweepAxesList").addEventListener("click", (event) => {
+          const button = event.target.closest("button[data-action]");
+          if (!button) return;
+          const axisId = button.dataset.axisId;
+          const index = Number(button.dataset.index || "-1");
+          const nestedIndex = Number(button.dataset.nestedIndex || "-1");
+          if (button.dataset.action === "remove-axis" && axisId) {
+            removeSweepAxis(axisId);
+            return;
+          }
+          if (button.dataset.action === "add-axis-value" && axisId) {
+            appendSweepAxisValue(axisId);
+            return;
+          }
+          if (button.dataset.action === "remove-axis-value" && axisId) {
+            updateSweepAxis(axisId, (axis) => ({ values: (axis.values || []).filter((_, idx) => idx !== index) }));
+            return;
+          }
+          if (button.dataset.action === "add-axis-nested-item" && axisId) {
+            updateSweepAxis(axisId, (axis) => {
+              const values = [...(axis.values || [])];
+              const candidate = Array.isArray(values[index]) ? [...values[index]] : [];
+              candidate.push(0);
+              values[index] = candidate;
+              return { values };
+            });
+            return;
+          }
+          if (button.dataset.action === "remove-axis-nested-item" && axisId) {
+            updateSweepAxis(axisId, (axis) => {
+              const values = [...(axis.values || [])];
+              const candidate = Array.isArray(values[index]) ? [...values[index]] : [];
+              values[index] = candidate.filter((_, idx) => idx !== nestedIndex);
+              return { values };
+            });
+          }
+        });
+        el("builderSweepAxesList").addEventListener("input", (event) => {
+          const target = event.target;
+          const axisId = target.getAttribute("data-axis-id");
+          if (!axisId) return;
+          if (target.getAttribute("data-role") === "axis-range-start") {
+            updateSweepAxis(axisId, () => ({ start: target.value }));
+            return;
+          }
+          if (target.getAttribute("data-role") === "axis-range-end") {
+            updateSweepAxis(axisId, () => ({ end: target.value }));
+            return;
+          }
+          if (target.getAttribute("data-role") === "axis-range-step") {
+            updateSweepAxis(axisId, () => ({ step: target.value }));
+            return;
+          }
+          if (target.getAttribute("data-role") === "axis-value") {
+            const valueIndex = Number(target.getAttribute("data-index") || "0");
+            updateSweepAxis(axisId, (axis) => {
+              const spec = sweepAxisSpec(axis.path);
+              const values = [...(axis.values || [])];
+              let nextValue = target.value;
+              if (spec?.kind === "int") nextValue = Number(target.value || "0");
+              if (spec?.kind === "float") nextValue = Number(target.value || "0");
+              if (spec?.kind === "bool") nextValue = String(target.value) === "true";
+              values[valueIndex] = nextValue;
+              return { values };
+            });
+            return;
+          }
+          if (target.getAttribute("data-role") === "axis-nested-item") {
+            const valueIndex = Number(target.getAttribute("data-index") || "0");
+            const nested = Number(target.getAttribute("data-nested-index") || "0");
+            updateSweepAxis(axisId, (axis) => {
+              const spec = sweepAxisSpec(axis.path);
+              const values = [...(axis.values || [])];
+              const candidate = Array.isArray(values[valueIndex]) ? [...values[valueIndex]] : [];
+              candidate[nested] = (spec?.kind === "int_list") ? Number(target.value || "0") : Number(target.value || "0");
+              values[valueIndex] = candidate;
+              return { values };
+            });
+          }
+        });
+        el("builderSweepAxesList").addEventListener("change", (event) => {
+          const target = event.target;
+          const axisId = target.getAttribute("data-axis-id");
+          if (!axisId) return;
+          if (target.getAttribute("data-role") === "axis-path") {
+            setAxisPath(axisId, target.value);
+            return;
+          }
+          if (target.getAttribute("data-role") === "axis-mode") {
+            setAxisMode(axisId, target.value);
+            return;
+          }
+          if (target.getAttribute("data-role") === "axis-enum-list-item") {
+            const valueIndex = Number(target.getAttribute("data-index") || "0");
+            updateSweepAxis(axisId, (axis) => {
+              const values = [...(axis.values || [])];
+              const candidate = new Set(Array.isArray(values[valueIndex]) ? values[valueIndex] : []);
+              if (target.checked) candidate.add(target.value); else candidate.delete(target.value);
+              values[valueIndex] = [...candidate];
+              return { values };
+            });
+            return;
+          }
+          if (target.getAttribute("data-role") === "axis-multi-select") {
+            const valueIndex = Number(target.getAttribute("data-index") || "0");
+            updateSweepAxis(axisId, (axis) => {
+              const values = [...(axis.values || [])];
+              values[valueIndex] = [...target.selectedOptions].map((option) => option.value);
+              return { values };
+            });
           }
         });
         el("builderQSearch").addEventListener("input", refreshBuilderQuantileVisuals);

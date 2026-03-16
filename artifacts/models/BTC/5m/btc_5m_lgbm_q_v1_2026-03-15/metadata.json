@@ -1,0 +1,387 @@
+{
+  "asset": "BTC",
+  "horizon": "5m",
+  "mode": "quantiles_internal_price_ranges_external",
+  "model_version": "btc_5m_lgbm_q_v1_2026-03-15",
+  "created_at_utc": "2026-03-15T14:33:06.142091+00:00",
+  "feature_set": "v1",
+  "feature_columns": [
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "log_return_1",
+    "return_1",
+    "log_return_2",
+    "return_2",
+    "log_return_3",
+    "return_3",
+    "log_return_6",
+    "return_6",
+    "log_return_12",
+    "return_12",
+    "vol_std_10",
+    "vol_std_20",
+    "vol_std_50",
+    "candle_body",
+    "candle_range",
+    "upper_wick",
+    "lower_wick",
+    "volume_mean_20",
+    "volume_zscore_20",
+    "volume_mean_50",
+    "volume_zscore_50",
+    "ema_20",
+    "sma_20",
+    "price_minus_ema_20",
+    "slope_ema_20",
+    "ema_50",
+    "sma_50",
+    "price_minus_ema_50",
+    "slope_ema_50",
+    "ema_200",
+    "sma_200",
+    "price_minus_ema_200",
+    "slope_ema_200",
+    "rsi",
+    "atr",
+    "macd",
+    "macd_signal",
+    "macd_hist"
+  ],
+  "label_column": "target_r_5m",
+  "train_rows": 87633,
+  "val_rows": 8640,
+  "test_rows": 8641,
+  "trained_quantiles": [
+    "q10",
+    "q50",
+    "q90"
+  ],
+  "primary_low_quantile": 0.1,
+  "primary_mid_quantile": 0.5,
+  "primary_high_quantile": 0.9,
+  "train_metrics_raw": {
+    "pinball_q10": 0.0001932007759018098,
+    "pinball_q50": 0.0004255418909209304,
+    "pinball_q90": 0.0001990090323475928,
+    "coverage_return": 0.8020380450286992,
+    "mean_width_return": 0.00260945653670093,
+    "coverage_price": 0.8020380450286992,
+    "mean_width_price": 261.1528857608522
+  },
+  "val_metrics_raw": {
+    "pinball_q10": 0.0001601258340925932,
+    "pinball_q50": 0.00032196780523624535,
+    "pinball_q90": 0.0001577622876351053,
+    "coverage_return": 0.8076388888888889,
+    "mean_width_return": 0.0020510825422252765,
+    "coverage_price": 0.8076388888888889,
+    "mean_width_price": 186.45633767822625
+  },
+  "val_metrics_calibrated": {
+    "pinball_q10": 0.00016009900016904,
+    "pinball_q50": 0.00032196780523624535,
+    "pinball_q90": 0.00015774489813280643,
+    "coverage_return": 0.8101851851851852,
+    "mean_width_return": 0.0020510825422252765,
+    "coverage_price": 0.8101851851851852,
+    "mean_width_price": 186.45536875296764
+  },
+  "test_metrics_raw": {
+    "pinball_q10": 0.0003267455015312927,
+    "pinball_q50": 0.0006589616541001865,
+    "pinball_q90": 0.0003119026919362992,
+    "coverage_return": 0.7628746672838792,
+    "mean_width_return": 0.0036732520129553105,
+    "coverage_price": 0.7628746672838792,
+    "mean_width_price": 278.24835366820287
+  },
+  "test_metrics_calibrated": {
+    "pinball_q10": 0.0003252600592072206,
+    "pinball_q50": 0.0006589616541001865,
+    "pinball_q90": 0.00031287347488627817,
+    "coverage_return": 0.7665779423677815,
+    "mean_width_return": 0.0036732520129553105,
+    "coverage_price": 0.7665779423677815,
+    "mean_width_price": 278.2201027952167
+  },
+  "registry_metrics": {
+    "train": {
+      "pinball_q10": 0.0001932007759018098,
+      "pinball_q50": 0.0004255418909209304,
+      "pinball_q90": 0.0001990090323475928,
+      "coverage_return": 0.8020380450286992,
+      "mean_width_return": 0.00260945653670093,
+      "coverage_price": 0.8020380450286992,
+      "mean_width_price": 261.1528857608522
+    },
+    "val": {
+      "pinball_q10": 0.0001601258340925932,
+      "pinball_q50": 0.00032196780523624535,
+      "pinball_q90": 0.0001577622876351053,
+      "coverage_return": 0.8076388888888889,
+      "mean_width_return": 0.0020510825422252765,
+      "coverage_price": 0.8076388888888889,
+      "mean_width_price": 186.45633767822625
+    },
+    "test": {
+      "pinball_q10": 0.0003267455015312927,
+      "pinball_q50": 0.0006589616541001865,
+      "pinball_q90": 0.0003119026919362992,
+      "coverage_return": 0.7628746672838792,
+      "mean_width_return": 0.0036732520129553105,
+      "coverage_price": 0.7628746672838792,
+      "mean_width_price": 278.24835366820287
+    },
+    "calibrated": {
+      "pinball_q10": 0.0003252600592072206,
+      "pinball_q50": 0.0006589616541001865,
+      "pinball_q90": 0.00031287347488627817,
+      "coverage_return": 0.7665779423677815,
+      "mean_width_return": 0.0036732520129553105,
+      "coverage_price": 0.7665779423677815,
+      "mean_width_price": 278.2201027952167
+    },
+    "val_calibrated": {
+      "pinball_q10": 0.00016009900016904,
+      "pinball_q50": 0.00032196780523624535,
+      "pinball_q90": 0.00015774489813280643,
+      "coverage_return": 0.8101851851851852,
+      "mean_width_return": 0.0020510825422252765,
+      "coverage_price": 0.8101851851851852,
+      "mean_width_price": 186.45536875296764
+    }
+  },
+  "params_json": {
+    "asset": "BTC",
+    "horizon": "5m",
+    "base_timeframe": "5m",
+    "steps_ahead": 1,
+    "quantiles": [
+      "q10",
+      "q50",
+      "q90"
+    ],
+    "target_coverage_requested": 0.8,
+    "target_coverage_effective": 0.8,
+    "interval_mode": "symmetric",
+    "train_window_mode": "expanding",
+    "train_window_days": 365,
+    "val_days": 30,
+    "test_days": 30,
+    "walk_forward": null,
+    "feature_set_version": "feat_v1",
+    "calibration": {
+      "method": "grid_scale",
+      "scale_grid": [
+        0.7,
+        0.85,
+        1.0,
+        1.15,
+        1.3,
+        1.6,
+        2.0
+      ],
+      "selection_rule": "min_abs_coverage_gap_then_min_width",
+      "selected_scale": 1.0,
+      "chosen_scale": 1.0,
+      "score_weight_gap": 1.0,
+      "score_weight_width": 1.0,
+      "scale_table": [
+        {
+          "scale": 0.7,
+          "cov_val": 0.6663194444444445,
+          "width_val": 0.0014357577795576933,
+          "coverage_gap": 0.13368055555555558,
+          "score_val": 0.13511631333511329
+        },
+        {
+          "scale": 0.85,
+          "cov_val": 0.7472222222222222,
+          "width_val": 0.001743420160891485,
+          "coverage_gap": 0.05277777777777781,
+          "score_val": 0.054521197938669295
+        },
+        {
+          "scale": 1.0,
+          "cov_val": 0.8101851851851852,
+          "width_val": 0.0020510825422252765,
+          "coverage_gap": 0.010185185185185186,
+          "score_val": 0.012236267727410462
+        },
+        {
+          "scale": 1.15,
+          "cov_val": 0.8561342592592592,
+          "width_val": 0.002358744923559067,
+          "coverage_gap": 0.05613425925925919,
+          "score_val": 0.058493004182818255
+        },
+        {
+          "scale": 1.3,
+          "cov_val": 0.8887731481481481,
+          "width_val": 0.002666407304892859,
+          "coverage_gap": 0.08877314814814807,
+          "score_val": 0.09143955545304093
+        },
+        {
+          "scale": 1.6,
+          "cov_val": 0.9356481481481481,
+          "width_val": 0.003281732067560443,
+          "coverage_gap": 0.13564814814814807,
+          "score_val": 0.1389298802157085
+        },
+        {
+          "scale": 2.0,
+          "cov_val": 0.9672453703703704,
+          "width_val": 0.004102165084450553,
+          "coverage_gap": 0.16724537037037035,
+          "score_val": 0.1713475354548209
+        }
+      ],
+      "target_coverage": 0.8
+    },
+    "seed": 42,
+    "data_range_start": "2025-02-19T08:40:00+00:00",
+    "data_range_end": "2026-02-18T16:00:00+00:00"
+  },
+  "base_timeframe": "5m",
+  "steps_ahead": 1,
+  "train_window_mode": "expanding",
+  "train_window_days": 365,
+  "val_days": 30,
+  "test_days": 30,
+  "data_range_start": "2025-02-19T08:40:00+00:00",
+  "data_range_end": "2026-02-18T16:00:00+00:00",
+  "naive_baseline_metrics": {
+    "pinball_q10": 0.0003990789230228458,
+    "pinball_q50": 0.0006597874004232085,
+    "pinball_q90": 0.0003808480414940704,
+    "coverage_return": 0.6605716930910774,
+    "mean_width_return": 0.0026272625305510623,
+    "coverage_price": 0.6605716930910774,
+    "mean_width_price": 204.21229879651418
+  },
+  "calibrator": {
+    "target_coverage": 0.8,
+    "spread_scale": 1.0,
+    "chosen_scale": 1.0,
+    "selection_rule": "min_abs_coverage_gap_then_min_width",
+    "score_weight_gap": 1.0,
+    "score_weight_width": 1.0,
+    "scale_table": [
+      {
+        "scale": 0.7,
+        "cov_val": 0.6663194444444445,
+        "width_val": 0.0014357577795576933,
+        "coverage_gap": 0.13368055555555558,
+        "score_val": 0.13511631333511329
+      },
+      {
+        "scale": 0.85,
+        "cov_val": 0.7472222222222222,
+        "width_val": 0.001743420160891485,
+        "coverage_gap": 0.05277777777777781,
+        "score_val": 0.054521197938669295
+      },
+      {
+        "scale": 1.0,
+        "cov_val": 0.8101851851851852,
+        "width_val": 0.0020510825422252765,
+        "coverage_gap": 0.010185185185185186,
+        "score_val": 0.012236267727410462
+      },
+      {
+        "scale": 1.15,
+        "cov_val": 0.8561342592592592,
+        "width_val": 0.002358744923559067,
+        "coverage_gap": 0.05613425925925919,
+        "score_val": 0.058493004182818255
+      },
+      {
+        "scale": 1.3,
+        "cov_val": 0.8887731481481481,
+        "width_val": 0.002666407304892859,
+        "coverage_gap": 0.08877314814814807,
+        "score_val": 0.09143955545304093
+      },
+      {
+        "scale": 1.6,
+        "cov_val": 0.9356481481481481,
+        "width_val": 0.003281732067560443,
+        "coverage_gap": 0.13564814814814807,
+        "score_val": 0.1389298802157085
+      },
+      {
+        "scale": 2.0,
+        "cov_val": 0.9672453703703704,
+        "width_val": 0.004102165084450553,
+        "coverage_gap": 0.16724537037037035,
+        "score_val": 0.1713475354548209
+      }
+    ]
+  },
+  "walk_forward_report_path": null,
+  "walk_forward_report_summary": {},
+  "seed": 42,
+  "requested_coverage": 0.8,
+  "effective_coverage": 0.8,
+  "interval_mode": "symmetric",
+  "quantiles_final": [
+    "q10",
+    "q50",
+    "q90"
+  ],
+  "quantile_strategy": "interval_only",
+  "quantile_soft_limit": 11,
+  "feature_set_label": "feat_v1",
+  "calibration_method": "grid_scale",
+  "scale_grid": [
+    0.7,
+    0.85,
+    1.0,
+    1.15,
+    1.3,
+    1.6,
+    2.0
+  ],
+  "scale_selection_rule": "min_abs_coverage_gap_then_width",
+  "training_budget_preset": "F1",
+  "training_budget_effective": {
+    "horizons": [
+      "5m"
+    ],
+    "quantile_strategy": "interval_only",
+    "train_window_days": 365,
+    "val_days": 30,
+    "test_days": 30,
+    "num_boost_round": 600,
+    "early_stopping_rounds": 60,
+    "scale_grid": [
+      0.7,
+      0.85,
+      1.0,
+      1.15,
+      1.3,
+      1.6,
+      2.0
+    ]
+  },
+  "experiment_id": "BTC_5m_S1_baseline_2026-03-15",
+  "notes": "Baseline 5m, legacy, feat_v1,\ncov80",
+  "tags": {
+    "stage": "S1; horizon:5m; base:legacy;",
+    "cov": "80; seed:42"
+  },
+  "base_timeframe_mode": "legacy",
+  "walk_forward_enabled": false,
+  "steps_overrides": {
+    "5m": 5,
+    "15m": 15,
+    "1h": 60
+  },
+  "steps_runtime": {
+    "5m": 1
+  }
+}
